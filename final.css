@@ -1966,10 +1966,14 @@ a { color: inherit; text-decoration: none; }
 .f-sigfoot__credit-name-en {
   font-family: var(--sf-serif);
   font-style: italic;
-  font-weight: 500;
-  font-size: 0.95rem;
-  color: var(--f-ink-2);
-  letter-spacing: 0.005em;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--f-ink);
+  letter-spacing: -0.008em;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.65),
+    0 1px 4px color-mix(in srgb, var(--f-gold) 14%, transparent);
 }
 
 /* meta */
@@ -1995,7 +1999,12 @@ a { color: inherit; text-decoration: none; }
 .f-body.dark .f-sigfoot__brand-y     { color: var(--f-bg); }
 .f-body.dark .f-sigfoot__brand-name  { color: var(--f-bg); }
 .f-body.dark .f-sigfoot__credit-name-ar { color: #fff; }
-.f-body.dark .f-sigfoot__credit-name-en { color: color-mix(in srgb, #fff 80%, var(--f-gold-soft)); }
+.f-body.dark .f-sigfoot__credit-name-en {
+  color: color-mix(in srgb, #fff 88%, var(--f-gold-soft));
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.4),
+    0 1px 6px color-mix(in srgb, var(--f-gold) 22%, transparent);
+}
 .f-body.dark .f-sigfoot__credit::before,
 .f-body.dark .f-sigfoot__credit::after {
   border-color: color-mix(in srgb, var(--f-gold) 65%, transparent);
@@ -2009,7 +2018,7 @@ a { color: inherit; text-decoration: none; }
 }
 @media (max-width: 540px) {
   .f-sigfoot__credit-name-ar { font-size: 0.95rem; }
-  .f-sigfoot__credit-name-en { font-size: 0.82rem; }
+  .f-sigfoot__credit-name-en { font-size: 0.92rem; }
   .f-sigfoot__credit-eyebrow { font-size: 0.5rem; letter-spacing: 0.22em; }
   .f-sigfoot__credit-meta    { font-size: 0.5rem; letter-spacing: 0.13em; }
   .f-sigfoot__brand-sub      { display: none; }
