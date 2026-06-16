@@ -102,11 +102,11 @@ window.fmtIQD = (n) => window.fmt(n) + ' د.ع';
 
 // Recent cases (mock)
 window.RECENT_CASES = [
-  { id:'TQ-2026-08-1417', svc:'CS0001', subscriber:'علي عبدالله حسين',  status:'فحص ميداني',    fee:135000,  age:'منذ ساعتين', officer:'م. حسين',  priority:'standard' },
+  { id:'TQ-2026-08-1417', svc:'CS0001', subscriber:'علي عبدالله حسين',  status:'فحص ميداني',    fee:135000,  age:'منذ ساعتين', officer:'م. كرار',  priority:'standard' },
   { id:'TQ-2026-08-1413', svc:'CT0009', subscriber:'هدى محمود إبراهيم', status:'بانتظار الدفع', fee:25000,   age:'منذ 4 ساعات', officer:'م. زينب',  priority:'standard' },
   { id:'TQ-2026-08-1409', svc:'CB0006', subscriber:'حسن جاسم العبيدي',  status:'موافقة مدير',   fee:0,       age:'أمس',         officer:'م. أحمد',  priority:'vip' },
   { id:'TQ-2026-08-1407', svc:'CA0002', subscriber:'سرى ناجي كاظم',     status:'فريق طوارئ',    fee:0,       age:'أمس',         officer:'م. مصطفى', priority:'urgent' },
-  { id:'TQ-2026-08-1402', svc:'CS0011', subscriber:'أحمد علي الجبوري',  status:'تحقق قانوني',   fee:0,       age:'منذ يومين',   officer:'م. حسين',  priority:'standard' },
+  { id:'TQ-2026-08-1402', svc:'CS0011', subscriber:'أحمد علي الجبوري',  status:'تحقق قانوني',   fee:0,       age:'منذ يومين',   officer:'م. كرار',  priority:'standard' },
   { id:'TQ-2026-08-1395', svc:'CT0008', subscriber:'مريم رياض الزبيدي', status:'قيد التنفيذ',   fee:35000,   age:'منذ 3 أيام',  officer:'م. زينب',  priority:'standard' },
 ];
 

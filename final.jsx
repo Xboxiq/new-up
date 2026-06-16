@@ -79,7 +79,7 @@ function PageHead({ onCmdK, nav }) {
           <span className="pulse" />
           {dateStr} · مركز الرصافة · فرع النضال
         </span>
-        <h1>أهلاً مهندس حسين — <em>ابدأ من القسم</em></h1>
+        <h1>أهلاً مهندس كرار — <em>ابدأ من القسم</em></h1>
         <p className="f-pagehead__lede">
           الأقسام الأربعة هي بوابتك لكل خدمة. اختر القسم أو ابدأ خدمة مباشرة من القائمة السريعة.
         </p>
@@ -662,7 +662,7 @@ function SignatureFooter() {
         </div>
 
         {/* Signature plaque */}
-        <div className="f-sigfoot__plaque" aria-label="2026 — Dev by Hussain Ali">
+        <div className="f-sigfoot__plaque" aria-label="2026 — Dev by Hussien Ali">
           <span className="f-sigfoot__plaque-glow" aria-hidden="true" />
           <span className="f-sigfoot__plaque-shimmer" aria-hidden="true" />
 
@@ -682,7 +682,7 @@ function SignatureFooter() {
             </span>
 
             <span className="f-sigfoot__name">
-              <span className="f-sigfoot__name-word">Hussain</span>
+              <span className="f-sigfoot__name-word">Hussien</span>
               <span className="f-sigfoot__name-amp" aria-hidden="true">·</span>
               <span className="f-sigfoot__name-word">Ali</span>
             </span>
