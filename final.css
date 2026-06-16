@@ -1967,13 +1967,13 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--sf-serif);
   font-style: italic;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   color: var(--f-ink);
   letter-spacing: -0.008em;
   font-feature-settings: "liga" 1, "dlig" 1, "kern" 1;
   text-shadow:
     0 1px 0 rgba(255,255,255,0.65),
-    0 1px 4px color-mix(in srgb, var(--f-gold) 14%, transparent);
+    0 1px 5px color-mix(in srgb, var(--f-gold) 16%, transparent);
 }
 
 /* meta */
@@ -2017,8 +2017,7 @@ a { color: inherit; text-decoration: none; }
   .f-sigfoot__brand { flex-wrap: wrap; justify-content: center; }
 }
 @media (max-width: 540px) {
-  .f-sigfoot__credit-name-ar { font-size: 0.95rem; }
-  .f-sigfoot__credit-name-en { font-size: 0.92rem; }
+  .f-sigfoot__credit-name-en { font-size: 1.05rem; }
   .f-sigfoot__credit-eyebrow { font-size: 0.5rem; letter-spacing: 0.22em; }
   .f-sigfoot__credit-meta    { font-size: 0.5rem; letter-spacing: 0.13em; }
   .f-sigfoot__brand-sub      { display: none; }

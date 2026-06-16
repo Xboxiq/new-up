@@ -644,7 +644,7 @@ function App() {
 // =============================================================
 function SignatureFooter() {
   return (
-    <footer className="f-sigfoot" role="contentinfo" aria-label="من تطوير حسين علي">
+    <footer className="f-sigfoot" role="contentinfo" aria-label="Designed and developed by Hussein Ali">
       <div className="f-sigfoot__rule" aria-hidden="true">
         <span className="f-sigfoot__rule-line" />
         <span className="f-sigfoot__rule-mark">
@@ -665,8 +665,6 @@ function SignatureFooter() {
         <div className="f-sigfoot__credit">
           <span className="f-sigfoot__credit-eyebrow">Designed &amp; Developed</span>
           <h6 className="f-sigfoot__credit-name">
-            <span className="f-sigfoot__credit-name-ar">حسين علي</span>
-            <span className="f-sigfoot__credit-name-sep" aria-hidden="true" />
             <span className="f-sigfoot__credit-name-en">Hussein&nbsp;Ali</span>
           </h6>
           <span className="f-sigfoot__credit-meta">
