@@ -1,0 +1,163 @@
+/* =============================================================
+   CHROMA — color & gradient discipline pass
+   Apple glass materials × Vercel precision × Notion calm
+   Additive layer; remove one <link> to revert.
+   ============================================================= */
+
+:root {
+  /* Notion-calm recalibration: surface-3 was too yellow */
+  --f-surface-3: #edebe3;
+
+  /* one shared specular recipe (Apple glass) */
+  --ch-spec-top: inset 0 1px 0 rgba(255,255,255,0.5);
+  --ch-spec-top-strong: inset 0 1px 0 rgba(255,255,255,0.75);
+  --ch-hairline: 0 0 0 0.5px;
+}
+.f-body.dark {
+  --ch-spec-top: inset 0 1px 0 rgba(255,255,255,0.07);
+  --ch-spec-top-strong: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* =============================================================
+   1. VERCEL PRIMARY — monochrome ink button, machined
+   ============================================================= */
+.f-btn--primary {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--f-ink) 88%, #fff) 0%,
+    var(--f-ink) 55%,
+    color-mix(in srgb, var(--f-ink) 92%, #000) 100%);
+  border-color: color-mix(in srgb, var(--f-ink) 92%, #000);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.25),
+    0 1px 2px rgba(22,21,19,0.18),
+    0 6px 16px -8px rgba(22,21,19,0.35);
+}
+.f-btn--primary:hover {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--f-navy) 80%, #fff 6%) 0%,
+    var(--f-navy) 55%,
+    color-mix(in srgb, var(--f-navy) 90%, #000) 100%);
+  border-color: color-mix(in srgb, var(--f-navy) 88%, #000);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.25),
+    0 2px 4px rgba(22,21,19,0.16),
+    0 10px 24px -10px color-mix(in srgb, var(--f-navy) 50%, transparent);
+}
+.f-btn--primary:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow:
+    inset 0 1.5px 3px rgba(0,0,0,0.3),
+    0 1px 2px rgba(22,21,19,0.12);
+}
+.f-body.dark .f-btn--primary {
+  background: linear-gradient(180deg, #fdfcf8 0%, #efede6 100%);
+  color: #161513;
+  border-color: rgba(0,0,0,0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    0 1px 2px rgba(0,0,0,0.5),
+    0 8px 20px -10px rgba(0,0,0,0.6);
+}
+.f-body.dark .f-btn--primary:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f3ec 100%);
+}
+
+/* secondary: crisp Vercel hairline card-button */
+.f-btn:not(.f-btn--primary):not(.f-btn--ghost) {
+  background: linear-gradient(180deg, var(--f-surface) 0%, color-mix(in srgb, var(--f-surface) 96%, var(--f-ink)) 100%);
+  box-shadow:
+    var(--ch-spec-top-strong),
+    0 1px 2px rgba(22,21,19,0.05);
+}
+.f-btn:not(.f-btn--primary):not(.f-btn--ghost):hover {
+  background: var(--f-surface);
+  box-shadow:
+    var(--ch-spec-top-strong),
+    0 2px 6px rgba(22,21,19,0.07);
+}
+
+/* Vercel focus ring everywhere */
+.f-btn:focus-visible, .f-deck__cta:focus-visible, .fs-pill input:focus-visible,
+.f-deck__panel:focus-visible, .sp-row:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--f-navy) 55%, transparent);
+  outline-offset: 2px;
+}
+
+/* =============================================================
+   2. APPLE GLASS CTA — dept-colored pills with depth
+   ============================================================= */
+.f-deck__cta {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--d-c) 78%, #fff 10%) 0%,
+    color-mix(in srgb, var(--d-c) 92%, var(--f-ink)) 60%,
+    color-mix(in srgb, var(--d-c) 80%, #000) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.32),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    0 1px 2px rgba(22,21,19,0.14),
+    0 8px 20px -8px color-mix(in srgb, var(--d-c) 55%, transparent);
+}
+.f-deck__cta:hover {
+  filter: none;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--d-c) 70%, #fff 16%) 0%,
+    color-mix(in srgb, var(--d-c) 96%, var(--f-ink)) 60%,
+    color-mix(in srgb, var(--d-c) 84%, #000) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.4),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    0 2px 4px rgba(22,21,19,0.12),
+    0 12px 28px -10px color-mix(in srgb, var(--d-c) 62%, transparent);
+}
+.f-deck__cta:active { transform: scale(0.97); }
+
+/* =============================================================
+   3. NOTION CALM — quiet chrome, content forward
+   ============================================================= */
+/* page background: barely-there top wash instead of flat fill */
+.f-body {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--f-cs) 3%, var(--f-bg)) 0%,
+      var(--f-bg) 340px);
+}
+.f-body.dark {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--f-cs) 7%, var(--f-bg)) 0%,
+      var(--f-bg) 340px);
+}
+
+/* hairline dividers get the half-pixel Vercel treatment */
+.f-card, .f-stat, .fs-card, .fg-card, .f-exp {
+  border-width: 0.5px;
+}
+
+/* =============================================================
+   4. GRADIENT DISCIPLINE — one ramp for all dept tints
+   ============================================================= */
+/* deck panels: structured 3-stop wash, angled with the light */
+.f-deck__panel.is-open {
+  background:
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--d-c) 9%, var(--f-surface)) 0%,
+      color-mix(in srgb, var(--d-c) 4%, var(--f-surface)) 38%,
+      var(--f-surface) 72%);
+}
+.f-body.dark .f-deck__panel.is-open {
+  background:
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--d-c) 14%, var(--f-surface)) 0%,
+      color-mix(in srgb, var(--d-c) 6%, var(--f-surface)) 40%,
+      var(--f-surface) 74%);
+}
+
+/* glass specular on every raised card (one consistent light source) */
+.f-deck__panel, .f-stat, .fs-card, .fg-card, .fd-hero, .f-ticker {
+  box-shadow: var(--ch-spec-top), var(--f-shadow-xs);
+}
+.f-deck__panel.is-open {
+  box-shadow: var(--ch-spec-top-strong), var(--f-shadow);
+}

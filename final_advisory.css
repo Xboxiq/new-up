@@ -1,0 +1,152 @@
+/* =============================================================
+   ADVISORY DOCK — official guidance / hazards / FAQs
+   + elite micro-polish (Apple × Vercel restraint)
+   ============================================================= */
+
+.adv-dock {
+  width: min(720px, 100%);
+  margin: 6px auto 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--f-surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  backdrop-filter: blur(22px) saturate(1.6);
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 9%, transparent);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.5),
+    0 14px 34px -18px rgba(22,21,19,0.18);
+}
+.f-body.dark .adv-dock {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.07),
+    0 14px 34px -16px rgba(0,0,0,0.55);
+}
+@supports (corner-shape: squircle) { .adv-dock { corner-shape: squircle; } }
+
+.adv-dock__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 18px 8px;
+}
+.adv-dock__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--f-ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.adv-dock__label .material-symbols-outlined { font-size: 14px; }
+.adv-dock__code {
+  font-family: var(--f-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--f-ink-3);
+}
+
+.adv-rows {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px 8px;
+}
+.adv-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 9px 10px;
+  border-radius: 12px;
+  animation: adv-in 480ms var(--f-ease) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+  transition: background 180ms var(--f-ease);
+}
+.adv-row:hover { background: color-mix(in srgb, var(--f-ink) 3.5%, transparent); }
+@keyframes adv-in {
+  from { opacity: 0; transform: translateY(7px); filter: blur(3px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+@media (prefers-reduced-motion: reduce) { .adv-row { animation: none; } }
+
+.adv-row__ico {
+  flex: none;
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  color: var(--a-c);
+  position: relative;
+}
+.adv-row__ico::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    color-mix(in srgb, var(--a-c) 16%, transparent) 0%,
+    transparent 70%);
+}
+.adv-row__ico .material-symbols-outlined {
+  font-size: 17px;
+  font-variation-settings: 'FILL' 1, 'wght' 400;
+}
+.adv-row__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.adv-row__tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--a-c);
+}
+.adv-row__tx {
+  font-size: 0.83rem;
+  line-height: 1.65;
+  color: var(--f-ink-2);
+  text-wrap: pretty;
+}
+
+/* on detail page: stretch and sit flush */
+.fd-adv { margin-inline: 0; width: 100%; }
+
+/* =============================================================
+   ELITE POLISH — quiet refinements, nothing loud
+   ============================================================= */
+
+/* selection tint */
+.f-body ::selection {
+  background: color-mix(in srgb, var(--f-navy) 16%, transparent);
+}
+.f-body.dark ::selection {
+  background: color-mix(in srgb, var(--f-cs) 30%, transparent);
+}
+
+/* hairline scrollbars */
+.f-body ::-webkit-scrollbar { width: 9px; height: 9px; }
+.f-body ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--f-ink) 14%, transparent);
+  border-radius: 999px;
+  border: 2.5px solid transparent;
+  background-clip: padding-box;
+}
+.f-body ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--f-ink) 24%, transparent);
+  background-clip: padding-box;
+  border: 2.5px solid transparent;
+}
+.f-body ::-webkit-scrollbar-track { background: transparent; }
+
+/* tabular numerals everywhere data lives */
+.f-body .hub-pass__spec-v,
+.f-body .ff-feepanel__total .val,
+.f-body .fr-row__amount,
+.f-body .fc-row__fee { font-variant-numeric: tabular-nums; }
+
+/* top chrome: a touch more glass */
+.f-body .f-top {
+  -webkit-backdrop-filter: blur(18px) saturate(1.7);
+  backdrop-filter: blur(18px) saturate(1.7);
+}
+
+/* cards: hairline upgrade in light mode */
+.f-body:not(.dark) .f-card,
+.f-body:not(.dark) .hub-pass__card,
+.f-body:not(.dark) .adv-dock { border-width: 0.5px; }

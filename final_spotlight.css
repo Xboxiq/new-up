@@ -1,0 +1,247 @@
+/* =============================================================
+   SPOTLIGHT overlay + compact top search + squircle icon tiles
+   Shared by final.html & final3d.html
+   ============================================================= */
+
+/* ---------- compact ⌘K pill in the top bar ---------- */
+.f-search {
+  flex: none !important;
+  width: auto !important;
+  gap: 8px;
+  padding: 7px 12px !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--f-ink) 5%, transparent) !important;
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 7%, transparent) !important;
+  transition: background 200ms var(--f-ease), transform 320ms var(--f-spring) !important;
+}
+.f-search:hover { background: color-mix(in srgb, var(--f-ink) 10%, transparent) !important; }
+.f-search:active { transform: scale(0.95); }
+.f-search__input { display: none; }
+.f-body.dark .f-search {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* ---------- spotlight veil + panel ---------- */
+.sp-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 14vh 18px 0;
+  background: color-mix(in srgb, var(--f-ink) 18%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+  animation: sp-veil-in 240ms var(--f-ease) both;
+}
+@keyframes sp-veil-in { from { opacity: 0; } to { opacity: 1; } }
+
+.sp-panel {
+  width: min(580px, 100%);
+  border-radius: 18px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--f-surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(34px) saturate(1.9);
+  backdrop-filter: blur(34px) saturate(1.9);
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 12%, transparent);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.5),
+    0 8px 24px -8px rgba(22,21,19,0.18),
+    0 40px 90px -30px rgba(22,21,19,0.4);
+  animation: sp-panel-in 420ms var(--f-spring) both;
+}
+@keyframes sp-panel-in {
+  from { opacity: 0; transform: scale(0.96) translateY(-14px); }
+  to   { opacity: 1; transform: none; }
+}
+.f-body.dark .sp-panel {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.08),
+    0 8px 24px -8px rgba(0,0,0,0.5),
+    0 40px 90px -30px rgba(0,0,0,0.85);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-veil, .sp-panel { animation: none; }
+}
+
+.sp-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 0.5px solid color-mix(in srgb, var(--f-ink) 9%, transparent);
+}
+.sp-input .material-symbols-outlined { font-size: 22px; color: var(--f-ink-3); }
+.sp-input input {
+  flex: 1;
+  border: 0; outline: 0; background: transparent;
+  font-family: var(--f-arab);
+  font-size: 1.08rem;
+  color: var(--f-ink);
+}
+.sp-input input::placeholder { color: var(--f-ink-3); }
+.sp-esc {
+  font-family: var(--f-mono);
+  font-size: 0.66rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--f-ink) 6%, transparent);
+  color: var(--f-ink-3);
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 7%, transparent);
+}
+
+.sp-results {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sp-empty {
+  text-align: center;
+  padding: 36px 10px;
+  color: var(--f-ink-3);
+  font-size: 0.9rem;
+}
+.sp-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+  transition: background 140ms var(--f-ease);
+}
+.sp-row.is-sel {
+  background: color-mix(in srgb, var(--f-navy) 9%, transparent);
+}
+.f-body.dark .sp-row.is-sel { background: color-mix(in srgb, var(--f-cs) 16%, transparent); }
+.sp-row__ico {
+  width: 36px; height: 36px;
+  flex: none;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  color: var(--s-c, var(--f-navy));
+  background: color-mix(in srgb, var(--s-c, var(--f-navy)) 11%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--s-c, var(--f-navy)) 20%, transparent);
+}
+.sp-row__ico--page { --s-c: var(--f-ink-2); }
+.sp-row__ico .material-symbols-outlined { font-size: 18px; }
+.sp-row__main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.sp-row__name { font-size: 0.9rem; font-weight: 600; color: var(--f-ink); }
+.sp-row__sub { font-size: 0.7rem; color: var(--f-ink-3); }
+.sp-row__code {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--f-ink-3);
+}
+.sp-row__enter {
+  opacity: 0;
+  color: var(--f-ink-3);
+  transition: opacity 140ms var(--f-ease);
+}
+.sp-row__enter .material-symbols-outlined { font-size: 15px; }
+.sp-row.is-sel .sp-row__enter { opacity: 1; }
+
+.sp-foot {
+  display: flex;
+  gap: 18px;
+  padding: 10px 20px;
+  border-top: 0.5px solid color-mix(in srgb, var(--f-ink) 9%, transparent);
+  font-size: 0.7rem;
+  color: var(--f-ink-3);
+}
+.sp-foot b {
+  font-family: var(--f-mono);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--f-ink) 6%, transparent);
+  padding: 1px 6px;
+  border-radius: 5px;
+  margin-inline-end: 4px;
+}
+
+/* =============================================================
+   SERVICES header search — compact expanding pill (in title row)
+   ============================================================= */
+.fs-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--f-ink) 5%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 7%, transparent);
+  transition: background 200ms var(--f-ease), box-shadow 320ms var(--f-spring), width 380ms var(--f-spring);
+}
+.fs-pill .material-symbols-outlined { font-size: 17px; color: var(--f-ink-3); }
+.fs-pill input {
+  width: 130px;
+  border: 0; outline: 0; background: transparent;
+  font-family: var(--f-arab);
+  font-size: 0.86rem;
+  color: var(--f-ink);
+  transition: width 380ms var(--f-spring);
+}
+.fs-pill input:focus { width: 230px; }
+.fs-pill:focus-within {
+  background: var(--f-surface);
+  box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--f-navy) 11%, transparent), var(--f-shadow-sm);
+}
+.fs-pill__count {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  color: var(--f-ink-3);
+  white-space: nowrap;
+}
+.f-body.dark .fs-pill { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.06); }
+@media (max-width: 700px) {
+  .fs-pill input { width: 90px; }
+  .fs-pill input:focus { width: 140px; }
+}
+
+/* =============================================================
+   SQUIRCLE ICON TILES — Apple superellipse, layered light
+   ============================================================= */
+.f3d .f-deck__ico, .f3d .fs-card__ico, .f3d .f-exp__ico,
+.f3d .fd-hero__ico, .f3d .fg-card__ico, .f3d .fs-rail__ico,
+.f3d .f-ticker__ico, .f3d .f-h2__icon, .f3d .sp-row__ico {
+  background:
+    linear-gradient(165deg,
+      color-mix(in srgb, var(--e-c, var(--d-c, var(--c-c, var(--g-c, var(--t-c, var(--s-c, var(--rb-c, var(--f-navy))))))) 16%, transparent) 0%,
+      color-mix(in srgb, var(--e-c, var(--d-c, var(--c-c, var(--g-c, var(--t-c, var(--s-c, var(--rb-c, var(--f-navy))))))) 7%, transparent) 100%);
+  border-width: 0.5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.45),
+    inset 0 -1px 0 color-mix(in srgb, var(--e-c, var(--d-c, var(--c-c, var(--g-c, var(--t-c, var(--s-c, var(--rb-c, var(--f-navy))))))) 7%, transparent),
+    0 2px 6px -2px color-mix(in srgb, var(--e-c, var(--d-c, var(--c-c, var(--g-c, var(--t-c, var(--s-c, var(--rb-c, var(--f-navy))))))) 22%, transparent);
+}
+.f3d.dark .f-deck__ico, .f3d.dark .fs-card__ico, .f3d.dark .f-exp__ico,
+.f3d.dark .fd-hero__ico, .f3d.dark .fg-card__ico, .f3d.dark .fs-rail__ico,
+.f3d.dark .f-ticker__ico, .f3d.dark .f-h2__icon, .f3d.dark .sp-row__ico {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.09),
+    0 2px 8px -2px rgba(0,0,0,0.4);
+}
+
+/* true superellipse corners where supported (Chrome 139+) */
+@supports (corner-shape: squircle) {
+  .f3d .f-deck__ico, .f3d .fs-card__ico, .f3d .f-exp__ico,
+  .f3d .fd-hero__ico, .f3d .fg-card__ico, .f3d .fs-rail__ico,
+  .f3d .f-ticker__ico, .f3d .f-h2__icon, .f3d .sp-row__ico {
+    corner-shape: squircle;
+    border-radius: 38%;
+  }
+  .f3d .f-deck__panel, .f3d .fs-card, .f3d .f-exp,
+  .f3d .fd-hero, .f3d .fg-card, .f3d .f-stat,
+  .f3d .f-card, .f3d .ff-feepanel, .sp-panel {
+    corner-shape: squircle;
+  }
+}

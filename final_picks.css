@@ -1,0 +1,550 @@
+/* ==============================================================
+   FINAL PICKS — تطبيق مدروس لثمانية عناصر مختارة
+   ============================================================== */
+
+/* GUARD — viewport overflow from decorative orbs */
+html, body { overflow-x: clip; }
+.f-body { overflow-x: clip; }
+
+/* GUARD — Material Symbols must remain monospace ligature glyphs */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  font-variation-settings: 'opsz' 24, 'wght' 400, 'FILL' 0, 'GRAD' 0 !important;
+}
+
+/* ==============================================================
+   G1 — العدسة الراسمة · GLASS × SELF-DRAW
+   تُطبَّق على الأيقونات الأساسية الكبيرة فقط:
+   - .f-deck__stk  (شارات الأقسام في بطاقات الرئيسية)
+   - .hub-stack__stk   (شارات الأقسام في صفحة الخدمات)
+   - .f-spot__ico      (أيقونة السبوتلايت)
+   لا تمس الأيقونات الجانبية أو ايقونات الخدمات الفردية.
+   ============================================================== */
+/* ==============================================================
+   G1 — العدسة الراسمة · GLASS × SELF-DRAW — إصلاح جوهري:
+   لا خط باهت ثابت حول الأيقونة.
+   بدلاً: حلقة زجاجية مصقولة ترسم نفسها دائرياً عند المرور (عبر conic-gradient + @property)
+   والأيقونة في الداخل تعيد رسم نفسها.
+   ============================================================== */
+/* ==============================================================
+   LIQUID GLASS — نموذج إبداعي مختلف لأيقونات الأماكن الأخرى
+   (تبويبات الأقسام في صفحة الخدمات + السبوتلايت).
+   لا حلقة، لا وميض — قبّة زجاج ثابتة + لمعة ضوئية واحدة
+   تعبر البلاطة قطرياً عند المرور (روح الزجاج السائل من أبل).
+   ============================================================== */
+.hub-stack__stk,
+.f-spot__ico {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+/* قبّة زجاجية ثابتة (تتكيّف مع شكل البلاطة عبر inherit) */
+.hub-stack__stk::before,
+.f-spot__ico::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 80% at 28% 14%,
+      color-mix(in srgb, #fff 55%, transparent) 0%,
+      color-mix(in srgb, #fff 8%, transparent) 32%,
+      transparent 56%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.7;
+}
+/* لمعة ضوئية واحدة تعبر عند المرور */
+.hub-stack__stk::after,
+.f-spot__ico::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(115deg,
+    transparent 42%,
+    color-mix(in srgb, #fff 60%, transparent) 50%,
+    transparent 58%);
+  transform: translateX(150%);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+}
+.hub-stack:hover .hub-stack__stk::after,
+.hub-stack.is-on .hub-stack__stk::after,
+.f-spot:hover .f-spot__ico::after {
+  opacity: 1;
+  animation: lg-sweep 820ms var(--f-ease) forwards;
+}
+@keyframes lg-sweep {
+  from { transform: translateX(150%); }
+  to   { transform: translateX(-150%); }
+}
+
+.hub-stack__stk > *,
+.f-spot__ico > * { position: relative; z-index: 3; }
+
+/* تعريف لون العدسة حسب لون القسم */
+.hub-stack__stk { --lens-c: var(--hs-c, var(--f-navy)); }
+.f-spot__ico { --lens-c: var(--sp-c, var(--f-navy)); }
+
+/* تكبير لطيف عند المرور */
+.hub-stack:hover .hub-stack__stk,
+.f-spot:hover .f-spot__ico {
+  transform: scale(1.04);
+  transition: transform 380ms var(--f-spring);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-stack:hover .hub-stack__stk::after,
+  .hub-stack.is-on .hub-stack__stk::after,
+  .f-spot:hover .f-spot__ico::after { animation: none; opacity: 0; }
+}
+
+/* ==============================================================
+   H3 — اللفّة · APPLE ROLL — نقل حرفي من syn__cta-roll في البنك.
+   النص الأصلي يلفّ عمودياً عند المرور كاشفاً صيغة الفعل البديلة.
+   ============================================================== */
+.syn__cta-roll {
+  position: relative; height: 1.5em; overflow: hidden;
+  display: inline-flex; align-items: flex-start;
+  vertical-align: middle;
+}
+.syn__cta-roll-stack {
+  display: flex; flex-direction: column;
+  transition: transform 480ms var(--f-spring);
+}
+.syn__cta:hover .syn__cta-roll-stack { transform: translateY(-1.5em); }
+.syn__cta-roll-stack span {
+  display: block;
+  height: 1.5em; line-height: 1.5em; white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .syn__cta:hover .syn__cta-roll-stack { transform: none; }
+}
+
+/* ==============================================================
+   L2 — القوس السائل · LIQUID GLASS ARC — نقل حرفي من btn-arc--liquid.
+   جسم زجاجي + قوس SVG يرسم نفسه على المحيط + لمعان يمر بعد الاكتمال.
+   ============================================================== */
+.syn__cta {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.syn__cta svg.arc {
+  position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+}
+.syn__cta svg.arc rect {
+  fill: none;
+  stroke: color-mix(in srgb, currentColor 65%, transparent);
+  stroke-width: 1.5; stroke-linecap: round;
+  stroke-dasharray: 100; stroke-dashoffset: 100;
+  transition: stroke-dashoffset 650ms var(--f-ease);
+}
+.syn__cta:hover svg.arc rect { stroke-dashoffset: 0; }
+/* لمعان السائل — يمسح بعد اكتمال القوس */
+.syn__cta::after {
+  content: "";
+  position: absolute; inset: -30%; pointer-events: none; opacity: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%);
+  transform: translateX(120%);
+  z-index: 1;
+}
+.syn__cta:hover::after {
+  opacity: 1;
+  animation: syn-glare 850ms var(--f-ease) 600ms forwards;
+}
+@keyframes syn-glare { from { transform: translateX(120%); } to { transform: translateX(-120%); } }
+@media (prefers-reduced-motion: reduce) {
+  .syn__cta:hover svg.arc rect { stroke-dashoffset: 0; transition: none; }
+  .syn__cta:hover::after { animation: none; opacity: 0; }
+}
+.syn__cta > *:not(svg.arc) { position: relative; z-index: 2; }
+
+/* الزر الأساسي والثانوي يرفعان طبقة الزجاج عند المرور (دون قطع الوظيفة) */
+.f-deck__cta, .f-spot__cta, .hub-pass__go, .f-btn--primary {
+  position: relative; isolation: isolate; overflow: hidden;
+}
+.f-deck__cta::after,
+.f-spot__cta::after,
+.hub-pass__go::after,
+.f-btn--primary::after {
+  /* قوس زجاجي علوي يكشف عن البنية الزجاجية لأبل (للأزرار الأخرى) */
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, #fff 32%, transparent) 0%,
+      color-mix(in srgb, #fff 8%, transparent) 32%,
+      transparent 55%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.88;
+  transition: opacity 360ms var(--f-ease);
+}
+.f-deck__cta::before,
+.f-spot__cta::before,
+.hub-pass__go::before,
+.f-btn--primary::before {
+  /* قوس سائل يتحرك من اليسار لليمين — أثر السائل الذي يتعبأ */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg,
+    transparent 30%,
+    color-mix(in srgb, #fff 28%, transparent) 48%,
+    color-mix(in srgb, #fff 12%, transparent) 56%,
+    transparent 70%);
+  transform: translateX(-110%);
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 720ms var(--f-spring);
+}
+.f-deck__cta:hover::before,
+.f-spot__cta:hover::before,
+.hub-pass__go:hover::before,
+.f-btn--primary:hover::before {
+  transform: translateX(110%);
+}
+.f-deck__cta > *,
+.f-spot__cta > *,
+.hub-pass__go > *,
+.f-btn--primary > * { position: relative; z-index: 2; }
+@media (prefers-reduced-motion: reduce) {
+  .f-deck__cta:hover::before,
+  .f-spot__cta:hover::before,
+  .hub-pass__go:hover::before,
+  .f-btn--primary:hover::before { transform: translateX(0); transition: none; }
+}
+
+/* ==============================================================
+   M1 — الملء السائل · LIQUID FILL
+   كخيار ثالث في hub-mode بصفحة الخدمات — الزر الجديد "تدفّق".
+   عندما يكون فعّالاً، بطاقات الشبكة تكتسب ملء سائل ينبثق من الأسفل.
+   ============================================================== */
+.hub-mode__btn[data-mode="liquid"] {
+  position: relative;
+  overflow: hidden;
+}
+.hub-mode__btn[data-mode="liquid"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 4px;
+  bottom: 4px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--f-navy) 18%, transparent),
+    color-mix(in srgb, var(--f-navy) 36%, transparent));
+  transform: translateY(120%);
+  transition: transform 520ms var(--f-spring);
+  pointer-events: none;
+}
+.hub-mode__btn[data-mode="liquid"].is-on::after { transform: translateY(0); }
+
+/* الملء السائل على بطاقات الخدمات حين الوضع نشط */
+.fs-grid.is-liquid .fs-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.fs-grid.is-liquid .fs-card::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--c-c) 4%, transparent) 0%,
+    color-mix(in srgb, var(--c-c) 14%, transparent) 100%);
+  pointer-events: none;
+  z-index: 0;
+  transition: height 620ms var(--f-spring);
+}
+.fs-grid.is-liquid .fs-card:hover::after { height: 78%; }
+.fs-grid.is-liquid .fs-card > * { position: relative; z-index: 1; }
+
+/* ==============================================================
+   Q1 — STORY ICONS — نقل حرفي للأيقونات التي تروي معناها
+   .qik--meter   إبرة العدّاد تمسح إلى اليمين عند المرور
+   .qik--pole    شرارة تجري على الكابل
+   .qik--bill    الختم يهبط على الفاتورة
+   .qik--newcase ملف جديد + علامة + تتفتح
+   ============================================================== */
+/* الفئة .qik للإجراءات السريعة — دائرة تامّة بدل السكويركل + حلقة ترسم نفسها */
+.f-quick.qik .f-quick__ico {
+  position: relative;
+  border-radius: 50% !important;
+  border: 0 !important;
+  background: radial-gradient(circle at 32% 26%,
+    color-mix(in srgb, #fff 75%, transparent) 0%,
+    color-mix(in srgb, #fff 20%, transparent) 32%,
+    transparent 56%),
+    color-mix(in srgb, var(--c-c, var(--f-navy)) 7%, var(--f-surface)) !important;
+  color: var(--c-c, var(--f-navy)) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.85),
+    inset 0 -6px 10px -6px color-mix(in srgb, var(--c-c) 30%, transparent) !important;
+  transition: transform 420ms var(--f-spring);
+}
+.f-quick.qik:hover .f-quick__ico {
+  transform: translateY(-2px) scale(1.02);
+}
+/* حلقة دائرية ثابتة هادئة حول أيقونة الإجراء — تظهر بنعومة عند المرور (لا تدور) */
+.f-quick.qik .f-quick__ico::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--c-c, var(--f-navy)) 26%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 280ms var(--f-ease);
+}
+.f-quick.qik:hover .f-quick__ico::after { opacity: 1; }
+.f-quick.qik .f-quick__ico svg { overflow: visible; }
+.f-quick.qik .f-quick__ico svg path,
+.f-quick.qik .f-quick__ico svg line,
+.f-quick.qik .f-quick__ico svg circle.s,
+.f-quick.qik .f-quick__ico svg rect.s {
+  fill: none; stroke: currentColor;
+  stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* meter — الإبرة تمسح من -52° إلى 38° */
+.qik--meter .f-quick__ico .needle {
+  transform-origin: 13px 15px;
+  transform: rotate(-52deg);
+  transition: transform 900ms var(--f-spring);
+}
+.qik--meter:hover .f-quick__ico .needle { transform: rotate(38deg); }
+.qik--meter .f-quick__ico .tick { opacity: 0.45; }
+
+/* pole — شرارة تجري على الكابل */
+.qik--pole .f-quick__ico .spark {
+  fill: currentColor; stroke: none;
+  offset-path: path('M3 8 C 9 12, 17 12, 23 8');
+  offset-distance: 0%;
+  opacity: 0; transition: opacity 200ms;
+}
+.qik--pole:hover .f-quick__ico .spark {
+  opacity: 1; animation: qik-spark 1.1s var(--f-ease) infinite;
+}
+@keyframes qik-spark { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+/* bill — الختم يهبط بنابض */
+.qik--bill .f-quick__ico .stamp {
+  transform-origin: 17px 17px;
+  transform: scale(2.1) rotate(14deg);
+  opacity: 0;
+  transition: transform 480ms var(--f-spring), opacity 300ms;
+}
+.qik--bill:hover .f-quick__ico .stamp { transform: none; opacity: 1; }
+.qik--bill .f-quick__ico .stamp circle.s {
+  fill: color-mix(in srgb, var(--c-c) 16%, transparent);
+  stroke: currentColor; stroke-width: 1.4;
+}
+
+/* newcase — علامة + تظهر */
+.qik--newcase .f-quick__ico .plusH,
+.qik--newcase .f-quick__ico .plusV {
+  stroke-dasharray: 14; stroke-dashoffset: 14;
+  transition: stroke-dashoffset 540ms var(--f-ease);
+}
+.qik--newcase:hover .f-quick__ico .plusH { stroke-dashoffset: 0; transition-delay: 60ms; }
+.qik--newcase:hover .f-quick__ico .plusV { stroke-dashoffset: 0; transition-delay: 220ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .qik--pole:hover .f-quick__ico .spark { animation: none; opacity: 0.7; }
+  .qik--meter:hover .f-quick__ico .needle { transform: rotate(0); }
+  .qik--bill:hover .f-quick__ico .stamp,
+  .qik--newcase:hover .f-quick__ico .plusH,
+  .qik--newcase:hover .f-quick__ico .plusV { transition: none; }
+}
+
+/* ==============================================================
+   X+ — STORY ICONS × 2 — أربع خدمات نوعية تكتسب قصصها
+   التطبيق عبر data-code على .fs-card:
+   - CS0011 (نقل ملكية):    إشارة دائرية تربط هويتين
+   - CB0001 (دفع قائمة):    نبضة الدفع تنزل من الأعلى
+   - CB0006 (تقسيط):        ثلاث نقاط مرحلية تومض بالتتابع
+   - CA0002 (خطر):          نبضة تحذير دافئة هادئة
+   ============================================================== */
+.fs-card[data-code="CS0011"] .fs-card__ico,
+.fs-card[data-code="CB0001"] .fs-card__ico,
+.fs-card[data-code="CB0006"] .fs-card__ico,
+.fs-card[data-code="CA0002"] .fs-card__ico {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+/* CS0011 — نقل ملكية: حلقة ثابتة هادئة (لا تدور) */
+.fs-card[data-code="CS0011"] .fs-card__ico::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 0.5px solid color-mix(in srgb, var(--c-c) 30%, transparent);
+  pointer-events: none;
+}
+
+/* CB0001 — دفع قائمة: قطرة عملة تنزل عند المرور */
+.fs-card[data-code="CB0001"] .fs-card__ico::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  top: -8px;
+  width: 4px;
+  height: 6px;
+  margin-inline-start: -2px;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--c-c) 70%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+.fs-card[data-code="CB0001"]:hover .fs-card__ico::after {
+  animation: x-drop 800ms var(--f-spring);
+}
+@keyframes x-drop {
+  0%   { opacity: 0; transform: translateY(-4px); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(20px); }
+}
+
+/* CB0006 — تقسيط: ثلاث نقاط مرحلية تومض */
+.fs-card[data-code="CB0006"] .fs-card__ico::after {
+  content: "";
+  position: absolute;
+  inset-inline: 20%;
+  bottom: -7px;
+  height: 3px;
+  border-radius: 99px;
+  background:
+    radial-gradient(circle 1.5px, var(--c-c) 100%, transparent 0) 10% center / 8px 100% no-repeat,
+    radial-gradient(circle 1.5px, var(--c-c) 100%, transparent 0) 50% center / 8px 100% no-repeat,
+    radial-gradient(circle 1.5px, var(--c-c) 100%, transparent 0) 90% center / 8px 100% no-repeat;
+  opacity: 0.45;
+}
+.fs-card[data-code="CB0006"]:hover .fs-card__ico::after {
+  animation: x-instal 1400ms ease-in-out;
+}
+@keyframes x-instal {
+  0%   { opacity: 0.3; }
+  33%  { opacity: 1; transform: translateX(-2px); }
+  66%  { opacity: 1; transform: translateX(2px); }
+  100% { opacity: 0.45; transform: translateX(0); }
+}
+
+/* CA0002 — خطر: شارة دلالية ثابتة (لا نبض دوري) */
+.fs-card[data-code="CA0002"] .fs-card__ico::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 0.5px solid color-mix(in srgb, var(--c-c) 34%, transparent);
+  pointer-events: none;
+}
+
+/* ==============================================================
+   DEPLOY FEED — نبض فيرسيل للحالات
+   شريط نبض عمودي يسري على .fc-row__lead (الحد الأيمن للحالة)،
+   كأنّ المعاملة "تتنفذ" في الوقت الفعلي.
+   ============================================================== */
+.fc-row__lead {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.fc-row__lead::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 50%;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--lead-c, var(--f-navy)) 80%, #fff) 50%,
+    transparent 100%);
+  filter: blur(2px);
+  animation: df-pulse 2.4s var(--f-ease) infinite;
+  pointer-events: none;
+}
+.fc-row__lead::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  width: 100%;
+  height: 4px;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--lead-c, var(--f-navy)) 90%, #fff);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--lead-c, var(--f-navy)) 60%, transparent);
+  pointer-events: none;
+  animation: df-head 2.4s var(--f-ease) infinite;
+}
+@keyframes df-pulse {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+@keyframes df-head {
+  0%   { transform: translateY(-4px); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(calc(100% + 4px)); opacity: 0; }
+}
+/* الحالات المنجزة لا تنبض */
+.fc-row.is-done .fc-row__lead::before,
+.fc-row.is-done .fc-row__lead::after { animation: none; opacity: 0.5; }
+@media (prefers-reduced-motion: reduce) {
+  .fc-row__lead::before,
+  .fc-row__lead::after { animation: none; }
+}
+
+/* ==============================================================
+   R1 — شارات الأقسام الدلالية · DEPT EMBLEMS
+   إضافة نقطة دلالية لون-القسم على بطاقات الخدمة بدون اضطراب البصر.
+   ============================================================== */
+.fs-card { position: relative; }
+.fs-card::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 12px;
+  top: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-c);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 32%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--c-c) 12%, transparent);
+  z-index: 3;
+  pointer-events: none;
+  transition: box-shadow 320ms;
+}
+.fs-card:hover::before {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--c-c) 22%, transparent);
+}
+
+/* نقطة دلالية مكافئة على شارات أيقونات الخدمة في حالاتها */
+.fc-row__code {
+  position: relative;
+  padding-inline-start: 14px;
+}
+.fc-row__code::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--lead-c, var(--f-navy));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--lead-c, var(--f-navy)) 18%, transparent);
+}

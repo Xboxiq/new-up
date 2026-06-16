@@ -1,0 +1,108 @@
+/* =============================================================
+   DUOTONE OFFSET GLYPHS — "طباعة مزاحة"
+   The icon is two impressions of itself: a crisp filled glyph
+   in the dept color + a tinted ghost copy offset behind it,
+   like fine offset/risograph printing. No boxes, no glows.
+   The ghost breathes: it slides further out when the parent
+   card is hovered/focused — tied to the micro-motion language.
+   ============================================================= */
+
+/* ---------- strip every tile ---------- */
+.f-body .f-deck__ico,
+.f-body .fs-card__ico,
+.f-body .f-exp__ico,
+.f-body .fd-hero__ico,
+.f-body .fg-card__ico,
+.f-body .fs-rail__ico,
+.f-body .f-ticker__ico,
+.f-body .f-h2__icon,
+.f-body .sp-row__ico,
+.f-body .hub-stack__ico,
+.f-body .hub-pass__ico {
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  position: relative;
+}
+/* neutralize the f3d squircle layer too */
+.f3d .f-deck__ico, .f3d .fs-card__ico, .f3d .f-exp__ico,
+.f3d .fd-hero__ico, .f3d .fg-card__ico, .f3d .fs-rail__ico,
+.f3d .f-ticker__ico, .f3d .f-h2__icon, .f3d .sp-row__ico {
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ---------- the duotone impression ---------- */
+.f-body .f-deck__ico .material-symbols-outlined,
+.f-body .fs-card__ico .material-symbols-outlined,
+.f-body .f-exp__ico .material-symbols-outlined,
+.f-body .fd-hero__ico .material-symbols-outlined,
+.f-body .fg-card__ico .material-symbols-outlined,
+.f-body .f-ticker__ico .material-symbols-outlined,
+.f-body .f-h2__icon .material-symbols-outlined,
+.f-body .sp-row__ico .material-symbols-outlined,
+.f-body .hub-stack__ico .material-symbols-outlined,
+.f-body .hub-pass__ico .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 380, 'GRAD' 0, 'opsz' 40;
+  /* the ghost: one crisp tinted copy, offset toward bottom-start */
+  text-shadow: 0.09em 0.09em 0 color-mix(in srgb, currentColor 22%, transparent);
+  transition: text-shadow 380ms var(--f-spring), transform 380ms var(--f-spring);
+}
+.f-body.dark .f-deck__ico .material-symbols-outlined,
+.f-body.dark .fs-card__ico .material-symbols-outlined,
+.f-body.dark .f-exp__ico .material-symbols-outlined,
+.f-body.dark .fd-hero__ico .material-symbols-outlined,
+.f-body.dark .fg-card__ico .material-symbols-outlined,
+.f-body.dark .f-ticker__ico .material-symbols-outlined,
+.f-body.dark .f-h2__icon .material-symbols-outlined,
+.f-body.dark .sp-row__ico .material-symbols-outlined,
+.f-body.dark .hub-stack__ico .material-symbols-outlined,
+.f-body.dark .hub-pass__ico .material-symbols-outlined {
+  text-shadow: 0.09em 0.09em 0 color-mix(in srgb, currentColor 30%, transparent);
+}
+
+/* ---------- the ghost breathes on interaction ---------- */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .f-exp:hover .f-exp__ico .material-symbols-outlined,
+  .fs-card:hover .fs-card__ico .material-symbols-outlined,
+  .fg-card__head:hover .fg-card__ico .material-symbols-outlined,
+  .sp-row.is-sel .sp-row__ico .material-symbols-outlined {
+    text-shadow: 0.16em 0.16em 0 color-mix(in srgb, currentColor 16%, transparent);
+    transform: translate(-0.03em, -0.03em);
+  }
+}
+/* active states: ghost spreads wide and soft — the card "lifts off the print" */
+.hub-stack.is-on .hub-stack__ico .material-symbols-outlined,
+.hub-pass.is-focus .hub-pass__ico .material-symbols-outlined,
+.f-deck__panel.is-open .f-deck__ico .material-symbols-outlined {
+  text-shadow: 0.17em 0.17em 0 color-mix(in srgb, currentColor 15%, transparent);
+  transform: translate(-0.04em, -0.04em);
+}
+
+/* ---------- per-context glyph sizes ---------- */
+.f-body .f-deck__ico .material-symbols-outlined  { font-size: 30px !important; }
+.f-body .hub-pass__ico .material-symbols-outlined { font-size: 36px !important; }
+.f-body .hub-stack__ico .material-symbols-outlined { font-size: 25px !important; }
+.f-body .f-exp__ico .material-symbols-outlined   { font-size: 26px !important; }
+.f-body .fs-card__ico .material-symbols-outlined { font-size: 27px !important; }
+.f-body .fd-hero__ico .material-symbols-outlined { font-size: 50px !important; }
+.f-body .fg-card__ico .material-symbols-outlined { font-size: 25px !important; }
+.f-body .f-ticker__ico .material-symbols-outlined { font-size: 32px !important; }
+.f-body .sp-row__ico .material-symbols-outlined  { font-size: 22px !important; }
+.f-body .fs-rail__ico .material-symbols-outlined { font-size: 19px !important; }
+
+.f-body .fs-rail__ico { width: 24px; height: 24px; }
+.f-body .fd-hero__ico { width: 78px; height: 78px; }
+.f-body .hub-pass__ico { width: 56px; height: 56px; }
+
+/* h2 + page-row icons: ink-tinted duotone */
+.f-body .f-h2__icon { color: var(--f-navy); }
+.f-body.dark .f-h2__icon { color: var(--f-cs); }
+
+/* advisory icons follow the same duotone language (smaller ghost) */
+.f-body .adv-row__ico::before { display: none; }
+.f-body .adv-row__ico .material-symbols-outlined {
+  text-shadow: 0.08em 0.08em 0 color-mix(in srgb, currentColor 22%, transparent);
+}

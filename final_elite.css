@@ -1,0 +1,73 @@
+/* =============================================================
+   ELITE PASS — typography upgrade + frosted energy ring
+   (loaded last; experiment layer on top of v1-approved)
+   ============================================================= */
+
+/* ---------- 1. Display typography: Alexandria for headlines ---------- */
+.f-h2__title,
+.f-deck__name,
+.f-spot__name,
+.fd-hero__name,
+.hub-pass__name,
+.f-stat__n,
+.fp-title,
+.ff-head__name,
+.fg-card__t,
+.f-brand__t {
+  font-family: var(--f-disp);
+  letter-spacing: 0;
+}
+/* Readex Pro breathes a little wider than Plex — retune line heights */
+.hub-pass__name { line-height: 1.5; }
+.f-deck__blurb, .fd-hero__blurb { line-height: 1.75; }
+
+/* ---------- 2. Frosted energy ring ---------- */
+/* the ring band itself becomes frosted glass: thicker, translucent,
+   blurring whatever passes behind it; the conic energy arc rides on top */
+.pin.f-deck__stk::before,
+.pin.fd-hero__stk::before {
+  -webkit-backdrop-filter: blur(7px) saturate(1.5);
+  backdrop-filter: blur(7px) saturate(1.5);
+  background: conic-gradient(from 224deg,
+    color-mix(in srgb, var(--pin-c) 78%, transparent) var(--ring-a),
+    color-mix(in srgb, var(--pin-c) 13%, transparent) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4.5px), #000 calc(100% - 3.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4.5px), #000 calc(100% - 3.5px));
+}
+.f-body.dark .pin.f-deck__stk::before,
+.f-body.dark .pin.fd-hero__stk::before {
+  background: conic-gradient(from 224deg,
+    color-mix(in srgb, var(--pin-c) 85%, transparent) var(--ring-a),
+    color-mix(in srgb, var(--pin-c) 20%, transparent) 0);
+}
+
+/* ---------- 3. UX-audit fixes (ui-ux-pro-max guidelines) ---------- */
+/* eliminate 300ms tap delay across all controls */
+button, [role="button"], a, .fc-chip, .ff-tab, .ff-seg__opt {
+  touch-action: manipulation;
+}
+
+/* 44px minimum touch targets — invisible expanded hit areas */
+.hub-scrub__arrow, .hub-mode__btn, .f-deck__dot,
+.f-nav__btn, .sp-esc { position: relative; }
+.hub-scrub__arrow::after, .hub-mode__btn::after, .f-deck__dot::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: inherit;
+}
+
+/* contain scroll chaining: wallet flow + spotlight results */
+.hub-flow { overscroll-behavior-x: contain; }
+.sp-results { overscroll-behavior: contain; }
+
+/* readable measure for long explanatory text */
+.fd-hero__blurb, .f-deck__blurb { max-width: 62ch; }
+
+.f-deck__panel.is-open .pin.f-deck__stk,
+.fd-hero .pin.fd-hero__stk {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    0 0 0 1px color-mix(in srgb, var(--pin-c) 10%, transparent),
+    0 0 26px -4px color-mix(in srgb, var(--pin-c) 38%, transparent);
+}

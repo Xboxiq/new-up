@@ -1,0 +1,273 @@
+/* =============================================================
+   APPLE TOUCH — refined chrome & buttons for final3d.html
+   iOS/macOS material language: frosted glass, segmented control,
+   layered gradient buttons with inner light + colored shadow.
+   ============================================================= */
+
+/* =============================================================
+   1) TOP BAR — true macOS toolbar material
+   ============================================================= */
+.f3d .f-top {
+  background: color-mix(in srgb, var(--f-bg) 72%, transparent);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
+  backdrop-filter: blur(28px) saturate(1.8);
+  border-bottom: 0.5px solid color-mix(in srgb, var(--f-border) 80%, transparent);
+  box-shadow:
+    inset 0 -0.5px 0 rgba(255,255,255,0.4),
+    0 1px 12px -6px rgba(22,21,19,0.10);
+}
+.f3d.dark .f-top {
+  background: color-mix(in srgb, var(--f-bg) 68%, transparent);
+  box-shadow:
+    inset 0 -0.5px 0 rgba(255,255,255,0.05),
+    0 1px 16px -6px rgba(0,0,0,0.5);
+}
+
+/* icon buttons — circular, soft fill like macOS toolbar */
+.f3d .f-iconbtn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--f-ink) 5%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 7%, transparent);
+  transition: background 200ms var(--f-ease), transform 320ms var(--f-spring), box-shadow 200ms var(--f-ease);
+}
+.f3d .f-iconbtn:hover {
+  background: color-mix(in srgb, var(--f-ink) 10%, transparent);
+  transform: scale(1.06);
+}
+.f3d .f-iconbtn:active {
+  transform: scale(0.92);
+  background: color-mix(in srgb, var(--f-ink) 14%, transparent);
+}
+.f3d.dark .f-iconbtn {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.06);
+}
+.f3d.dark .f-iconbtn:hover { background: rgba(255,255,255,0.13); }
+
+/* team pill + avatar: glassy */
+.f3d .f-team {
+  background: color-mix(in srgb, var(--f-surface) 65%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 9%, transparent);
+  box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.5), 0 1px 3px rgba(22,21,19,0.05);
+}
+.f3d.dark .f-team {
+  box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.07);
+}
+
+/* =============================================================
+   2) NAV TABS — iOS segmented control (floating capsule)
+   ============================================================= */
+.f3d .f-tabs {
+  gap: 2px;
+  padding: 3px;
+  margin-bottom: 10px;
+  background: color-mix(in srgb, var(--f-ink) 5.5%, transparent);
+  border-radius: 999px;
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 5%, transparent);
+  width: fit-content;
+  box-shadow: inset 0 1px 2px rgba(22,21,19,0.05);
+}
+.f3d.dark .f-tabs {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.05);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+.f3d .f-tab {
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  transition: color 200ms var(--f-ease), background 280ms var(--f-spring), box-shadow 280ms var(--f-ease), transform 320ms var(--f-spring);
+}
+.f3d .f-tab:active { transform: scale(0.95); }
+.f3d .f-tab.is-on {
+  background: var(--f-surface);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.7),
+    0 1px 2.5px rgba(22,21,19,0.12),
+    0 3px 8px -2px rgba(22,21,19,0.10);
+}
+.f3d.dark .f-tab.is-on {
+  background: color-mix(in srgb, var(--f-surface) 100%, #fff 6%);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.10),
+    0 1px 3px rgba(0,0,0,0.4),
+    0 4px 10px -2px rgba(0,0,0,0.35);
+}
+/* remove old underline indicator */
+.f3d .f-tab.is-on::after { display: none; }
+
+/* =============================================================
+   3) PRIMARY BUTTONS — layered Apple push button
+   gradient top-light, inner stroke, colored ambient shadow,
+   sheen sweep on hover, true press on :active
+   ============================================================= */
+.f3d .f-btn--primary,
+.f3d .f-deck__cta,
+.f3d .f-spot__cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--ab-c, var(--f-navy)) 88%, #fff 14%) 0%,
+      var(--ab-c, var(--f-navy)) 48%,
+      color-mix(in srgb, var(--ab-c, var(--f-navy)) 88%, #000 10%) 100%);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.28),
+    inset 0 -1px 0 rgba(0,0,0,0.12),
+    inset 0 0 0 0.5px color-mix(in srgb, var(--ab-c, var(--f-navy)) 60%, #000 14%),
+    0 1px 2px rgba(22,21,19,0.12),
+    0 6px 16px -6px color-mix(in srgb, var(--ab-c, var(--f-navy)) 55%, transparent);
+  transition: transform 340ms var(--f-spring), box-shadow 240ms var(--f-ease), filter 240ms var(--f-ease);
+}
+/* deck CTA inherits its dept color */
+.f3d .f-deck__cta { --ab-c: var(--d-c); }
+.f3d .f-spot__cta { --ab-c: var(--sp-c, var(--f-navy)); color: #fff; }
+
+/* sheen sweep */
+.f3d .f-btn--primary::before,
+.f3d .f-deck__cta::before,
+.f3d .f-spot__cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg,
+    transparent 30%,
+    rgba(255,255,255,0.32) 48%,
+    rgba(255,255,255,0.10) 54%,
+    transparent 68%);
+  transform: translateX(180%);
+  transition: transform 700ms var(--f-ease);
+  pointer-events: none;
+}
+[dir="rtl"] .f3d .f-btn--primary::before,
+[dir="rtl"] .f3d .f-deck__cta::before,
+[dir="rtl"] .f3d .f-spot__cta::before { transform: translateX(-180%); }
+
+.f3d .f-btn--primary:hover,
+.f3d .f-deck__cta:hover,
+.f3d .f-spot__cta:hover {
+  transform: translateY(-1.5px);
+  filter: brightness(1.04) saturate(1.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.32),
+    inset 0 -1px 0 rgba(0,0,0,0.12),
+    inset 0 0 0 0.5px color-mix(in srgb, var(--ab-c, var(--f-navy)) 60%, #000 14%),
+    0 2px 4px rgba(22,21,19,0.12),
+    0 12px 26px -8px color-mix(in srgb, var(--ab-c, var(--f-navy)) 65%, transparent);
+}
+.f3d .f-btn--primary:hover::before,
+.f3d .f-deck__cta:hover::before,
+.f3d .f-spot__cta:hover::before { transform: translateX(0%); }
+[dir="rtl"] .f3d .f-btn--primary:hover::before,
+[dir="rtl"] .f3d .f-deck__cta:hover::before,
+[dir="rtl"] .f3d .f-spot__cta:hover::before { transform: translateX(0%); }
+
+.f3d .f-btn--primary:active,
+.f3d .f-deck__cta:active,
+.f3d .f-spot__cta:active {
+  transform: translateY(0.5px) scale(0.97);
+  filter: brightness(0.96);
+  box-shadow:
+    inset 0 1.5px 3px rgba(0,0,0,0.22),
+    inset 0 0 0 0.5px color-mix(in srgb, var(--ab-c, var(--f-navy)) 60%, #000 20%),
+    0 1px 2px rgba(22,21,19,0.10);
+  transition-duration: 80ms;
+}
+
+/* focus ring — iOS style double ring */
+.f3d .f-btn--primary:focus-visible,
+.f3d .f-deck__cta:focus-visible,
+.f3d .f-spot__cta:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--f-bg),
+    0 0 0 5.5px color-mix(in srgb, var(--ab-c, var(--f-navy)) 55%, transparent);
+}
+
+/* =============================================================
+   4) SECONDARY / GHOST — quiet glass buttons
+   ============================================================= */
+.f3d .f-btn:not(.f-btn--primary):not(.f-btn--ghost) {
+  background: color-mix(in srgb, var(--f-surface) 80%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 0.5px solid color-mix(in srgb, var(--f-ink) 11%, transparent);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.6),
+    0 1px 2.5px rgba(22,21,19,0.07);
+  transition: transform 320ms var(--f-spring), background 200ms var(--f-ease), box-shadow 200ms var(--f-ease);
+}
+.f3d.dark .f-btn:not(.f-btn--primary):not(.f-btn--ghost) {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.08),
+    0 1px 3px rgba(0,0,0,0.35);
+}
+.f3d .f-btn:not(.f-btn--primary):active { transform: scale(0.96); }
+
+/* spotlight alt button — frosted on dark panel */
+.f3d .f-spot__alt {
+  background: rgba(255,255,255,0.12);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255,255,255,0.22);
+  box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.25);
+  transition: background 200ms var(--f-ease), transform 320ms var(--f-spring);
+}
+.f3d .f-spot__alt:hover { background: rgba(255,255,255,0.20); }
+.f3d .f-spot__alt:active { transform: scale(0.96); }
+
+/* =============================================================
+   5) FILTER CHIPS — iOS pill toggles
+   ============================================================= */
+.f3d .fc-chip,
+.f3d .ff-seg__opt {
+  border-width: 0.5px;
+  transition: all 260ms var(--f-spring);
+}
+.f3d .fc-chip:active,
+.f3d .ff-seg__opt:active { transform: scale(0.94); }
+.f3d .fc-chip.is-on {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--f-ink) 88%, #fff 12%),
+    var(--f-ink));
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.22),
+    0 2px 8px -2px color-mix(in srgb, var(--f-ink) 40%, transparent);
+}
+
+/* form tabs (احترافية/أصلية) — same segmented material */
+.f3d .ff-tabs {
+  background: color-mix(in srgb, var(--f-ink) 5.5%, transparent);
+  border-width: 0.5px;
+  box-shadow: inset 0 1px 2px rgba(22,21,19,0.05);
+}
+.f3d.dark .ff-tabs { background: rgba(255,255,255,0.06); }
+.f3d .ff-tab { transition: color 200ms var(--f-ease), background 280ms var(--f-spring), box-shadow 280ms var(--f-ease), transform 320ms var(--f-spring); }
+.f3d .ff-tab:active { transform: scale(0.95); }
+.f3d .ff-tab.is-on {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.7),
+    0 1px 2.5px rgba(22,21,19,0.12),
+    0 3px 8px -2px rgba(22,21,19,0.10);
+}
+.f3d.dark .ff-tab.is-on {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255,255,255,0.10),
+    0 1px 3px rgba(0,0,0,0.4);
+}
+
+/* =============================================================
+   6) REDUCED MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .f3d .f-btn--primary::before,
+  .f3d .f-deck__cta::before,
+  .f3d .f-spot__cta::before { display: none; }
+}

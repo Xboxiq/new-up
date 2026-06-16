@@ -1,0 +1,241 @@
+/* =============================================================
+   FINAL POLISH — deep Apple micro-interactions, everywhere.
+   Requires the VARIABLE Material Symbols font (FILL axis range).
+   ============================================================= */
+
+/* ---------- global feel ---------- */
+.f3d * { -webkit-tap-highlight-color: transparent; }
+.f3d ::selection {
+  background: color-mix(in srgb, var(--f-navy) 22%, transparent);
+}
+.f3d.dark ::selection {
+  background: color-mix(in srgb, var(--f-cs) 35%, transparent);
+}
+
+/* macOS overlay scrollbar */
+.f3d ::-webkit-scrollbar { width: 9px; height: 9px; }
+.f3d ::-webkit-scrollbar-track { background: transparent; }
+.f3d ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--f-ink) 22%, transparent);
+  border-radius: 999px;
+  border: 2.5px solid transparent;
+  background-clip: padding-box;
+}
+.f3d ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--f-ink) 38%, transparent);
+  background-clip: padding-box;
+  border-width: 2px;
+}
+
+/* =============================================================
+   ICONS — variable font micro-animation (outline → filled)
+   ============================================================= */
+.f3d .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  transition:
+    font-variation-settings 360ms var(--f-ease),
+    transform 420ms var(--f-spring);
+}
+
+/* any interactive container fills its icon on hover */
+.f3d .f-btn:hover .material-symbols-outlined,
+.f3d .f-iconbtn:hover .material-symbols-outlined,
+.f3d .f-tab.is-on .material-symbols-outlined,
+.f3d .ff-tab.is-on .material-symbols-outlined,
+.f3d .f-deck__panel.is-open .f-deck__ico .material-symbols-outlined,
+.f3d .fs-card:hover .fs-card__ico .material-symbols-outlined,
+.f3d .f-exp:hover .f-exp__ico .material-symbols-outlined,
+.f3d .fs-rail__btn.is-on .material-symbols-outlined,
+.f3d .fg-card.is-open .fg-card__ico .material-symbols-outlined,
+.f3d .f-stat:hover .f-stat__ico .material-symbols-outlined,
+.f3d .f-spot__ico .material-symbols-outlined,
+.f3d .fc-stage.is-now .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+/* icon pop on the containers themselves */
+.f3d .fs-card:hover .fs-card__ico { transform: scale(1.08) rotate(-3deg); }
+.f3d .f-exp:hover .f-exp__ico { transform: scale(1.1) rotate(3deg); }
+.f3d .fs-rail__btn:hover .fs-rail__ico { transform: scale(1.08); }
+.f3d .fs-rail__ico, .f3d .fs-card__ico, .f3d .f-exp__ico,
+.f3d .f-stat__ico, .f3d .fg-card__ico {
+  transition: transform 420ms var(--f-spring), background 200ms var(--f-ease);
+}
+
+/* arrows nudge toward their direction (RTL aware) */
+.f3d .fp-back .material-symbols-outlined,
+.f3d .f-deck__cta .material-symbols-outlined,
+.f3d .f-spot__cta .material-symbols-outlined {
+  transition: transform 380ms var(--f-spring);
+}
+.f3d .fp-back:hover .material-symbols-outlined { transform: translateX(3px); }
+.f3d .f-deck__cta:hover .material-symbols-outlined,
+.f3d .f-spot__cta:hover .material-symbols-outlined { transform: translateX(-3px); }
+
+/* dark-mode toggle: playful spin on press */
+.f3d .f-iconbtn:active .material-symbols-outlined { transform: rotate(-35deg) scale(0.9); }
+
+/* =============================================================
+   CARDS — soft press + lift physics
+   ============================================================= */
+.f3d .fs-card:active,
+.f3d .f-exp:active,
+.f3d .fg-card__head:active,
+.f3d .fc-row__head:active { transform: scale(0.985); }
+.f3d .fs-card, .f3d .f-exp { transition-property: transform, border-color, box-shadow, background; }
+
+/* stat cards: hover lift with depth */
+.f3d .f-stat {
+  transition: transform 420ms var(--f-spring), box-shadow 240ms var(--f-ease), border-color 240ms var(--f-ease);
+}
+.f3d .f-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px -16px rgba(22,21,19,0.18);
+}
+.f3d.dark .f-stat:hover { box-shadow: 0 14px 30px -14px rgba(0,0,0,0.6); }
+
+/* =============================================================
+   INPUTS — iOS focus ring that grows
+   ============================================================= */
+.f3d .ff-field input, .f3d .ff-field select, .f3d .ff-field textarea {
+  border-width: 0.5px;
+  box-shadow: inset 0 0.5px 1.5px rgba(22,21,19,0.05), 0 0 0 0 transparent;
+  transition: border-color 200ms var(--f-ease), box-shadow 320ms var(--f-spring), transform 320ms var(--f-spring);
+}
+.f3d .ff-field input:focus, .f3d .ff-field select:focus, .f3d .ff-field textarea:focus {
+  border-color: color-mix(in srgb, var(--f-navy) 55%, transparent);
+  box-shadow:
+    inset 0 0.5px 1.5px rgba(22,21,19,0.04),
+    0 0 0 3.5px color-mix(in srgb, var(--f-navy) 13%, transparent);
+}
+.f3d.dark .ff-field input:focus, .f3d.dark .ff-field select:focus, .f3d.dark .ff-field textarea:focus {
+  border-color: color-mix(in srgb, var(--f-cs) 60%, transparent);
+  box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--f-cs) 18%, transparent);
+}
+
+/* search field grows slightly on focus */
+.f3d .fs-search { transition: border-color 200ms var(--f-ease), box-shadow 320ms var(--f-spring), transform 320ms var(--f-spring); }
+.f3d .fs-search:focus-within {
+  transform: scale(1.008);
+  box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--f-navy) 10%, transparent), var(--f-shadow-sm);
+}
+
+/* =============================================================
+   CHECKBOXES — springy pop with overshoot
+   ============================================================= */
+@keyframes fpol-check-pop {
+  0%   { transform: scale(0.6); }
+  55%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.f3d .ff-check.is-on .ff-check__box {
+  animation: fpol-check-pop 380ms var(--f-spring);
+}
+.f3d .ff-check.is-on .ff-check__box .material-symbols-outlined {
+  animation: fpol-check-draw 300ms var(--f-ease) both;
+}
+@keyframes fpol-check-draw {
+  from { opacity: 0; transform: scale(0.4) rotate(-20deg); }
+  to   { opacity: 1; transform: none; }
+}
+.f3d .ff-check { transition: border-color 240ms var(--f-ease), background 240ms var(--f-ease), transform 280ms var(--f-spring); }
+.f3d .ff-check:active { transform: scale(0.985); }
+
+/* segmented options pop on select */
+@keyframes fpol-seg-pop {
+  0% { transform: scale(0.94); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.f3d .ff-seg__opt.is-on { animation: fpol-seg-pop 320ms var(--f-ease); }
+
+/* =============================================================
+   FEE PANEL — total breathes when it changes
+   ============================================================= */
+.f3d .ff-feepanel__total .val {
+  transition: color 200ms var(--f-ease);
+  font-variant-numeric: tabular-nums;
+}
+
+/* autosave dot: calm breathing even when idle */
+.f3d .ff-autosave__dot {
+  animation: fpol-breathe 3.4s ease-in-out infinite;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--f-ok) 40%, transparent);
+}
+@keyframes fpol-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--f-ok) 35%, transparent); }
+  50%      { box-shadow: 0 0 0 4px transparent; }
+}
+
+/* =============================================================
+   DECK — dots get spring, watermark drifts on open
+   ============================================================= */
+.f3d .f-deck__dot { transition: width 380ms var(--f-spring), background 240ms var(--f-ease); }
+.f3d .f-deck__panel.is-open .f-deck__wm {
+  animation: fpol-wm-drift 8s ease-in-out infinite alternate;
+}
+@keyframes fpol-wm-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-10px); }
+}
+.f3d .f-deck__chip { transition: transform 280ms var(--f-spring), background 200ms var(--f-ease); }
+.f3d .f-deck__chip:hover { transform: translateY(-1.5px); }
+
+/* =============================================================
+   TICKER — content crossfade (pairs with existing JS swap)
+   ============================================================= */
+.f3d .f-ticker__body { transition: opacity 300ms var(--f-ease), transform 300ms var(--f-ease); }
+
+/* =============================================================
+   CASES — row hover slides the lead dot, timeline springs in
+   ============================================================= */
+.f3d .fc-row__lead { transition: transform 380ms var(--f-spring), box-shadow 240ms var(--f-ease); }
+.f3d .fc-row__head:hover .fc-row__lead {
+  transform: scale(1.5);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lead-c) 14%, transparent);
+}
+.f3d .fc-row.is-open .fc-stage {
+  animation: fpol-stage-in 460ms var(--f-spring) both;
+  animation-delay: calc(var(--si, 0) * 50ms);
+}
+@keyframes fpol-stage-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.92); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* =============================================================
+   GUIDE — accordion springs, icon breathes when open
+   ============================================================= */
+.f3d .fg-card__body { transition: max-height 520ms var(--f-spring); }
+.f3d .fg-card.is-open .fg-card__ico { transform: scale(1.06) rotate(-3deg); }
+
+/* =============================================================
+   PRICING — row hover highlights the bar
+   ============================================================= */
+.f3d .fr-row { transition: background 200ms var(--f-ease); }
+.f3d .fr-row:hover { background: var(--f-surface-2); }
+.f3d .fr-row:hover .fr-row__bar span { filter: brightness(1.12) saturate(1.15); }
+.f3d .fr-row__bar span { transition: filter 240ms var(--f-ease); }
+
+/* =============================================================
+   PAPER — subtle hover float (like lifting a sheet)
+   ============================================================= */
+.f3d .ff-paper {
+  transition: transform 600ms var(--f-spring), box-shadow 400ms var(--f-ease);
+}
+.f3d .ff-paper:hover {
+  transform: translateY(-3px) perspective(1400px) rotateX(0.6deg);
+  box-shadow: 0 28px 60px -24px rgba(22,21,19,0.32);
+}
+
+/* =============================================================
+   REDUCED MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .f3d .material-symbols-outlined { transition: none; }
+  .f3d .ff-autosave__dot,
+  .f3d .f-deck__panel.is-open .f-deck__wm { animation: none; }
+  .f3d .fc-row.is-open .fc-stage { animation: none; opacity: 1; }
+  .f3d .ff-check.is-on .ff-check__box,
+  .f3d .ff-seg__opt.is-on { animation: none; }
+}

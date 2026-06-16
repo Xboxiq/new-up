@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(file '/c/Users/lenovo/.claude/projects/C--Users-lenovo-Desktop-file/71a11353-1b89-4dc1-885a-fd3578615f2e/tool-results/webfetch-1781606544203-2oczx7.bin')",
+      "Bash(mkdir -p '/c/Users/lenovo/Desktop/file/design_unpack')",
+      "Bash(cp '/c/Users/lenovo/.claude/projects/C--Users-lenovo-Desktop-file/71a11353-1b89-4dc1-885a-fd3578615f2e/tool-results/webfetch-1781606544203-2oczx7.bin' '/c/Users/lenovo/Desktop/file/design_unpack/archive.tar.gz')",
+      "Bash(tar -tzf archive.tar.gz)",
+      "Bash(tar -xzf archive.tar.gz)",
+      "Read(//c/c/Users/lenovo/Desktop/file/design_unpack/untitled/**)"
+    ]
+  }
+}

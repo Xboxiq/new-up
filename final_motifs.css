@@ -1,0 +1,343 @@
+/* =============================================================
+   MOTIFS — لمسات منقولة حرفياً من مختبر الأزرار، كل واحدة في مكانها:
+   • G2  التبويب الزجاجي  → تبويبا الفورمة (احترافية/أصلية)
+   • INFUSED الزجاج المنصهر → بلاطات أيقونات الخدمات (بدل المربّع+الظل)
+   • MORPH القطرة المتحولة  → زر التحوّل الليلي/النهاري في الشريط العلوي
+   ملف معزول — لا يلمس أي سلوك آخر.
+   ============================================================= */
+
+/* ---------- G2 — التبويب الزجاجي · SEGMENTED ----------
+   فقاعة زجاجية على التبويب النشط نفسه (تتبعه أينما تحرّك). */
+.ff-tabs {
+  position: relative;
+  isolation: isolate;
+  background: color-mix(in srgb, var(--f-ink) 6%, var(--f-surface-2)) !important;
+}
+.ff-tab {
+  position: relative;
+  flex: 1;
+  justify-content: center;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: color 280ms var(--f-ease) !important;
+}
+.ff-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--f-surface);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.75),
+    inset 0 0 0 0.5px color-mix(in srgb, var(--f-ink) 10%, transparent),
+    0 4px 12px -7px rgba(20,30,40,0.4);
+  opacity: 0;
+  transform: scale(0.86);
+  transition: opacity 380ms var(--f-spring), transform 440ms var(--f-spring);
+  pointer-events: none;
+  z-index: -1;
+}
+.ff-tab.is-on::before { opacity: 1; transform: scale(1); }
+.ff-tab.is-on { color: var(--f-ink) !important; font-weight: 700; }
+.ff-tab > * { position: relative; z-index: 1; }
+
+/* ---------- INFUSED — الزجاج المنصهر · أيقونات الخدمات ----------
+   عند المرور على البطاقة، سائل بلون القسم يصعد بسطح مقوّس كموجة حتى يملأ العدسة. */
+.fs-card__ico {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.fs-card__ico::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--c-c) 78%, #fff 8%),
+    color-mix(in srgb, var(--c-c) 92%, #000));
+  transform: translateY(101%);
+  border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+  transition: transform 540ms var(--f-spring), border-radius 540ms var(--f-ease);
+  pointer-events: none;
+}
+.fs-card:hover .fs-card__ico::before {
+  transform: translateY(0);
+  border-radius: 0;
+}
+.fs-card__ico .material-symbols-outlined {
+  position: relative;
+  z-index: 1;
+  transition: color 380ms var(--f-ease);
+}
+.fs-card:hover .fs-card__ico .material-symbols-outlined { color: #fff; }
+
+/* ---------- MORPH — القطرة المتحولة · زر التحوّل الليلي/النهاري ----------
+   دائرة زجاجية صامتة؛ عند المرور تتمدد كقطرة وتكشف تسميتها. */
+.f-morph {
+  position: relative;
+  overflow: hidden;
+  gap: 0;
+  border-radius: 999px !important;
+  width: 32px;
+  padding: 0;
+  white-space: nowrap;
+  transition: width 380ms var(--f-spring), padding 380ms var(--f-spring), background var(--f-dur) var(--f-ease);
+}
+.f-morph .material-symbols-outlined { flex: none; }
+.f-morph__lbl {
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  font-family: var(--f-arab);
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: max-width 380ms var(--f-spring), opacity 260ms var(--f-ease), margin-inline-start 380ms var(--f-spring);
+}
+.f-morph:hover {
+  width: auto;
+  padding-inline: 6px 11px;
+  background: var(--f-surface);
+}
+.f-morph:hover .f-morph__lbl {
+  max-width: 52px;
+  opacity: 1;
+  margin-inline-start: 5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ff-tab::before,
+  .fs-card__ico::before,
+  .f-morph,
+  .f-morph__lbl,
+  .f-search,
+  .f-search__input,
+  .f-search .f-kbd,
+  .undo-win,
+  .undo-win__bar { transition: none !important; animation: none !important; }
+}
+
+/* ---------- MORPH — البحث · القطرة المتحولة ----------
+   .f-search دائرة صامتة (32px) تتمدّد للحقل الكامل عند المرور أو التركيز،
+   كاشفةً الـpaceholder و⌘K. روح iOS: لا ضجيج دائم. */
+.f-search {
+  width: 36px !important;
+  min-width: 36px;
+  padding-inline: 8px !important;
+  border-radius: 999px !important;
+  overflow: hidden;
+  flex: 0 0 36px !important;
+  white-space: nowrap;
+  justify-content: center;
+  transition: flex-basis 460ms var(--f-spring), width 460ms var(--f-spring),
+              min-width 460ms var(--f-spring), padding 460ms var(--f-spring),
+              border-color var(--f-dur) var(--f-ease),
+              background var(--f-dur) var(--f-ease) !important;
+}
+.f-search .material-symbols-outlined { color: var(--f-ink-2) !important; flex: none; }
+.f-search__input {
+  max-width: 0 !important;
+  opacity: 0;
+  overflow: hidden;
+  flex: 1 1 auto !important;
+  text-align: start;
+  transition: max-width 460ms var(--f-spring), opacity 280ms var(--f-ease) 80ms,
+              margin-inline-start 460ms var(--f-spring);
+}
+.f-search .f-kbd {
+  max-width: 0;
+  opacity: 0;
+  padding-inline: 0;
+  overflow: hidden;
+  transition: max-width 380ms var(--f-spring), opacity 220ms var(--f-ease) 120ms,
+              padding-inline 380ms var(--f-spring), margin-inline-start 380ms var(--f-spring);
+}
+.f-search:hover,
+.f-search:focus-within,
+.f-search:focus {
+  width: clamp(280px, 32vw, 420px) !important;
+  min-width: 280px;
+  flex: 1 1 clamp(280px, 32vw, 420px) !important;
+  padding-inline: 14px !important;
+  background: var(--f-surface);
+}
+.f-search:hover .f-search__input,
+.f-search:focus-within .f-search__input,
+.f-search:focus .f-search__input {
+  max-width: 360px !important;
+  opacity: 1;
+  margin-inline-start: 10px;
+}
+.f-search:hover .f-kbd,
+.f-search:focus-within .f-kbd,
+.f-search:focus .f-kbd {
+  max-width: 56px;
+  opacity: 1;
+  padding-inline: 6px;
+  margin-inline-start: 8px;
+}
+
+/* ---------- GLASS × SELF-DRAW — على الستيكر الكبير في ترويسة صفحة الخدمة ----------
+   تحت طبقة الزجاج، خطوط الأيقونة تُرسم نفسها لحظة فتح الصفحة،
+   ثم يعبر اللمعان كمصادقة على اكتمال الرسم. لمسة ساعات فاخرة. */
+.fd-hero__stk {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+.fd-hero__stk::before {
+  /* قبّة زجاج علوية ناعمة */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(80% 60% at 30% 22%,
+    rgba(255,255,255,0.75) 0%,
+    rgba(255,255,255,0.18) 28%,
+    transparent 55%);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+.fd-hero__stk::after {
+  /* شريط لمعان قطري — يمسح بعد اكتمال الرسم (مرة واحدة عند الدخول) */
+  content: "";
+  position: absolute;
+  inset: -10%;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.7) 50%, transparent 62%);
+  pointer-events: none;
+  z-index: 3;
+  transform: translateX(120%);
+  opacity: 0;
+  animation: fd-glass-glare 1100ms var(--f-ease) 1100ms forwards;
+}
+/* رسم تدريجي عبر clip-path — أيقونات الستيكر مساحات مملوءة، لذا نكشفها من الأسفل للأعلى */
+.fd-hero__stk .pin__main {
+  animation: fd-stk-draw 900ms var(--f-spring) 120ms both;
+}
+@keyframes fd-stk-draw {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+@keyframes fd-glass-glare {
+  0%   { opacity: 0; transform: translateX(120%); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-120%); }
+}
+
+/* SELF-DRAW على ستيكرات صفّ الأقسام (hub-stack) — عند المرور على البطاقة، يُكشف الستيكر من الأسفل تدريجياً */
+.hub-stack__stk .pin__main { transition: clip-path 700ms var(--f-spring); }
+.hub-stack:hover .hub-stack__stk .pin__main {
+  animation: hs-draw 720ms var(--f-spring) both;
+}
+@keyframes hs-draw {
+  0%   { clip-path: inset(100% 0 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+/* ---------- K6 — نافذة التراجع · UNDO WINDOW ----------
+   كبسولة سوداء عائمة في الأسفل، ٥ ثوانٍ + شريط نزيف. */
+.undo-win {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 84px;
+  margin: 0 auto;
+  width: max-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px 9px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #0b1220 92%, transparent);
+  color: #f3f5f8;
+  font-family: var(--f-arab);
+  font-size: 0.82rem;
+  font-weight: 600;
+  z-index: 9999;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    0 18px 40px -16px rgba(0,0,0,0.5),
+    0 4px 12px -4px rgba(0,0,0,0.35);
+  overflow: hidden;
+  animation: undo-rise 320ms var(--f-spring);
+}
+.undo-win__icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: color-mix(in srgb, #ef4444 86%, transparent);
+  flex: none;
+}
+.undo-win__icon .material-symbols-outlined { font-size: 14px; color: #fff; }
+.undo-win__msg { white-space: nowrap; }
+.undo-win__count {
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: color-mix(in srgb, #fff 65%, transparent);
+  direction: ltr;
+  min-width: 18px;
+  text-align: center;
+}
+.undo-win__btn {
+  background: rgba(255,255,255,0.08);
+  border: 0;
+  color: #fff;
+  font-family: var(--f-arab);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 200ms var(--f-ease), transform 200ms var(--f-spring);
+}
+.undo-win__btn:hover { background: rgba(255,255,255,0.16); }
+.undo-win__btn:active { transform: scale(0.95); }
+.undo-win__bar {
+  position: absolute;
+  bottom: 0;
+  inset-inline-start: 0;
+  height: 2px;
+  background: color-mix(in srgb, #ef4444 90%, transparent);
+  width: 100%;
+  transform-origin: inset-inline-start;
+  animation: undo-bleed 5000ms linear forwards;
+}
+@keyframes undo-rise {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes undo-bleed {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* صفّ إجراءات داخل تفاصيل الحالة */
+.fc-row__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--f-border);
+}
+.fc-row__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 0.5px solid color-mix(in srgb, var(--f-cs) 26%, var(--f-border-2));
+  background: color-mix(in srgb, var(--f-cs) 8%, var(--f-surface));
+  color: var(--f-cs);
+  font-family: var(--f-arab);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 220ms var(--f-ease), border-color 220ms, transform 220ms var(--f-spring);
+}
+.fc-row__close .material-symbols-outlined { font-size: 16px; }
+.fc-row__close:hover { background: color-mix(in srgb, var(--f-cs) 14%, var(--f-surface)); border-color: color-mix(in srgb, var(--f-cs) 44%, var(--f-border-2)); }
+.fc-row__close:active { transform: scale(0.96); }

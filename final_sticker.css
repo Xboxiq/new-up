@@ -1,0 +1,364 @@
+/* =============================================================
+   FINAL ICON LANGUAGE — two roles, one calm system
+   1) ARC RING — section icons (deck panels, dept stacks, hero,
+      spotlight card): glyph in dept color inside an INCOMPLETE
+      hairline circle. Selecting that place sweeps the ring to a
+      full circle — quiet, official, signature.
+   2) SOFT TILE — service-level icons (wallet passes + quick
+      services + ticker): the original gentle tinted square that
+      worked best. No gloss, no tilt, no gimmicks.
+   ============================================================= */
+
+@property --ring-a {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 72%;
+}
+
+.pin {
+  position: relative;
+  flex: none;
+  width: var(--pin-s, 44px);
+  height: var(--pin-s, 44px);
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  transition: transform 460ms var(--f-spring);
+}
+.pin__glyph {
+  width: 52%;
+  height: 52%;
+  color: var(--pin-c);
+  --stk-edge: var(--f-surface);
+  overflow: visible;
+  transition: transform 460ms var(--f-spring);
+}
+.pin__ghost { display: none; }
+.pin__main { transition: none; filter: none; }
+
+/* ---------- 1. ENERGY RING + GLASS CORE — deck panels + detail hero ---------- */
+/* glass core: frosted disc the glyph sits on */
+.pin.f-deck__stk,
+.pin.fd-hero__stk {
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pin-c) 7%, transparent);
+  -webkit-backdrop-filter: blur(6px) saturate(1.3);
+  backdrop-filter: blur(6px) saturate(1.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: background 360ms var(--f-ease), box-shadow 360ms var(--f-ease), transform 460ms var(--f-spring);
+}
+.f-body.dark .pin.f-deck__stk,
+.f-body.dark .pin.fd-hero__stk {
+  background: color-mix(in srgb, var(--pin-c) 12%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* energy ring */
+.pin.f-deck__stk::before,
+.pin.fd-hero__stk::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  --ring-a: 72%;
+  background: conic-gradient(from 224deg,
+    var(--pin-c) var(--ring-a),
+    color-mix(in srgb, var(--pin-c) 15%, transparent) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.6px), #000 calc(100% - 1.9px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2.6px), #000 calc(100% - 1.9px));
+  transition: --ring-a 760ms var(--f-spring), filter 360ms var(--f-ease);
+  filter: drop-shadow(0 0 2.5px color-mix(in srgb, var(--pin-c) 35%, transparent));
+}
+.f-body.dark .pin.f-deck__stk::before,
+.f-body.dark .pin.fd-hero__stk::before {
+  background: conic-gradient(from 224deg,
+    var(--pin-c) var(--ring-a),
+    color-mix(in srgb, var(--pin-c) 24%, transparent) 0);
+}
+
+/* hover / touch: the ring completes and the energy rises */
+@media (hover: hover) {
+  .f-deck__panel:hover .pin.f-deck__stk::before {
+    --ring-a: 100%;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--pin-c) 60%, transparent));
+  }
+  .f-deck__panel:hover .pin.f-deck__stk {
+    background: color-mix(in srgb, var(--pin-c) 12%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      0 0 18px -4px color-mix(in srgb, var(--pin-c) 38%, transparent);
+  }
+}
+.f-deck__panel:active .pin.f-deck__stk::before { --ring-a: 100%; }
+
+/* seed dot removed — ring + glow carry the state on their own */
+
+/* selected / open: the circle stays complete, core glows */
+.f-deck__panel.is-open .pin.f-deck__stk::before,
+.fd-hero .pin.fd-hero__stk::before {
+  --ring-a: 100%;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--pin-c) 55%, transparent));
+}
+.f-deck__panel.is-open .pin.f-deck__stk,
+.fd-hero .pin.fd-hero__stk {
+  background: color-mix(in srgb, var(--pin-c) 13%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    0 0 22px -5px color-mix(in srgb, var(--pin-c) 45%, transparent);
+}
+
+.f-deck__panel.is-open .pin.f-deck__stk .pin__glyph {
+  transform: scale(1.08);
+}
+
+/* ---------- 2. SOFT TILE — wallet pass + dept stacks ---------- */
+.pin.hub-pass__stk,
+.pin.hub-stack__stk {
+  border-radius: 14px;
+  background: linear-gradient(165deg,
+    color-mix(in srgb, var(--pin-c) 14%, transparent),
+    color-mix(in srgb, var(--pin-c) 7%, transparent));
+  border: 0.5px solid color-mix(in srgb, var(--pin-c) 22%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+  transition: background 320ms var(--f-ease), border-color 320ms var(--f-ease),
+              box-shadow 320ms var(--f-ease), transform 460ms var(--f-spring);
+}
+.f-body.dark .pin.hub-pass__stk,
+.f-body.dark .pin.hub-stack__stk { box-shadow: inset 0 1px 0 rgba(255,255,255,0.07); }
+@supports (corner-shape: squircle) {
+  .pin.hub-pass__stk, .pin.hub-stack__stk { corner-shape: squircle; border-radius: 34%; }
+}
+.pin.hub-pass__stk .pin__glyph,
+.pin.hub-stack__stk .pin__glyph { width: 54%; height: 54%; }
+
+/* ---------- 2b. spotlight icon handled by .f-spot__ico (glass on gradient card) ---------- */
+
+/* dept stack: selecting the bundle FILLS the tile — quiet, definitive */
+.hub-stack.is-on .pin.hub-stack__stk {
+  background: linear-gradient(165deg,
+    color-mix(in srgb, var(--pin-c) 92%, #fff 10%),
+    var(--pin-c));
+  border-color: transparent;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    0 6px 16px -6px color-mix(in srgb, var(--pin-c) 55%, transparent);
+}
+.hub-stack.is-on .pin.hub-stack__stk .pin__glyph {
+  color: #fff;
+  transform: scale(1.06);
+}
+@media (hover: hover) {
+  .hub-stack:hover:not(.is-on) .pin.hub-stack__stk {
+    background: linear-gradient(165deg,
+      color-mix(in srgb, var(--pin-c) 20%, transparent),
+      color-mix(in srgb, var(--pin-c) 10%, transparent));
+  }
+}
+.hub-pass.is-focus .pin.hub-pass__stk {
+  background: linear-gradient(165deg,
+    color-mix(in srgb, var(--pin-c) 22%, transparent),
+    color-mix(in srgb, var(--pin-c) 11%, transparent));
+  border-color: color-mix(in srgb, var(--pin-c) 36%, transparent);
+  transform: scale(1.05);
+}
+
+/* ---------- placements ---------- */
+.hub-stack__card { position: relative; overflow: hidden; }
+.hub-stack__stk { position: static; }
+.hub-stack__top { position: absolute; inset-block-start: 14px; inset-inline-end: 14px; }
+.hub-pass__stk { position: static; }
+.f-deck__stk { margin-block-start: -2px; }
+.fd-hero__stk, .f-spot__stk { flex: none; }
+.f-deck__ico:has(.pin) { width: auto; height: auto; }
+
+/* =============================================================
+   RESTORE the original soft-tile language for material icons
+   (overrides the old liberation layer, any load order)
+   ============================================================= */
+body.f-body .f-exp__ico {
+  background: color-mix(in srgb, var(--e-c) 11%, transparent) !important;
+  border: 0.5px solid color-mix(in srgb, var(--e-c) 20%, transparent) !important;
+  border-radius: 11px !important;
+  box-shadow: none !important;
+}
+body.f-body .f-ticker__ico {
+  background: color-mix(in srgb, var(--t-c) 11%, transparent) !important;
+  border: 0.5px solid color-mix(in srgb, var(--t-c) 22%, transparent) !important;
+  border-radius: 13px !important;
+  box-shadow: none !important;
+}
+body.f-body .f-exp__ico .material-symbols-outlined {
+  color: var(--e-c) !important;
+  font-size: 20px !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+body.f-body .f-ticker__ico .material-symbols-outlined {
+  color: var(--t-c) !important;
+  font-size: 22px !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+body.f-body .fs-card__ico {
+  background: color-mix(in srgb, var(--c-c) 10%, transparent) !important;
+  border: 0.5px solid color-mix(in srgb, var(--c-c) 20%, transparent) !important;
+  border-radius: 11px !important;
+}
+body.f-body .fg-card__ico {
+  background: color-mix(in srgb, var(--g-c, var(--f-navy)) 10%, transparent) !important;
+  border: 0.5px solid color-mix(in srgb, var(--g-c, var(--f-navy)) 20%, transparent) !important;
+  border-radius: 11px !important;
+}
+body.f-body .sp-row__ico {
+  background: color-mix(in srgb, var(--s-c, var(--f-navy)) 11%, transparent) !important;
+  border: 0.5px solid color-mix(in srgb, var(--s-c, var(--f-navy)) 20%, transparent) !important;
+  border-radius: 10px !important;
+}
+body.f-body .fs-rail__ico {
+  background: color-mix(in srgb, var(--rb-c, var(--f-navy)) 10%, transparent) !important;
+  border-radius: 8px !important;
+}
+body.f-body .fs-card__ico .material-symbols-outlined { font-size: 20px !important; text-shadow: none !important; }
+body.f-body .fg-card__ico .material-symbols-outlined { font-size: 19px !important; text-shadow: none !important; }
+body.f-body .sp-row__ico .material-symbols-outlined { font-size: 18px !important; text-shadow: none !important; }
+body.f-body .fs-rail__ico .material-symbols-outlined { font-size: 15px !important; text-shadow: none !important; }
+body.f-body .f-h2__icon .material-symbols-outlined { text-shadow: none !important; }
+body.f-body .adv-row__ico .material-symbols-outlined { text-shadow: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pin, .pin__glyph { transition: none; }
+  .pin.f-deck__stk::before, .pin.fd-hero__stk::before { transition: none; }
+}
+
+/* =============================================================
+   SIG BADGE — نقل حرفي لنموذج «التوقيع» (R1) من بنك الاعتماد
+   حلقة تُرسم عند المرور/الفتح + نواة زجاجية + رسم مميز لكل قسم.
+   قابل للتحجيم عبر --sig-s. لا توهج، لا دوران، لا وميض.
+   ============================================================= */
+.sig {
+  position: relative;
+  width: var(--sig-s, 90px);
+  height: var(--sig-s, 90px);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.sig__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.sig__ring circle.t {
+  fill: none;
+  stroke: color-mix(in srgb, var(--c-c) 18%, transparent);
+  stroke-width: 1.25;
+}
+.sig__ring circle.p {
+  fill: none;
+  stroke: var(--c-c);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 70;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 800ms var(--f-ease);
+}
+.sig:hover .sig__ring circle.p,
+.f-deck__panel.is-open .sig .sig__ring circle.p {
+  stroke-dashoffset: 0;
+}
+.sig__core {
+  width: 71%;
+  height: 71%;
+  border-radius: 50%;
+  position: relative;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,0.85), rgba(255,255,255,0.2) 38%, transparent 60%),
+    color-mix(in srgb, var(--c-c) 7%, var(--f-surface));
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.85),
+    inset 0 -7px 11px -6px color-mix(in srgb, var(--c-c) 35%, transparent),
+    inset 0 0 0 0.5px color-mix(in srgb, var(--c-c) 30%, transparent);
+  display: grid;
+  place-items: center;
+  color: var(--c-c);
+  transition: transform 460ms var(--f-spring);
+}
+.f-body.dark .sig__core {
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,0.22), rgba(255,255,255,0.05) 38%, transparent 60%),
+    color-mix(in srgb, var(--c-c) 16%, var(--f-surface));
+}
+.sig:hover .sig__core,
+.f-deck__panel.is-open .sig .sig__core {
+  transform: scale(1.04);
+}
+.sig__core svg {
+  width: 58%;
+  height: 58%;
+  overflow: visible;
+}
+.sig__core svg path,
+.sig__core svg line,
+.sig__core svg circle.s,
+.sig__core svg rect.s {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sig__core svg circle.f { fill: currentColor; stroke: none; }
+
+/* CS — التوقيع يُرسم خطّاً واحداً متّصلاً */
+.sig--cs .sig-line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1100ms var(--f-ease);
+}
+.sig--cs:hover .sig-line,
+.f-deck__panel.is-open .sig--cs .sig-line { stroke-dashoffset: 0; }
+
+/* CT — المفك يلتفّ */
+.sig--ct .tool {
+  transform-origin: 18px 18px;
+  transition: transform 700ms var(--f-spring);
+}
+.sig--ct:hover .tool,
+.f-deck__panel.is-open .sig--ct .tool { transform: rotate(-25deg); }
+
+/* CB — كفّة الميزان تميل */
+.sig--cb .scale-bar {
+  transform-origin: 18px 14px;
+  transition: transform 720ms var(--f-spring);
+}
+.sig--cb:hover .scale-bar,
+.f-deck__panel.is-open .sig--cb .scale-bar { transform: rotate(-7deg); }
+
+/* CA — الجرس يرنّ */
+.sig--ca .bell { transform-origin: 18px 8px; }
+.sig--ca:hover .bell,
+.f-deck__panel.is-open .sig--ca .bell { animation: sig-bell 750ms var(--f-ease); }
+@keyframes sig-bell {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(-13deg); }
+  50% { transform: rotate(11deg); }
+  75% { transform: rotate(-6deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sig__ring circle.p,
+  .sig__core,
+  .sig--cs .sig-line,
+  .sig--ct .tool,
+  .sig--cb .scale-bar { transition: none; }
+  .sig--ca:hover .bell,
+  .f-deck__panel.is-open .sig--ca .bell { animation: none; }
+}
+
+/* رأس بطاقة القسم — مواءمة الشارة */
+.f-deck__head .f-deck__sig { margin-block-start: -2px; }
