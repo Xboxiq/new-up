@@ -1,0 +1,318 @@
+/* =============================================================
+   FINAL UI — primitives (Sprint 1)
+   Toast · Skeleton · EmptyState · ConfirmDialog · Field validation
+   Tokens borrowed from final.css (--f-*)
+   ============================================================= */
+
+/* ---------- TOAST STACK ---------- */
+.fui-toast-stack {
+  position: fixed;
+  inset-block-end: 24px;
+  inset-inline-end: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: min(420px, calc(100vw - 32px));
+}
+.fui-toast {
+  pointer-events: auto;
+  position: relative;
+  display: grid;
+  grid-template-columns: 4px 26px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 12px 10px;
+  background: var(--f-surface);
+  border: 1px solid var(--f-border);
+  border-radius: var(--f-r-md);
+  box-shadow: var(--f-shadow-md);
+  font-family: var(--f-arab);
+  color: var(--f-ink);
+  overflow: hidden;
+  transform: translateY(8px);
+  opacity: 0;
+  animation: fui-toast-in .28s var(--f-spring) forwards;
+}
+@keyframes fui-toast-in {
+  to { transform: translateY(0); opacity: 1; }
+}
+.fui-toast__rail {
+  width: 4px; height: 100%;
+  border-radius: 3px;
+  background: var(--f-ink-3);
+}
+.fui-toast--success .fui-toast__rail { background: var(--f-ok); }
+.fui-toast--error   .fui-toast__rail { background: var(--f-err); }
+.fui-toast--warn    .fui-toast__rail { background: var(--f-warn); }
+.fui-toast--info    .fui-toast__rail { background: var(--f-navy); }
+
+.fui-toast__ico {
+  display: inline-grid; place-items: center;
+  width: 26px; height: 26px; border-radius: 999px;
+  background: color-mix(in srgb, var(--f-surface-2) 80%, transparent);
+  color: var(--f-ink-2);
+}
+.fui-toast--success .fui-toast__ico { color: var(--f-ok); background: color-mix(in srgb, var(--f-ok) 14%, transparent); }
+.fui-toast--error   .fui-toast__ico { color: var(--f-err); background: color-mix(in srgb, var(--f-err) 14%, transparent); }
+.fui-toast--warn    .fui-toast__ico { color: var(--f-warn); background: color-mix(in srgb, var(--f-warn) 14%, transparent); }
+.fui-toast--info    .fui-toast__ico { color: var(--f-navy); background: color-mix(in srgb, var(--f-navy) 12%, transparent); }
+.fui-toast__ico .material-symbols-outlined { font-size: 18px; }
+
+.fui-toast__title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+.fui-toast__text {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--f-ink-2);
+  margin-top: 2px;
+}
+.fui-toast__action {
+  border: 0;
+  background: transparent;
+  font-family: var(--f-arab);
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--f-navy);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.fui-toast__action:hover { background: var(--f-surface-2); }
+.fui-toast__close {
+  border: 0;
+  background: transparent;
+  color: var(--f-ink-3);
+  cursor: pointer;
+  display: inline-grid; place-items: center;
+  width: 24px; height: 24px;
+  border-radius: 6px;
+}
+.fui-toast__close:hover { background: var(--f-surface-2); color: var(--f-ink); }
+.fui-toast__close .material-symbols-outlined { font-size: 16px; }
+
+/* ---------- SKELETON ---------- */
+.fui-skel {
+  display: inline-block;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--f-surface-3) 60%, transparent) 0%,
+    color-mix(in srgb, var(--f-surface-2) 90%, transparent) 50%,
+    color-mix(in srgb, var(--f-surface-3) 60%, transparent) 100%);
+  background-size: 200% 100%;
+  animation: fui-skel-shimmer 1.4s var(--f-ease) infinite;
+}
+@keyframes fui-skel-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.fui-skel-card {
+  padding: 18px;
+  border-radius: var(--f-r-md);
+  background: var(--f-surface);
+  border: 1px solid var(--f-border);
+}
+.fui-skel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--f-border);
+}
+.fui-skel-row:last-child { border-bottom: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fui-skel { animation: none; }
+}
+
+/* ---------- EMPTY STATE ---------- */
+.fui-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 24px;
+  text-align: center;
+}
+.fui-empty__art {
+  position: relative;
+  width: 88px; height: 88px;
+  display: inline-grid; place-items: center;
+  margin-bottom: 6px;
+}
+.fui-empty__halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    color-mix(in srgb, var(--f-gold) 18%, transparent) 0%,
+    transparent 65%);
+}
+.fui-empty__ico {
+  position: relative;
+  display: inline-grid; place-items: center;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--f-surface);
+  border: 1px solid var(--f-border-2);
+  color: var(--f-ink-3);
+  box-shadow: var(--f-shadow-sm);
+}
+.fui-empty__ico .material-symbols-outlined { font-size: 30px; }
+.fui-empty__title {
+  margin: 4px 0 0;
+  font-family: var(--f-disp);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--f-ink);
+}
+.fui-empty__body {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  color: var(--f-ink-3);
+  max-width: 36ch;
+  line-height: 1.5;
+}
+
+/* ---------- CONFIRM / MODAL ---------- */
+.fui-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.fui-modal__veil {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--f-ink) 38%, transparent);
+  backdrop-filter: blur(2px);
+  animation: fui-veil-in .2s ease forwards;
+}
+@keyframes fui-veil-in { from { opacity: 0; } to { opacity: 1; } }
+
+.fui-modal__sheet {
+  position: relative;
+  width: min(420px, calc(100vw - 32px));
+  background: var(--f-surface);
+  border: 1px solid var(--f-border);
+  border-radius: var(--f-r-lg);
+  box-shadow: var(--f-shadow-md), 0 1px 0 rgba(255,255,255,0.7) inset;
+  padding: 22px;
+  font-family: var(--f-arab);
+  transform: translateY(10px) scale(.98);
+  opacity: 0;
+  animation: fui-sheet-in .28s var(--f-spring) forwards;
+}
+@keyframes fui-sheet-in {
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.fui-modal__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.fui-modal__ico {
+  display: inline-grid; place-items: center;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--f-navy) 10%, transparent);
+  color: var(--f-navy);
+}
+.fui-modal__sheet.is-danger .fui-modal__ico {
+  background: color-mix(in srgb, var(--f-err) 12%, transparent);
+  color: var(--f-err);
+}
+.fui-modal__title {
+  margin: 0;
+  font-family: var(--f-disp);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--f-ink);
+}
+.fui-modal__desc {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--f-ink-2);
+  line-height: 1.55;
+}
+.fui-modal__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+.fui-btn-danger {
+  background: var(--f-err);
+  color: #fff;
+  border-color: var(--f-err);
+}
+.fui-btn-danger:hover { background: color-mix(in srgb, var(--f-err) 88%, black); }
+
+/* ---------- FIELD VALIDATION ---------- */
+.fui-field-err {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 0.74rem;
+  color: var(--f-err);
+  line-height: 1.2;
+}
+.fui-field-err .material-symbols-outlined { font-size: 14px; }
+.fui-field-help {
+  margin-top: 4px;
+  font-size: 0.74rem;
+  color: var(--f-ink-3);
+}
+
+/* invalid input ring */
+.ff-field.is-invalid input,
+.ff-field.is-invalid select,
+.ff-field.is-invalid textarea {
+  border-color: var(--f-err) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--f-err) 14%, transparent) !important;
+}
+
+/* validation summary banner */
+.fui-valsum {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-radius: var(--f-r);
+  background: color-mix(in srgb, var(--f-err) 7%, var(--f-surface));
+  border: 1px solid color-mix(in srgb, var(--f-err) 30%, var(--f-border));
+  font-family: var(--f-arab);
+  color: var(--f-ink);
+}
+.fui-valsum__head {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86rem;
+  color: var(--f-err);
+}
+.fui-valsum__head .material-symbols-outlined { font-size: 18px; }
+.fui-valsum ul {
+  margin: 6px 0 0;
+  padding-inline-start: 22px;
+  font-size: 0.8rem;
+  color: var(--f-ink-2);
+  line-height: 1.6;
+}
+.fui-valsum__more { color: var(--f-ink-3); }
+
+/* ---------- DARK MODE ---------- */
+.f-body.dark .fui-toast,
+.f-body.dark .fui-modal__sheet,
+.f-body.dark .fui-skel-card {
+  background: color-mix(in srgb, var(--f-surface) 85%, #000);
+  border-color: var(--f-border-2);
+}
+.f-body.dark .fui-empty__ico {
+  background: color-mix(in srgb, var(--f-surface) 70%, #000);
+}

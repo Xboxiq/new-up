@@ -30,50 +30,56 @@ function useCountUp(target) {
 // =============================================================
 // Generic field
 // =============================================================
-function FF_Field({ f, value, onChange }) {
-  const cls = `ff-field${f.full ? ' ff-field--full' : ''}${f.mono ? ' ff-field--mono' : ''}`;
+function FF_Field({ f, value, onChange, error }) {
+  const cls = `ff-field${f.full ? ' ff-field--full' : ''}${f.mono ? ' ff-field--mono' : ''}${error ? ' is-invalid' : ''}`;
+  const Err = window.FieldError;
   if (f.type === 'textarea') {
     return (
-      <div className={cls}>
+      <div className={cls} data-fk={f.k}>
         <label>{f.l}</label>
         <textarea value={value || ''} onChange={e => onChange(e.target.value)}
                   rows={3} placeholder={f.ph || ''} />
+        <Err msg={error} />
       </div>
     );
   }
   if (f.type === 'select') {
     return (
-      <div className={cls}>
+      <div className={cls} data-fk={f.k}>
         <label>{f.l}</label>
         <select value={value || ''} onChange={e => onChange(e.target.value)}>
           <option value="">— اختر —</option>
           {f.options.map(o => <option key={o} value={o}>{o}</option>)}
         </select>
+        <Err msg={error} />
       </div>
     );
   }
   if (f.type === 'date') {
     return (
-      <div className={cls}>
+      <div className={cls} data-fk={f.k}>
         <label>{f.l}</label>
         <input type="date" value={value || ''} onChange={e => onChange(e.target.value)} />
+        <Err msg={error} />
       </div>
     );
   }
   if (f.type === 'number') {
     return (
-      <div className={cls}>
+      <div className={cls} data-fk={f.k}>
         <label>{f.l}{f.unit && <span className="ff-field__unit"> ({f.unit})</span>}</label>
         <input type="number" value={value || ''} onChange={e => onChange(e.target.value)}
                placeholder={f.ph || ''} max={f.max} dir="ltr" style={{ textAlign:'start' }} />
+        <Err msg={error} />
       </div>
     );
   }
   return (
-    <div className={cls}>
+    <div className={cls} data-fk={f.k}>
       <label>{f.l}</label>
       <input value={value || ''} onChange={e => onChange(e.target.value)}
              placeholder={f.ph || ''} dir={f.mono ? 'ltr' : 'auto'} style={f.mono ? { textAlign:'start' } : null} />
+      <Err msg={error} />
     </div>
   );
 }
@@ -81,13 +87,14 @@ function FF_Field({ f, value, onChange }) {
 // =============================================================
 // Section renderers
 // =============================================================
-function FF_Rows({ rows, form, set }) {
+function FF_Rows({ rows, form, set, errors }) {
   return (
     <>
       {rows.map((row, ri) => (
         <div key={ri} className="ff-row" style={{ '--cols': row.length }}>
           {row.map(f => (
-            <FF_Field key={f.k} f={f} value={form[f.k]} onChange={(v) => set(f.k, v)} />
+            <FF_Field key={f.k} f={f} value={form[f.k]} onChange={(v) => set(f.k, v)}
+                      error={errors && errors[f.k]} />
           ))}
         </div>
       ))}
@@ -275,10 +282,14 @@ function FormPage({ nav, code }) {
   const sec = window.SECTION_MAP[svc.section];
   const schema = window.getFormSchema(svc.code);
   const storageKey = 'tq-form-' + svc.code;
+  const toast = window.useToast ? window.useToast() : null;
 
   const [tab, setTab] = useState('pro');
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [showErrors, setShowErrors] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const initial = () => ({ docs: {}, cls:'منزلي', phase:'أحادي الطور' });
   const [form, setForm] = useState(() => {
@@ -296,7 +307,62 @@ function FormPage({ nav, code }) {
     return () => clearTimeout(id);
   }, [form, storageKey]);
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k, v) => {
+    setForm(f => ({ ...f, [k]: v }));
+    if (errors[k]) setErrors(es => { const n = { ...es }; delete n[k]; return n; });
+  };
+
+  // ---- validation: required = first text/select/number field of each rowed section ----
+  const buildRules = () => {
+    const rules = {};
+    (schema.sections || []).forEach(sx => {
+      (sx.rows || []).forEach(row => {
+        row.forEach(f => {
+          if (f.required || f.k === 'name' || f.k === 'subId' || f.k === 'phone') {
+            const list = [window.Validate.required];
+            if (f.k === 'phone') list.push(window.Validate.phoneIQ);
+            if (f.type === 'number') list.push(window.Validate.digits);
+            rules[f.k] = list;
+          }
+        });
+      });
+    });
+    if (schema.declaration) rules.declAgreed = [(v) => v ? '' : 'يلزم الموافقة على الإقرار'];
+    return rules;
+  };
+
+  const submit = () => {
+    const errs = window.validateForm(form, buildRules());
+    setErrors(errs);
+    setShowErrors(true);
+    if (Object.keys(errs).length) {
+      toast && toast.push({
+        kind: 'error',
+        title: 'لا يمكن إرسال الطلب',
+        body: `${Object.keys(errs).length} حقل بحاجة مراجعة قبل الإرسال.`,
+      });
+      const firstKey = Object.keys(errs)[0];
+      setTimeout(() => {
+        const el = document.querySelector(`[data-fk="${firstKey}"]`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
+      return;
+    }
+    toast && toast.push({
+      kind: 'success',
+      title: 'تم تجهيز الطلب',
+      body: `${svc.code} — ${svc.name}. سيُحوَّل للدائرة المختصة.`,
+      action: { label: 'عرض الأصلية', onClick: () => setTab('orig') },
+    });
+  };
+
+  const resetForm = () => {
+    setForm(initial());
+    setErrors({});
+    setShowErrors(false);
+    setConfirmReset(false);
+    toast && toast.push({ kind: 'info', title: 'تم إعادة تهيئة النموذج' });
+  };
 
   const feeResult = computeFees(schema.fees, form);
   const total = useCountUp(feeResult.total || 0);
@@ -346,7 +412,7 @@ function FormPage({ nav, code }) {
                   )}
                 </div>
                 <div className="ff-section__body">
-                  {sx.rows && <FF_Rows rows={sx.rows} form={form} set={set} />}
+                  {sx.rows && <FF_Rows rows={sx.rows} form={form} set={set} errors={showErrors ? errors : null} />}
                   {sx.kind === 'classification' && <FF_Classification sec={sx} form={form} set={set} />}
                   {sx.kind === 'class_change' && <FF_ClassChange sec={sx} form={form} set={set} />}
                   {sx.kind === 'reason_seg' && <FF_ReasonSeg sec={sx} form={form} set={set} />}
@@ -421,20 +487,40 @@ function FormPage({ nav, code }) {
               </div>
             )}
             <div className="ff-feepanel__actions">
-              <button className="f-btn f-btn--primary"
-                      disabled={schema.declaration && !form.declAgreed}
-                      onClick={() => alert('تم تجهيز الطلب — يحوّل للدائرة المختصة (تجريبي)')}>
+              <button className="f-btn f-btn--primary" onClick={submit}>
                 <Icon name="send" /> تقديم الطلب
               </button>
+              <button className="f-btn" onClick={() => setTab('orig')}>
+                <Icon name="description" /> عرض الأصلية
+              </button>
               <button className="f-btn" onClick={() => { setTab('orig'); setTimeout(() => window.print(), 350); }}>
-                <Icon name="print" /> طباعة بصيغة الأصلية
+                <Icon name="print" /> طباعة
+              </button>
+              <button className="f-btn" onClick={() => setConfirmReset(true)}>
+                <Icon name="refresh" /> إعادة تهيئة
               </button>
             </div>
           </aside>
         </div>
       ) : (
-        <OriginalPaper svc={svc} schema={schema} form={form} />
+        <window.OfficialPaper svc={svc} schema={schema} form={form} />
       )}
+
+      {showErrors && Object.keys(errors).length > 0 && tab === 'pro' && (
+        <window.ValidationSummary errors={errors} />
+      )}
+
+      <window.ConfirmDialog
+        open={confirmReset}
+        danger
+        icon="restart_alt"
+        title="إعادة تهيئة النموذج؟"
+        description="ستفقد جميع البيانات المدخلة في هذا النموذج. لا يمكن التراجع عن العملية."
+        confirmLabel="نعم، أعد التهيئة"
+        cancelLabel="إلغاء"
+        onConfirm={resetForm}
+        onCancel={() => setConfirmReset(false)}
+      />
     </div>
   );
 }

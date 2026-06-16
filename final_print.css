@@ -1,0 +1,328 @@
+/* =============================================================
+   OFFICIAL PAPER — Word-faithful print layout
+   Mirrors the exact look of the source .docx forms:
+   black hairline tables, lightly shaded header cells, compact rows.
+   - Screen: A4-sized centred preview on the warm canvas.
+   - Print : full-bleed A4 portrait, only the sheet is visible.
+   ============================================================= */
+
+:root {
+  --of-ink:    #111111;
+  --of-line:   #000000;        /* Word default border */
+  --of-shade:  #ededed;        /* table header shade  */
+  --of-shade-2:#f6f4ee;        /* light row shade     */
+  --of-accent: #1f3a8a;        /* heading underline   */
+}
+
+/* ---------- WRAPPER ---------- */
+.of-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0 60px;
+}
+
+/* on-screen toolbar */
+.of-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: 794px;
+  padding: 10px 14px;
+  background: var(--f-surface);
+  border: 1px solid var(--f-border);
+  border-radius: var(--f-r);
+  font-family: var(--f-arab);
+}
+.of-toolbar__hint {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.82rem; color: var(--f-ink-2);
+}
+.of-toolbar__hint .material-symbols-outlined { font-size: 16px; color: var(--f-navy); }
+.of-toolbar__btns { display: inline-flex; gap: 8px; }
+
+/* ---------- THE A4 SHEET ---------- */
+.of-paper {
+  width: 794px;            /* A4 portrait @96dpi */
+  min-height: 1123px;      /* A4 height @96dpi  */
+  background: #fff;
+  color: var(--of-ink);
+  padding: 18mm 16mm 18mm;
+  font-family: "IBM Plex Sans Arabic", "Readex Pro", serif;
+  font-size: 10.5pt;
+  line-height: 1.45;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.06),
+    0 24px 56px -20px rgba(0,0,0,0.18);
+  border-radius: 2px;
+  position: relative;
+}
+
+/* ---------- TABLE BASE ---------- */
+.of-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 6pt;
+  font-size: 10.5pt;
+  line-height: 1.4;
+}
+.of-tbl th,
+.of-tbl td {
+  border: 1px solid var(--of-line);
+  padding: 4pt 6pt;
+  vertical-align: middle;
+  text-align: start;
+  word-break: break-word;
+  min-height: 18pt;
+}
+.of-tbl th {
+  background: var(--of-shade);
+  font-weight: 700;
+  color: var(--of-ink);
+}
+.of-tbl .of-mono {
+  font-family: "Geist Mono", "Courier New", monospace;
+  font-size: 9.5pt;
+  letter-spacing: 0.02em;
+  direction: ltr;
+  text-align: start;
+  unicode-bidi: plaintext;
+}
+
+/* ---------- T1 · TITLE BAR ---------- */
+.of-titlebar { margin-bottom: 8pt; }
+.of-title-main {
+  width: 70%;
+  background: var(--of-shade);
+  text-align: center !important;
+  font-weight: 800;
+  font-size: 14pt;
+  color: var(--of-ink);
+  font-family: "Alexandria", "Readex Pro", sans-serif;
+  padding: 8pt 6pt !important;
+}
+.of-title-code {
+  width: 30%;
+  text-align: center !important;
+  font-weight: 700;
+  font-size: 11pt;
+  background: var(--of-shade);
+}
+.of-title-rcptL {
+  width: 70%;
+  font-weight: 600;
+  font-size: 10pt;
+}
+.of-title-rcptV {
+  width: 30%;
+  font-family: "Geist Mono", monospace;
+  text-align: center !important;
+  font-size: 10pt;
+}
+
+/* ---------- T2 · SUBSCRIBER HEADER ---------- */
+.of-header { margin-bottom: 8pt; }
+.of-header th { font-size: 9.5pt; }
+.of-header .of-serial {
+  font-family: "Geist Mono", monospace;
+  font-size: 9pt;
+  direction: ltr;
+  unicode-bidi: plaintext;
+}
+
+/* shared row of check options */
+.of-checks {
+  display: block;
+  font-size: 10pt;
+  line-height: 1.7;
+}
+.of-check {
+  display: inline-block;
+  margin-inline-end: 14pt;
+  white-space: nowrap;
+}
+.of-check__b {
+  display: inline-block;
+  width: 12pt;
+  margin-inline-end: 2pt;
+  font-size: 12pt;
+  line-height: 1;
+  color: var(--of-ink);
+}
+
+/* ---------- HEADINGS (between tables) ---------- */
+.of-heading {
+  margin: 10pt 0 4pt;
+  font-family: "Alexandria", "Readex Pro", sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+  color: var(--of-accent);
+  border-bottom: 1.5pt solid var(--of-accent);
+  padding-bottom: 2pt;
+  display: inline-block;
+}
+.of-heading--decl {
+  display: block;
+  text-align: center;
+  border-bottom: 0;
+  margin-top: 14pt;
+  padding-bottom: 4pt;
+  position: relative;
+}
+.of-heading--decl::before,
+.of-heading--decl::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0;
+  width: 30%;
+  height: 1pt;
+  background: var(--of-accent);
+}
+.of-heading--decl::before { inset-inline-start: 0; }
+.of-heading--decl::after  { inset-inline-end: 0; }
+
+/* ---------- T3 · ADDRESS ---------- */
+.of-address th { font-size: 9.5pt; }
+.of-subhead {
+  background: var(--of-shade-2) !important;
+  text-align: center !important;
+  font-weight: 700;
+}
+
+/* ---------- T4 · DOCS MATRIX ---------- */
+.of-docs th,
+.of-docs td { font-size: 9.5pt; padding: 3pt 4pt; }
+.of-docs thead th { text-align: center; }
+.of-docs__cb,
+.of-docs__n,
+.of-docs__cls {
+  text-align: center !important;
+  font-size: 11pt;
+  width: 36pt;
+}
+.of-docs__name { text-align: start; }
+.of-docs__opt {
+  font-size: 8.5pt;
+  color: #555;
+  font-weight: 500;
+}
+.of-dot {
+  color: #aaa;
+  font-weight: 700;
+}
+
+/* ---------- T5 · DOC DETAILS ---------- */
+.of-docdetails th { text-align: center; font-size: 9.5pt; }
+
+/* ---------- T6 · NOTES ---------- */
+.of-notes td { min-height: 36pt; }
+
+/* ---------- T7 · ROUTING ---------- */
+.of-routing th { font-weight: 700; }
+.of-routing td.of-checks { line-height: 1.9; }
+
+/* ---------- T8 · SIGNATURES ---------- */
+.of-signs { margin-top: 6pt; }
+.of-signs thead th {
+  text-align: center !important;
+  font-weight: 700;
+  background: var(--of-shade-2);
+  font-size: 10pt;
+}
+.of-signs tbody td {
+  height: 48pt;
+}
+
+/* ---------- DECLARATION BLOCK ---------- */
+.of-decl {
+  margin-top: 14pt;
+  break-inside: avoid;
+}
+.of-decl__body {
+  text-align: justify;
+  font-size: 10pt;
+  line-height: 1.65;
+}
+.of-decl__body p { margin: 4pt 0; }
+.of-decl__sign {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30pt;
+  margin-top: 24pt;
+}
+.of-decl__col { text-align: center; }
+.of-decl__line {
+  height: 1pt;
+  background: var(--of-ink);
+  margin-bottom: 4pt;
+}
+.of-decl__lbl {
+  font-size: 9pt;
+  color: #555;
+}
+
+/* ============================================================
+   PRINT — A4 portrait, sheet only
+   ============================================================ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  body * { visibility: hidden !important; }
+  .of-paper, .of-paper * { visibility: visible !important; }
+
+  html, body, .f-body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .no-print,
+  .f-floatcompare,
+  .f-sigfoot,
+  .f-top,
+  .f-tabs,
+  .ff-tabs,
+  .ff-feepanel,
+  .ff-form,
+  .of-toolbar { display: none !important; }
+
+  .of-wrap { padding: 0 !important; }
+  .of-paper {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 14mm 12mm !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .of-tbl,
+  .of-decl,
+  .of-decl__sign,
+  .of-titlebar,
+  .of-header,
+  .of-docs,
+  .of-signs { break-inside: avoid; }
+
+  /* ensure colour shades print */
+  .of-title-main, .of-title-code,
+  .of-tbl th, .of-subhead, .of-signs thead th {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ---------- responsive screen preview ---------- */
+@media (max-width: 820px) {
+  .of-paper { width: 100%; padding: 14mm 10mm; font-size: 9.5pt; }
+  .of-tbl,
+  .of-tbl th,
+  .of-tbl td { font-size: 9.5pt; }
+}

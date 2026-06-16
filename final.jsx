@@ -678,4 +678,6 @@ function SignatureFooter() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <window.ToastProvider><App /></window.ToastProvider>
+);
