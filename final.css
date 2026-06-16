@@ -1781,14 +1781,16 @@ a { color: inherit; text-decoration: none; }
 
 
 /* =============================================================
-   SIGNATURE FOOTER — distinctive credits strip
-   Calm by default · gold/navy accent · subtle motion
+   SIGNATURE FOOTER — distinctive credits plaque
+   Display serif name · gold/navy · refined hierarchy · subtle motion
    ============================================================= */
 .f-sigfoot {
+  --sf-serif: "Playfair Display", "Alexandria", "Geist", serif;
+  --sf-mono:  var(--f-mono);
   position: relative;
   max-width: 1480px;
-  margin: -20px auto 0;
-  padding: 22px 24px 32px;
+  margin: -16px auto 0;
+  padding: 28px 24px 38px;
   font-family: var(--f-arab);
   color: var(--f-ink-2);
   isolation: isolate;
@@ -1799,217 +1801,448 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(420px 160px at 88% 0%, color-mix(in srgb, var(--f-gold) 9%, transparent), transparent 70%),
-    radial-gradient(420px 160px at 12% 100%, color-mix(in srgb, var(--f-navy) 7%, transparent), transparent 70%),
-    linear-gradient(180deg, transparent, color-mix(in srgb, var(--f-surface-3) 35%, transparent));
+    radial-gradient(520px 200px at 85% 0%,  color-mix(in srgb, var(--f-gold) 11%, transparent), transparent 70%),
+    radial-gradient(520px 200px at 15% 100%, color-mix(in srgb, var(--f-navy) 8%,  transparent), transparent 70%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--f-surface-3) 38%, transparent));
 }
 .f-sigfoot__line {
   height: 1px;
   width: 100%;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    color-mix(in srgb, var(--f-border-2) 60%, transparent) 18%,
+    color-mix(in srgb, var(--f-border-2) 60%, transparent) 16%,
     var(--f-gold) 50%,
-    color-mix(in srgb, var(--f-border-2) 60%, transparent) 82%,
+    color-mix(in srgb, var(--f-border-2) 60%, transparent) 84%,
     transparent 100%
   );
   opacity: 0.7;
+  position: relative;
 }
+.f-sigfoot__line::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  width: 7px; height: 7px;
+  border-radius: 999px;
+  background: var(--f-gold);
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--f-bg) 90%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--f-gold) 35%, transparent),
+    0 0 14px color-mix(in srgb, var(--f-gold) 60%, transparent);
+}
+
 .f-sigfoot__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 28px;
   flex-wrap: wrap;
 }
 
+/* ---------- LEFT: copyright + brand ---------- */
 .f-sigfoot__left {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.78rem;
+  gap: 14px;
+  font-size: 0.8rem;
   color: var(--f-ink-3);
 }
-.f-sigfoot__mono {
-  font-family: var(--f-mono);
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--f-ink-2);
+.f-sigfoot__copy {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--sf-mono);
 }
-.f-sigfoot__dot {
-  width: 4px; height: 4px;
-  border-radius: 999px;
-  background: var(--f-gold);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--f-gold) 18%, transparent);
+.f-sigfoot__copy-c {
+  font-size: 0.85rem;
+  color: var(--f-gold);
+  font-weight: 700;
+}
+.f-sigfoot__copy-y {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--f-ink);
+  letter-spacing: 0.04em;
+}
+.f-sigfoot__sep-v {
+  width: 1px;
+  height: 16px;
+  background: color-mix(in srgb, var(--f-border-2) 80%, transparent);
 }
 .f-sigfoot__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   font-weight: 600;
   color: var(--f-ink-2);
 }
+.f-sigfoot__brand-ar {
+  font-family: var(--f-arab);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--f-ink);
+  letter-spacing: 0.01em;
+}
+.f-sigfoot__brand-en {
+  font-family: var(--sf-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--f-ink-3);
+  text-transform: uppercase;
+}
 
-.f-sigfoot__sign {
+/* ---------- RIGHT: signature plaque ---------- */
+.f-sigfoot__plaque {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 8px 16px 8px 8px;
-  border-radius: 999px;
+  gap: 18px;
+  padding: 14px 22px 14px 14px;
+  border-radius: 18px;
   background:
     linear-gradient(135deg,
-      color-mix(in srgb, var(--f-surface) 92%, transparent),
-      color-mix(in srgb, var(--f-surface-2) 92%, transparent));
-  border: 1px solid color-mix(in srgb, var(--f-gold) 28%, var(--f-border));
+      color-mix(in srgb, var(--f-surface) 96%, transparent),
+      color-mix(in srgb, var(--f-surface-2) 96%, transparent));
+  border: 1px solid color-mix(in srgb, var(--f-gold) 34%, var(--f-border));
   box-shadow:
-    var(--f-shadow-sm),
-    inset 0 0 0 1px color-mix(in srgb, #fff 60%, transparent);
+    0 1px 0 rgba(255,255,255,0.8) inset,
+    0 -1px 0 color-mix(in srgb, var(--f-gold) 12%, transparent) inset,
+    0 1px 2px rgba(22,21,19,0.04),
+    0 18px 38px -22px rgba(22,21,19,0.18),
+    0 0 0 4px color-mix(in srgb, var(--f-gold) 6%, transparent);
   overflow: hidden;
+  transition: transform var(--f-dur) var(--f-spring),
+              box-shadow var(--f-dur) var(--f-ease);
 }
-.f-sigfoot__sign::before {
+.f-sigfoot__plaque:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.8) inset,
+    0 -1px 0 color-mix(in srgb, var(--f-gold) 18%, transparent) inset,
+    0 2px 4px rgba(22,21,19,0.05),
+    0 26px 52px -22px rgba(22,21,19,0.24),
+    0 0 0 4px color-mix(in srgb, var(--f-gold) 10%, transparent);
+}
+
+/* corner ornament accents */
+.f-sigfoot__plaque::before,
+.f-sigfoot__plaque::after {
   content: "";
+  position: absolute;
+  width: 22px; height: 22px;
+  pointer-events: none;
+}
+.f-sigfoot__plaque::before {
+  inset-block-start: 6px;
+  inset-inline-start: 6px;
+  border-top: 1.5px solid var(--f-gold);
+  border-inline-start: 1.5px solid var(--f-gold);
+  border-start-start-radius: 10px;
+  opacity: 0.55;
+}
+.f-sigfoot__plaque::after {
+  inset-block-end: 6px;
+  inset-inline-end: 6px;
+  border-bottom: 1.5px solid var(--f-gold);
+  border-inline-end: 1.5px solid var(--f-gold);
+  border-end-end-radius: 10px;
+  opacity: 0.55;
+}
+
+/* shimmer + ambient glow */
+.f-sigfoot__plaque-glow {
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background:
+    radial-gradient(40% 60% at 20% 50%, color-mix(in srgb, var(--f-navy) 12%, transparent), transparent 70%),
+    radial-gradient(40% 60% at 80% 50%, color-mix(in srgb, var(--f-gold) 14%, transparent), transparent 70%);
+  filter: blur(8px);
+}
+.f-sigfoot__plaque-shimmer {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     115deg,
-    transparent 30%,
-    color-mix(in srgb, var(--f-gold-soft) 35%, transparent) 50%,
-    transparent 70%
+    transparent 32%,
+    color-mix(in srgb, var(--f-gold-soft) 38%, transparent) 50%,
+    transparent 68%
   );
-  transform: translateX(-120%);
-  animation: f-sigfoot-shimmer 6s ease-in-out 1.2s infinite;
+  transform: translateX(-130%);
+  animation: f-sigfoot-shimmer 7s ease-in-out 1.4s infinite;
   pointer-events: none;
+  mix-blend-mode: overlay;
 }
 @keyframes f-sigfoot-shimmer {
-  0%, 100% { transform: translateX(-120%); }
-  55%      { transform: translateX(120%); }
+  0%, 100% { transform: translateX(-130%); }
+  55%      { transform: translateX(130%); }
 }
 
+/* ---------- CREST ---------- */
 .f-sigfoot__crest {
   position: relative;
-  width: 34px; height: 34px;
+  width: 48px; height: 48px;
   display: inline-grid;
   place-items: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--f-navy), var(--f-ink));
+  background:
+    radial-gradient(120% 100% at 30% 20%, color-mix(in srgb, var(--f-navy-soft) 95%, transparent), var(--f-ink) 75%);
   color: #fff;
   flex-shrink: 0;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--f-gold) 30%, transparent),
+    inset 0 -2px 6px rgba(0,0,0,0.4),
+    inset 0 2px 4px rgba(255,255,255,0.08),
+    0 6px 14px -6px rgba(22,21,19,0.4);
 }
 .f-sigfoot__crest-mono {
-  font-family: var(--f-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  background: linear-gradient(135deg, #fff, var(--f-gold-soft));
+  font-family: var(--sf-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #fff 0%, var(--f-gold-soft) 60%, var(--f-gold) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35));
 }
 .f-sigfoot__crest-ring {
   position: absolute;
-  inset: -3px;
   border-radius: 50%;
   border: 1px solid color-mix(in srgb, var(--f-gold) 60%, transparent);
-  opacity: 0.7;
-  animation: f-sigfoot-ring 3.2s var(--f-ease) infinite;
+  pointer-events: none;
+}
+.f-sigfoot__crest-ring--inner {
+  inset: -4px;
+  opacity: 0.75;
+  animation: f-sigfoot-ring 3.6s var(--f-ease) infinite;
+}
+.f-sigfoot__crest-ring--outer {
+  inset: -9px;
+  opacity: 0.35;
+  border-style: dashed;
+  animation: f-sigfoot-spin 24s linear infinite;
 }
 @keyframes f-sigfoot-ring {
-  0%, 100% { transform: scale(1);    opacity: 0.7; }
-  50%      { transform: scale(1.08); opacity: 0.2; }
+  0%, 100% { transform: scale(1);    opacity: 0.75; }
+  50%      { transform: scale(1.10); opacity: 0.2; }
+}
+@keyframes f-sigfoot-spin {
+  to { transform: rotate(360deg); }
 }
 
-.f-sigfoot__sign-text {
+/* ---------- TEXT STACK ---------- */
+.f-sigfoot__stack {
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.1;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+  text-align: center;
 }
-.f-sigfoot__sign-pre {
-  font-family: var(--f-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
+
+/* overline: "Dev by" with rules */
+.f-sigfoot__overline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sf-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--f-ink-3);
 }
-.f-sigfoot__sign-main {
+.f-sigfoot__overline-rule {
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--f-gold) 80%, transparent),
+    transparent);
+}
+.f-sigfoot__overline-text {
+  color: var(--f-gold);
+  font-weight: 700;
+}
+
+/* the name — the centerpiece */
+.f-sigfoot__name {
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
-  margin-top: 3px;
-  font-family: var(--f-disp);
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
-.f-sigfoot__year {
-  font-family: var(--f-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--f-gold);
-  letter-spacing: 0.04em;
-}
-.f-sigfoot__sep {
-  color: var(--f-ink-3);
-  font-weight: 400;
-  margin-inline: 2px;
-}
-.f-sigfoot__dev {
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--f-ink-2);
-}
-.f-sigfoot__name {
+  gap: 10px;
+  margin: 2px 0;
+  font-family: var(--sf-serif);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.55rem;
+  letter-spacing: 0.005em;
+  line-height: 1;
   background: linear-gradient(
     100deg,
     var(--f-ink) 0%,
-    var(--f-navy) 40%,
-    var(--f-gold) 80%,
-    var(--f-crimson) 110%
+    var(--f-navy) 28%,
+    var(--f-navy-soft) 48%,
+    var(--f-gold) 78%,
+    var(--f-crimson) 112%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-weight: 800;
+  filter:
+    drop-shadow(0 1px 0 rgba(255,255,255,0.6))
+    drop-shadow(0 6px 14px color-mix(in srgb, var(--f-gold) 18%, transparent));
+}
+.f-sigfoot__name-word {
+  position: relative;
+}
+.f-sigfoot__name-word:first-child::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  inset-block-end: -2px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--f-gold), transparent);
+  opacity: 0;
+  transform: scaleX(0.6);
+  transition: opacity var(--f-dur) var(--f-ease), transform var(--f-dur) var(--f-ease);
+}
+.f-sigfoot__plaque:hover .f-sigfoot__name-word:first-child::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.f-sigfoot__name-amp {
+  font-family: var(--sf-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--f-gold);
+  -webkit-text-fill-color: var(--f-gold);
+  background: none;
+  filter: none;
+  transform: translateY(-2px);
 }
 
-.f-sigfoot__spark {
-  width: 6px; height: 6px;
+/* underline rules + meta */
+.f-sigfoot__underline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.f-sigfoot__underline-bar {
+  height: 1px;
+  width: 28px;
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--f-border-2) 80%, transparent),
+    transparent);
+}
+.f-sigfoot__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sf-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--f-ink-3);
+  white-space: nowrap;
+}
+.f-sigfoot__meta-y {
+  color: var(--f-gold);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.f-sigfoot__meta-role,
+.f-sigfoot__meta-loc {
+  color: var(--f-ink-2);
+}
+.f-sigfoot__meta-dot {
+  width: 3px; height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--f-gold) 70%, var(--f-border-2));
+}
+
+/* verified pip */
+.f-sigfoot__verified {
+  position: relative;
+  align-self: flex-start;
+  width: 8px; height: 8px;
+  margin-block-start: 4px;
+}
+.f-sigfoot__verified-dot {
+  position: absolute;
+  inset: 0;
   border-radius: 999px;
   background: var(--f-gold);
   box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--f-gold) 20%, transparent),
-    0 0 14px color-mix(in srgb, var(--f-gold) 55%, transparent);
-  animation: f-sigfoot-spark 2.4s var(--f-ease) infinite;
+    0 0 0 3px color-mix(in srgb, var(--f-gold) 22%, transparent),
+    0 0 16px color-mix(in srgb, var(--f-gold) 60%, transparent);
+  animation: f-sigfoot-spark 2.6s var(--f-ease) infinite;
 }
 @keyframes f-sigfoot-spark {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%      { opacity: 1;   transform: scale(1.25); }
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.3); }
 }
 
-/* Dark mode */
-.f-body.dark .f-sigfoot__sign {
+/* ---------- DARK MODE ---------- */
+.f-body.dark .f-sigfoot__plaque {
   background:
     linear-gradient(135deg,
-      color-mix(in srgb, var(--f-surface) 60%, transparent),
-      color-mix(in srgb, var(--f-surface-2) 60%, transparent));
-  border-color: color-mix(in srgb, var(--f-gold) 38%, var(--f-border-2));
+      color-mix(in srgb, var(--f-surface) 70%, transparent),
+      color-mix(in srgb, var(--f-surface-2) 70%, transparent));
+  border-color: color-mix(in srgb, var(--f-gold) 42%, var(--f-border-2));
 }
-.f-body.dark .f-sigfoot__dev    { color: var(--f-ink-2); }
-.f-body.dark .f-sigfoot__brand  { color: var(--f-ink-2); }
+.f-body.dark .f-sigfoot__crest {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--f-gold) 42%, transparent),
+    inset 0 -2px 6px rgba(0,0,0,0.6),
+    inset 0 2px 4px rgba(255,255,255,0.1),
+    0 6px 18px -6px rgba(0,0,0,0.7);
+}
+.f-body.dark .f-sigfoot__name {
+  filter:
+    drop-shadow(0 1px 0 rgba(0,0,0,0.4))
+    drop-shadow(0 6px 18px color-mix(in srgb, var(--f-gold) 28%, transparent));
+}
+.f-body.dark .f-sigfoot__copy-y { color: var(--f-bg); }
+.f-body.dark .f-sigfoot__brand-ar { color: var(--f-bg); }
 
-/* Responsive */
-@media (max-width: 720px) {
-  .f-sigfoot { margin: -10px auto 0; padding: 18px 16px 24px; }
-  .f-sigfoot__inner { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .f-sigfoot__sign  { align-self: stretch; justify-content: center; }
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 860px) {
+  .f-sigfoot__inner { flex-direction: column; gap: 22px; align-items: stretch; }
+  .f-sigfoot__left  { justify-content: center; }
+  .f-sigfoot__plaque { align-self: center; }
+}
+@media (max-width: 540px) {
+  .f-sigfoot { padding: 22px 14px 28px; }
+  .f-sigfoot__plaque { padding: 12px 16px 12px 12px; gap: 12px; }
+  .f-sigfoot__crest { width: 42px; height: 42px; }
+  .f-sigfoot__crest-mono { font-size: 0.95rem; }
+  .f-sigfoot__name { font-size: 1.25rem; gap: 7px; }
+  .f-sigfoot__meta { font-size: 0.56rem; letter-spacing: 0.12em; gap: 6px; }
+  .f-sigfoot__underline-bar { width: 18px; }
+  .f-sigfoot__overline { font-size: 0.55rem; letter-spacing: 0.2em; }
+  .f-sigfoot__overline-rule { width: 16px; }
+  .f-sigfoot__brand-en { display: none; }
 }
 
-/* Respect reduced motion */
+/* ---------- REDUCED MOTION ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .f-sigfoot__sign::before,
-  .f-sigfoot__crest-ring,
-  .f-sigfoot__spark {
+  .f-sigfoot__plaque-shimmer,
+  .f-sigfoot__crest-ring--inner,
+  .f-sigfoot__crest-ring--outer,
+  .f-sigfoot__verified-dot {
     animation: none;
   }
 }
