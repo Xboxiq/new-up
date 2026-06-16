@@ -663,7 +663,7 @@ function SignatureFooter() {
         </div>
 
         <div className="f-sigfoot__credit">
-          <span className="f-sigfoot__credit-eyebrow">تطوير وتصميم</span>
+          <span className="f-sigfoot__credit-eyebrow">Designed &amp; Developed</span>
           <h6 className="f-sigfoot__credit-name">
             <span className="f-sigfoot__credit-name-ar">حسين علي</span>
             <span className="f-sigfoot__credit-name-sep" aria-hidden="true" />

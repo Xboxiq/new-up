@@ -1927,14 +1927,14 @@ a { color: inherit; text-decoration: none; }
   inset-inline-end: 18%;
 }
 
-/* eyebrow: "تطوير وتصميم" */
+/* eyebrow: "Designed & Developed" */
 .f-sigfoot__credit-eyebrow {
-  font-family: var(--sf-arab);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
+  font-family: var(--sf-mono);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
   color: var(--f-ink-3);
-  text-transform: none;
+  text-transform: uppercase;
 }
 
 /* the name — bilingual, refined */
@@ -2010,7 +2010,7 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 540px) {
   .f-sigfoot__credit-name-ar { font-size: 0.95rem; }
   .f-sigfoot__credit-name-en { font-size: 0.82rem; }
-  .f-sigfoot__credit-eyebrow { font-size: 0.55rem; letter-spacing: 0.18em; }
+  .f-sigfoot__credit-eyebrow { font-size: 0.5rem; letter-spacing: 0.22em; }
   .f-sigfoot__credit-meta    { font-size: 0.5rem; letter-spacing: 0.13em; }
   .f-sigfoot__brand-sub      { display: none; }
 }
