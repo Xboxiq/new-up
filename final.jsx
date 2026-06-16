@@ -644,65 +644,35 @@ function App() {
 // =============================================================
 function SignatureFooter() {
   return (
-    <footer className="f-sigfoot" role="contentinfo" aria-label="حقوق التطوير">
-      <div className="f-sigfoot__line" aria-hidden="true" />
+    <footer className="f-sigfoot" role="contentinfo" aria-label="من تطوير حسين علي">
+      <div className="f-sigfoot__rule" aria-hidden="true">
+        <span className="f-sigfoot__rule-line" />
+        <span className="f-sigfoot__rule-mark">
+          <span className="f-sigfoot__rule-diamond" />
+        </span>
+        <span className="f-sigfoot__rule-line" />
+      </div>
 
       <div className="f-sigfoot__inner">
-        {/* Brand / copyright column */}
-        <div className="f-sigfoot__left">
-          <span className="f-sigfoot__copy">
-            <span className="f-sigfoot__copy-c">©</span>
-            <span className="f-sigfoot__copy-y">2026</span>
-          </span>
-          <span className="f-sigfoot__sep-v" aria-hidden="true" />
-          <span className="f-sigfoot__brand">
-            <span className="f-sigfoot__brand-ar">تدفّق الخير</span>
-            <span className="f-sigfoot__brand-en">· Rasafa Electricity · Baghdad ·</span>
-          </span>
+        <div className="f-sigfoot__brand" aria-label="جهة التشغيل">
+          <span className="f-sigfoot__brand-c">©</span>
+          <span className="f-sigfoot__brand-y">2026</span>
+          <span className="f-sigfoot__brand-bar" aria-hidden="true" />
+          <span className="f-sigfoot__brand-name">تدفّق الخير</span>
+          <span className="f-sigfoot__brand-sub">كهرباء الرصافة · فرع النضال</span>
         </div>
 
-        {/* Signature plaque */}
-        <div className="f-sigfoot__plaque" aria-label="2026 — Dev by Hussien Ali">
-          <span className="f-sigfoot__plaque-glow" aria-hidden="true" />
-          <span className="f-sigfoot__plaque-shimmer" aria-hidden="true" />
-
-          {/* Crest */}
-          <span className="f-sigfoot__crest">
-            <span className="f-sigfoot__crest-mono">HA</span>
-            <span className="f-sigfoot__crest-ring f-sigfoot__crest-ring--inner" aria-hidden="true" />
-            <span className="f-sigfoot__crest-ring f-sigfoot__crest-ring--outer" aria-hidden="true" />
-          </span>
-
-          {/* Organized text stack */}
-          <span className="f-sigfoot__stack">
-            <span className="f-sigfoot__overline">
-              <span className="f-sigfoot__overline-rule" aria-hidden="true" />
-              <span className="f-sigfoot__overline-text">Dev by</span>
-              <span className="f-sigfoot__overline-rule" aria-hidden="true" />
-            </span>
-
-            <span className="f-sigfoot__name">
-              <span className="f-sigfoot__name-word">Hussien</span>
-              <span className="f-sigfoot__name-amp" aria-hidden="true">·</span>
-              <span className="f-sigfoot__name-word">Ali</span>
-            </span>
-
-            <span className="f-sigfoot__underline">
-              <span className="f-sigfoot__underline-bar" aria-hidden="true" />
-              <span className="f-sigfoot__meta">
-                <span className="f-sigfoot__meta-y">2026</span>
-                <span className="f-sigfoot__meta-dot" />
-                <span className="f-sigfoot__meta-role">Software Engineer</span>
-                <span className="f-sigfoot__meta-dot" />
-                <span className="f-sigfoot__meta-loc">Baghdad — Iraq</span>
-              </span>
-              <span className="f-sigfoot__underline-bar" aria-hidden="true" />
-            </span>
-          </span>
-
-          {/* Verified spark */}
-          <span className="f-sigfoot__verified" aria-hidden="true">
-            <span className="f-sigfoot__verified-dot" />
+        <div className="f-sigfoot__credit">
+          <span className="f-sigfoot__credit-eyebrow">تطوير وتصميم</span>
+          <h6 className="f-sigfoot__credit-name">
+            <span className="f-sigfoot__credit-name-ar">حسين علي</span>
+            <span className="f-sigfoot__credit-name-sep" aria-hidden="true" />
+            <span className="f-sigfoot__credit-name-en">Hussein&nbsp;Ali</span>
+          </h6>
+          <span className="f-sigfoot__credit-meta">
+            <span>Software · Design</span>
+            <span className="f-sigfoot__credit-meta-dot" aria-hidden="true" />
+            <span>Baghdad — Iraq</span>
           </span>
         </div>
       </div>
