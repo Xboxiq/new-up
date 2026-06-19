@@ -61,26 +61,26 @@
   --f-dur-md:  360ms;
 }
 
-/* ---------- Dark mode ---------- */
+/* ---------- Dark mode (softened — calm navy, never OLED black) ---------- */
 .f-body.dark {
-  --f-cs:        oklch(0.78 0.075 259);
-  --f-ct:        oklch(0.80 0.070 78);
-  --f-cb:        oklch(0.80 0.065 192);
-  --f-ca:        oklch(0.78 0.070 12);
-  --f-bg:        #0d0e10;
-  --f-bg-2:      #15161a;
-  --f-surface:   #17181d;
-  --f-surface-2: #1d1f25;
-  --f-surface-3: #25272e;
-  --f-border:    #2a2c33;
-  --f-border-2:  #3a3d44;
-  --f-ink:       #f5f3ec;
-  --f-ink-2:     #c2c0b8;
-  --f-ink-3:     #8a8780;
-  --f-shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
-  --f-shadow-sm: 0 1px 2px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04) inset;
-  --f-shadow:    0 1px 2px rgba(0,0,0,0.4), 0 18px 40px -18px rgba(0,0,0,0.65);
-  --f-shadow-md: 0 1px 2px rgba(0,0,0,0.4), 0 30px 64px -22px rgba(0,0,0,0.7);
+  --f-cs:        oklch(0.78 0.085 259);
+  --f-ct:        oklch(0.80 0.080 78);
+  --f-cb:        oklch(0.80 0.075 192);
+  --f-ca:        oklch(0.78 0.080 12);
+  --f-bg:        #131720;          /* warm navy-charcoal, not zero-black */
+  --f-bg-2:      #1a1f2a;
+  --f-surface:   #1e2330;          /* card surface — clearly elevated */
+  --f-surface-2: #252b39;
+  --f-surface-3: #2f3645;
+  --f-border:    #313847;
+  --f-border-2:  #424a5c;
+  --f-ink:       #f1efe6;
+  --f-ink-2:     #cdcabf;          /* +contrast vs prior c2c0b8 */
+  --f-ink-3:     #9a958a;
+  --f-shadow-xs: 0 1px 2px rgba(0,0,0,0.28);
+  --f-shadow-sm: 0 1px 2px rgba(0,0,0,0.28), 0 1px 0 rgba(255,255,255,0.05) inset;
+  --f-shadow:    0 1px 2px rgba(0,0,0,0.28), 0 18px 40px -18px rgba(0,0,0,0.55);
+  --f-shadow-md: 0 1px 2px rgba(0,0,0,0.28), 0 30px 64px -22px rgba(0,0,0,0.6);
 }
 
 /* a breath of atmosphere behind everything — two faint tinted pools */

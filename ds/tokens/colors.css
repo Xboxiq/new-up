@@ -83,15 +83,15 @@
   --shade:          #f2f2f2; /* header-cell shading on forms */
 }
 
-/* ---------- Dark mode ---------- */
+/* ---------- Dark mode (softened — calm navy, never OLED black) ---------- */
 body.dark {
-  --bg:            #0a1019;
-  --surface:       #131c2e;
-  --surface-2:     #1b2740;
-  --surface-3:     #223052;
-  --text:          #eaf0fb;
-  --text-soft:     #a6b6d2;
-  --border:        #273450;
-  --border-strong: #34466a;
-  --blue-50:       #16233f;
+  --bg:            #131720;
+  --surface:       #1e2330;
+  --surface-2:     #252b39;
+  --surface-3:     #2f3645;
+  --text:          #f1efe6;
+  --text-soft:     #b8c2d6;
+  --border:        #313847;
+  --border-strong: #424a5c;
+  --blue-50:       #1a263f;
 }

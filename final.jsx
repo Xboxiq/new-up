@@ -57,6 +57,7 @@ function TopChrome({ tab, setTab, dark, setDark, onCmdK }) {
           { k: 'reports',  l: 'التقارير' },
           { k: 'pricing',  l: 'الأجور' },
           { k: 'guide',    l: 'الدليل' },
+          ...(window.Auth && window.Auth.can('admin.access') ? [{ k: 'admin', l: 'الأدمن' }] : []),
         ].map(t => (
           <button key={t.k} className={`f-tab ${tab === t.k ? 'is-on' : ''}`} onClick={() => setTab(t.k)}>
             {t.l}
@@ -229,42 +230,27 @@ function ServicesExpress({ nav }) {
 }
 
 // =============================================================
-// 3) TIPS TICKER — rotates per refresh, extensible later
-//    Pulls from localStorage (future add/edit) + defaults
+// 3) TIPS TICKER — rotates per refresh, managed via Admin page
 // =============================================================
-const DEFAULT_TIPS = [
-  { c: 'var(--f-cb)', tag: 'نصيحة',      ico: 'lightbulb', title: 'تجنّب إرجاع طلبات CS0001',
-    body: 'أرفق كتاب تأييد السكن المصدّق قبل تحويل الطلب للدائرة الفنية — أول سبب للإرجاع هذا الشهر.', by: 'مدير المركز' },
-  { c: 'var(--f-cs)', tag: 'سؤال متكرر', ico: 'help', title: 'كيف يُحسب التقسيط؟',
-    body: 'بحدّ أقصى ٦ أقساط، ويحتاج موافقة المدير للقيم فوق ٥٠٠ ألف د.ع.', by: 'دليل النظام' },
-  { c: 'var(--f-ct)', tag: 'تحديث',      ico: 'campaign', title: 'تعديل جدول الأجور ٢٠٢٦',
-    body: 'بدأ سريان التعديل على أجور الكشف الميداني — راجع اللائحة قبل إصدار أي مطالبة.', by: 'إدارة الأجور' },
-  { c: 'var(--f-ca)', tag: 'تنبيه',      ico: 'warning', title: 'حالات تجاوزت الـ SLA',
-    body: 'هناك ٣ حالات معلّقة في الدائرة الفنية تجاوزت المدة — راجعها لمنع التصعيد.', by: 'النظام' },
-  { c: 'var(--f-cs)', tag: 'نصيحة',      ico: 'tips_and_updates', title: 'استخدم البحث السريع ⌘K',
-    body: 'تستطيع الوصول لأي خدمة أو حالة أو مشترك بثوانٍ — جرّب كتابة رقم الاشتراك مباشرة.', by: 'دليل النظام' },
-];
+function TipsTicker({ nav }) {
+  const [version, setVersion] = useState(0);
+  useEffect(() => window.DB && window.DB.tips.subscribe(() => setVersion(v => v + 1)), []);
+  const tips = useMemo(() => {
+    if (!window.DB) return [];
+    return window.DB.tips.list().filter(t => t.active !== false);
+  }, [version]);
 
-function loadTips() {
-  try {
-    const extra = JSON.parse(localStorage.getItem('tq-tips') || '[]');
-    return [...extra, ...DEFAULT_TIPS];
-  } catch { return DEFAULT_TIPS; }
-}
-
-function TipsTicker() {
-  const tips = useMemo(loadTips, []);
-  // New random tip every page refresh
-  const [idx, setIdx] = useState(() => Math.floor(Math.random() * tips.length));
+  const [idx, setIdx] = useState(() => Math.floor(Math.random() * Math.max(1, tips.length)));
+  useEffect(() => { if (idx >= tips.length && tips.length > 0) setIdx(0); }, [tips.length, idx]);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || tips.length === 0) return;
     setProgress(0);
     const id = setInterval(() => {
       setProgress(p => {
-        const next = p + 100 / 100; // 10s
+        const next = p + 100 / 100;
         if (next >= 100) { setIdx(i => (i + 1) % tips.length); return 0; }
         return next;
       });
@@ -272,7 +258,8 @@ function TipsTicker() {
     return () => clearInterval(id);
   }, [idx, paused, tips.length]);
 
-  const t = tips[idx];
+  if (tips.length === 0) return null;
+  const t = tips[idx] || tips[0];
 
   return (
     <section className="f-ticker" style={{ '--t-c': t.c }}
@@ -299,9 +286,11 @@ function TipsTicker() {
             <Icon name="chevron_left" />
           </button>
         </div>
-        <button className="f-ticker__add" disabled title="قريباً — إضافة وتعديل النصائح">
-          <Icon name="add" /> إضافة <span className="f-ticker__soon">قريباً</span>
-        </button>
+        {window.Auth && window.Auth.can('tips.write') && (
+          <button className="f-ticker__add" onClick={() => nav && nav('admin', { tab: 'tips' })} title="إدارة النصائح">
+            <Icon name="add" /> إدارة النصائح
+          </button>
+        )}
       </div>
     </section>
   );
@@ -589,6 +578,7 @@ function App() {
             : route.name === 'pricing' ? 'pricing'
             : route.name === 'guide' ? 'guide'
             : route.name === 'reports' ? 'reports'
+            : route.name === 'admin' ? 'admin'
             : 'overview';
 
   let page = null;
@@ -599,6 +589,7 @@ function App() {
   else if (route.name === 'branches') page = <window.BranchesPage nav={nav} />;
   else if (route.name === 'pricing')  page = <window.PricingPage nav={nav} />;
   else if (route.name === 'guide')    page = <window.GuidePage nav={nav} />;
+  else if (route.name === 'admin')    page = <window.AdminPage nav={nav} initialTab={route.tab} />;
   else if (route.name === 'reports')  page = (
     <div className="fp-enter" style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
       <Stats />
@@ -613,7 +604,7 @@ function App() {
       <PageHead onCmdK={noop} nav={nav} />
       <Departments nav={nav} />
       <ServicesExpress nav={nav} />
-      <TipsTicker />
+      <TipsTicker nav={nav} />
       <Spotlight nav={nav} />
       <Stats />
       <div className="f-two">
