@@ -15,9 +15,120 @@ function bars(seed, n = 14) {
 }
 
 // =============================================================
+// USER MENU — avatar dropdown (profile + admin entry)
+// =============================================================
+function UserMenu({ nav }) {
+  const [open, setOpen] = useState(false);
+  const [, force] = useState(0);
+  useEffect(() => window.Auth && window.Auth.subscribe(() => force(n => n + 1)), []);
+  const me = window.Auth && window.Auth.currentUser();
+  const can = window.Auth ? window.Auth.can : () => false;
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+
+  if (!me) return <button className="f-avatar">?</button>;
+
+  const initial = (me.name || '?').trim().slice(0, 1);
+  const roleLbl = window.Auth.ROLE_LABELS[me.role] || me.role;
+  const goAdmin = (tab) => { setOpen(false); nav && nav('admin', { tab }); };
+  const switchTo = (id) => { window.Auth.signInAs(id); setOpen(false); };
+  const otherUsers = window.DB ? window.DB.users.list().filter(u => u.active && u.id !== me.id).slice(0, 4) : [];
+
+  return (
+    <div className="f-usermenu" ref={ref}>
+      <button className={`f-avatar f-avatar--btn ${open ? 'is-on' : ''}`}
+              onClick={() => setOpen(o => !o)}
+              aria-haspopup="menu" aria-expanded={open}
+              title={`${me.name} — ${roleLbl}`}>
+        <span className="f-avatar__txt">{initial}</span>
+        {can('admin.access') && <span className="f-avatar__badge" title="مسؤول"><Icon name="shield_person" /></span>}
+      </button>
+
+      {open && (
+        <div className="f-umenu" role="menu" dir="rtl">
+          <div className="f-umenu__head">
+            <span className="f-umenu__avatar">{initial}</span>
+            <div className="f-umenu__head-main">
+              <div className="f-umenu__name">{me.name}</div>
+              <div className="f-umenu__role">
+                {can('admin.access') && <Icon name="shield_person" />}
+                {roleLbl} {me.section && me.section !== '*' && <span className="f-umenu__sec">· {me.section}</span>}
+              </div>
+              {me.email && <div className="f-umenu__email">{me.email}</div>}
+            </div>
+          </div>
+
+          {can('admin.access') && (
+            <>
+              <div className="f-umenu__sep" />
+              <div className="f-umenu__sect-lbl">
+                <Icon name="admin_panel_settings" /> لوحة الإدارة
+              </div>
+              <button className="f-umenu__item" onClick={() => goAdmin('overview')}>
+                <Icon name="space_dashboard" /><span>نظرة عامة</span>
+              </button>
+              <button className="f-umenu__item" onClick={() => goAdmin('services')}>
+                <Icon name="apps" /><span>إدارة الخدمات</span>
+              </button>
+              <button className="f-umenu__item" onClick={() => goAdmin('tips')}>
+                <Icon name="tips_and_updates" /><span>إدارة النصائح</span>
+              </button>
+              {can('users.read') && (
+                <button className="f-umenu__item" onClick={() => goAdmin('users')}>
+                  <Icon name="group" /><span>المستخدمون</span>
+                </button>
+              )}
+              <button className="f-umenu__item" onClick={() => goAdmin('settings')}>
+                <Icon name="tune" /><span>إعدادات المركز</span>
+              </button>
+              {can('audit.read') && (
+                <button className="f-umenu__item" onClick={() => goAdmin('audit')}>
+                  <Icon name="history" /><span>سجل التدقيق</span>
+                </button>
+              )}
+            </>
+          )}
+
+          {otherUsers.length > 0 && (
+            <>
+              <div className="f-umenu__sep" />
+              <div className="f-umenu__sect-lbl">
+                <Icon name="switch_account" /> تبديل الحساب
+              </div>
+              {otherUsers.map(u => (
+                <button key={u.id} className="f-umenu__item f-umenu__item--user" onClick={() => switchTo(u.id)}>
+                  <span className="f-umenu__avatar f-umenu__avatar--sm">{u.name.slice(0,1)}</span>
+                  <span className="f-umenu__item-main">
+                    <span>{u.name}</span>
+                    <small>{window.Auth.ROLE_LABELS[u.role]}</small>
+                  </span>
+                </button>
+              ))}
+            </>
+          )}
+
+          <div className="f-umenu__sep" />
+          <button className="f-umenu__item f-umenu__item--danger" onClick={() => { window.Auth.signOut(); setOpen(false); }}>
+            <Icon name="logout" /><span>تسجيل الخروج</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================
 // TOP CHROME
 // =============================================================
-function TopChrome({ tab, setTab, dark, setDark, onCmdK }) {
+function TopChrome({ tab, setTab, dark, setDark, onCmdK, nav }) {
   return (
     <header className="f-top">
       <div className="f-top__row">
@@ -46,7 +157,7 @@ function TopChrome({ tab, setTab, dark, setDark, onCmdK }) {
           <Icon name={dark ? 'light_mode' : 'dark_mode'} />
           <span className="f-morph__lbl">{dark ? 'نهاري' : 'ليلي'}</span>
         </button>
-        <button className="f-avatar">كب</button>
+        <UserMenu nav={nav} />
       </div>
       <nav className="f-tabs">
         {[
@@ -229,42 +340,27 @@ function ServicesExpress({ nav }) {
 }
 
 // =============================================================
-// 3) TIPS TICKER — rotates per refresh, extensible later
-//    Pulls from localStorage (future add/edit) + defaults
+// 3) TIPS TICKER — rotates per refresh, managed via Admin page
 // =============================================================
-const DEFAULT_TIPS = [
-  { c: 'var(--f-cb)', tag: 'نصيحة',      ico: 'lightbulb', title: 'تجنّب إرجاع طلبات CS0001',
-    body: 'أرفق كتاب تأييد السكن المصدّق قبل تحويل الطلب للدائرة الفنية — أول سبب للإرجاع هذا الشهر.', by: 'مدير المركز' },
-  { c: 'var(--f-cs)', tag: 'سؤال متكرر', ico: 'help', title: 'كيف يُحسب التقسيط؟',
-    body: 'بحدّ أقصى ٦ أقساط، ويحتاج موافقة المدير للقيم فوق ٥٠٠ ألف د.ع.', by: 'دليل النظام' },
-  { c: 'var(--f-ct)', tag: 'تحديث',      ico: 'campaign', title: 'تعديل جدول الأجور ٢٠٢٦',
-    body: 'بدأ سريان التعديل على أجور الكشف الميداني — راجع اللائحة قبل إصدار أي مطالبة.', by: 'إدارة الأجور' },
-  { c: 'var(--f-ca)', tag: 'تنبيه',      ico: 'warning', title: 'حالات تجاوزت الـ SLA',
-    body: 'هناك ٣ حالات معلّقة في الدائرة الفنية تجاوزت المدة — راجعها لمنع التصعيد.', by: 'النظام' },
-  { c: 'var(--f-cs)', tag: 'نصيحة',      ico: 'tips_and_updates', title: 'استخدم البحث السريع ⌘K',
-    body: 'تستطيع الوصول لأي خدمة أو حالة أو مشترك بثوانٍ — جرّب كتابة رقم الاشتراك مباشرة.', by: 'دليل النظام' },
-];
+function TipsTicker({ nav }) {
+  const [version, setVersion] = useState(0);
+  useEffect(() => window.DB && window.DB.tips.subscribe(() => setVersion(v => v + 1)), []);
+  const tips = useMemo(() => {
+    if (!window.DB) return [];
+    return window.DB.tips.list().filter(t => t.active !== false);
+  }, [version]);
 
-function loadTips() {
-  try {
-    const extra = JSON.parse(localStorage.getItem('tq-tips') || '[]');
-    return [...extra, ...DEFAULT_TIPS];
-  } catch { return DEFAULT_TIPS; }
-}
-
-function TipsTicker() {
-  const tips = useMemo(loadTips, []);
-  // New random tip every page refresh
-  const [idx, setIdx] = useState(() => Math.floor(Math.random() * tips.length));
+  const [idx, setIdx] = useState(() => Math.floor(Math.random() * Math.max(1, tips.length)));
+  useEffect(() => { if (idx >= tips.length && tips.length > 0) setIdx(0); }, [tips.length, idx]);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || tips.length === 0) return;
     setProgress(0);
     const id = setInterval(() => {
       setProgress(p => {
-        const next = p + 100 / 100; // 10s
+        const next = p + 100 / 100;
         if (next >= 100) { setIdx(i => (i + 1) % tips.length); return 0; }
         return next;
       });
@@ -272,7 +368,8 @@ function TipsTicker() {
     return () => clearInterval(id);
   }, [idx, paused, tips.length]);
 
-  const t = tips[idx];
+  if (tips.length === 0) return null;
+  const t = tips[idx] || tips[0];
 
   return (
     <section className="f-ticker" style={{ '--t-c': t.c }}
@@ -299,9 +396,11 @@ function TipsTicker() {
             <Icon name="chevron_left" />
           </button>
         </div>
-        <button className="f-ticker__add" disabled title="قريباً — إضافة وتعديل النصائح">
-          <Icon name="add" /> إضافة <span className="f-ticker__soon">قريباً</span>
-        </button>
+        {window.Auth && window.Auth.can('tips.write') && (
+          <button className="f-ticker__add" onClick={() => nav && nav('admin', { tab: 'tips' })} title="إدارة النصائح">
+            <Icon name="add" /> إدارة النصائح
+          </button>
+        )}
       </div>
     </section>
   );
@@ -589,6 +688,7 @@ function App() {
             : route.name === 'pricing' ? 'pricing'
             : route.name === 'guide' ? 'guide'
             : route.name === 'reports' ? 'reports'
+            : route.name === 'admin' ? 'admin'
             : 'overview';
 
   let page = null;
@@ -599,6 +699,7 @@ function App() {
   else if (route.name === 'branches') page = <window.BranchesPage nav={nav} />;
   else if (route.name === 'pricing')  page = <window.PricingPage nav={nav} />;
   else if (route.name === 'guide')    page = <window.GuidePage nav={nav} />;
+  else if (route.name === 'admin')    page = <window.AdminPage nav={nav} initialTab={route.tab} />;
   else if (route.name === 'reports')  page = (
     <div className="fp-enter" style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
       <Stats />
@@ -613,7 +714,7 @@ function App() {
       <PageHead onCmdK={noop} nav={nav} />
       <Departments nav={nav} />
       <ServicesExpress nav={nav} />
-      <TipsTicker />
+      <TipsTicker nav={nav} />
       <Spotlight nav={nav} />
       <Stats />
       <div className="f-two">
@@ -625,7 +726,7 @@ function App() {
 
   return (
     <div className="f-shell">
-      <TopChrome tab={tab} setTab={(k) => nav(k)} dark={dark} setDark={setDark} onCmdK={noop} />
+      <TopChrome tab={tab} setTab={(k) => nav(k)} dark={dark} setDark={setDark} onCmdK={noop} nav={nav} />
       <main className="f-page">
         {page}
       </main>

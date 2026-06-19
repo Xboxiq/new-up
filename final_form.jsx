@@ -175,22 +175,88 @@ function FF_Urgency({ sec, form, set }) {
   );
 }
 
-function FF_Documents({ list, form, set }) {
+function FF_Documents({ list, form, set, docFiles, setDocFiles }) {
   const visible = list.filter(d => !d.for || (d.for + '').split('|').includes(form.cls));
+
+  const pickFile = async (key, docName) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*,.pdf';
+    input.onchange = async () => {
+      const f = input.files && input.files[0];
+      if (!f) return;
+      if (f.size > 8 * 1024 * 1024) {
+        alert(`${f.name} يتجاوز 8MB — اختر ملفاً أصغر.`);
+        return;
+      }
+      const buf = await window.readFileAsArrayBuffer(f);
+      const preview = f.type.startsWith('image/') ? await window.readFileAsDataURL(f) : null;
+      setDocFiles(prev => ({
+        ...prev,
+        [key]: { name: f.name, size: f.size, type: f.type, _buf: buf, _preview: preview, label: docName },
+      }));
+      // Auto-tick the document checkbox
+      set('docs', { ...(form.docs || {}), [docName]: true });
+    };
+    input.click();
+  };
+
+  const removeFile = (key, docName) => {
+    setDocFiles(prev => { const n = { ...prev }; delete n[key]; return n; });
+    set('docs', { ...(form.docs || {}), [docName]: false });
+  };
+
   return (
-    <>
+    <div className="ff-docs">
       {visible.map((d, i) => {
-        const on = !!(form.docs || {})[d.n];
+        const key = `doc_${i}`;
+        const ticked = !!(form.docs || {})[d.n];
+        const file = docFiles && docFiles[key];
         return (
-          <div key={i} className={`ff-check ${on ? 'is-on' : ''}`}
-               onClick={() => set('docs', { ...(form.docs || {}), [d.n]: !on })}>
-            <span className="ff-check__box">{on && <Icon name="check" />}</span>
-            {d.n}
-            {d.opt && <span className="ff-check__opt">{d.opt}</span>}
+          <div key={i} className={`ff-doc ${ticked ? 'is-on' : ''} ${file ? 'has-file' : ''}`}>
+            <div className="ff-doc__main"
+                 onClick={() => !file && set('docs', { ...(form.docs || {}), [d.n]: !ticked })}>
+              <span className="ff-doc__box">
+                {ticked && <Icon name="check" />}
+              </span>
+              <span className="ff-doc__text">
+                <span className="ff-doc__name">{d.n}</span>
+                {d.opt && <span className="ff-doc__opt">{d.opt}</span>}
+              </span>
+            </div>
+
+            {file ? (
+              <div className="ff-doc__file">
+                <span className="ff-doc__filebadge">
+                  {file._preview
+                    ? <img src={file._preview} alt="" />
+                    : <Icon name={file.type === 'application/pdf' ? 'picture_as_pdf' : 'description'} />}
+                </span>
+                <span className="ff-doc__filemeta">
+                  <span className="ff-doc__filename" title={file.name}>{file.name}</span>
+                  <span className="ff-doc__filesize">{(file.size / 1024).toFixed(0)} KB</span>
+                </span>
+                <button className="ff-doc__btn ff-doc__btn--replace" onClick={() => pickFile(key, d.n)} title="استبدال">
+                  <Icon name="swap_horiz" />
+                </button>
+                <button className="ff-doc__btn ff-doc__btn--remove" onClick={() => removeFile(key, d.n)} title="حذف">
+                  <Icon name="close" />
+                </button>
+              </div>
+            ) : (
+              <button className="ff-doc__upload" onClick={() => pickFile(key, d.n)}>
+                <Icon name="upload_file" />
+                <span>إرفاق</span>
+              </button>
+            )}
           </div>
         );
       })}
-    </>
+      <p className="ff-docs__hint">
+        <Icon name="info" />
+        ارفع صورة أو PDF لكل مستند — يُضاف تلقائياً للـ PDF الموحّد عند التصدير.
+      </p>
+    </div>
   );
 }
 
@@ -290,6 +356,10 @@ function FormPage({ nav, code }) {
   const [errors, setErrors] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [attachments, setAttachments] = useState([]);
+  const [docFiles, setDocFiles] = useState({});
+  const [exporting, setExporting] = useState(false);
+  const [printMode, setPrintMode] = useState('legacy');  // 'legacy' = حرفية Word, 'pro' = احترافية
 
   const initial = () => ({ docs: {}, cls:'منزلي', phase:'أحادي الطور' });
   const [form, setForm] = useState(() => {
@@ -361,7 +431,60 @@ function FormPage({ nav, code }) {
     setErrors({});
     setShowErrors(false);
     setConfirmReset(false);
+    setAttachments([]);
+    setDocFiles({});
     toast && toast.push({ kind: 'info', title: 'تم إعادة تهيئة النموذج' });
+  };
+
+  // Merge per-document files into the unified attachments stream
+  const allAttachments = () => {
+    const docArr = Object.entries(docFiles).map(([k, f]) => ({
+      ...f,
+      name: f.label + ' — ' + f.name,
+    }));
+    return [...docArr, ...attachments];
+  };
+
+  const onPickFiles = async (e) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    const next = [];
+    for (const f of files) {
+      if (f.size > 8 * 1024 * 1024) {
+        toast && toast.push({ kind:'warn', title:'ملف كبير', body: `${f.name} > 8MB — تم تجاهله` });
+        continue;
+      }
+      try {
+        const buf = await window.readFileAsArrayBuffer(f);
+        const url = (f.type.startsWith('image/'))
+          ? await window.readFileAsDataURL(f)
+          : null;
+        next.push({ name: f.name, type: f.type, size: f.size, _buf: buf, _preview: url });
+      } catch (err) { console.error(err); }
+    }
+    setAttachments(a => [...a, ...next]);
+  };
+  const removeAttachment = (i) => setAttachments(a => a.filter((_, j) => j !== i));
+
+  const exportUnified = async () => {
+    if (!window.exportFormWithAttachments) {
+      toast && toast.push({ kind:'error', title:'وحدة التصدير غير متوفرة' });
+      return;
+    }
+    setTab('orig');
+    setExporting(true);
+    await new Promise(r => setTimeout(r, 400));
+    try {
+      const fileName = `${svc.code}_${(form.name || 'بدون-اسم').replace(/\s/g,'-')}_${new Date().toISOString().slice(0,10)}`;
+      const merged = allAttachments();
+      await window.exportFormWithAttachments({ svc, schema, form, attachments: merged, fileName });
+      toast && toast.push({ kind:'success', title:'تم تصدير الملف الموحّد', body: `${fileName}.pdf · ${merged.length} ملف` });
+      window.DB && window.DB.log('form.export', svc.code, { with: merged.length });
+    } catch (err) {
+      toast && toast.push({ kind:'error', title:'فشل التصدير', body: err.message });
+    } finally {
+      setExporting(false);
+    }
   };
 
   const feeResult = computeFees(schema.fees, form);
@@ -417,7 +540,7 @@ function FormPage({ nav, code }) {
                   {sx.kind === 'class_change' && <FF_ClassChange sec={sx} form={form} set={set} />}
                   {sx.kind === 'reason_seg' && <FF_ReasonSeg sec={sx} form={form} set={set} />}
                   {sx.kind === 'urgency' && <FF_Urgency sec={sx} form={form} set={set} />}
-                  {sx.kind === 'documents' && <FF_Documents list={sx.list} form={form} set={set} />}
+                  {sx.kind === 'documents' && <FF_Documents list={sx.list} form={form} set={set} docFiles={docFiles} setDocFiles={setDocFiles} />}
                 </div>
               </div>
             ))}
@@ -438,6 +561,48 @@ function FormPage({ nav, code }) {
                 </div>
               </div>
             )}
+
+            {/* ─── ATTACHMENTS ─── */}
+            <div className="f-card ff-section">
+              <div className="f-card__head">
+                <h3 className="f-card__title"><Icon name="attach_file" /> المرفقات</h3>
+                <p className="f-card__sub">صور أو PDFs للمستمسكات — تُدمج في PDF موحّد عند التصدير</p>
+              </div>
+              <div className="ff-section__body">
+                <label className="ff-attach-drop">
+                  <input type="file" multiple accept="image/*,.pdf" onChange={onPickFiles} style={{ display:'none' }} />
+                  <Icon name="cloud_upload" />
+                  <span>
+                    <strong>اسحب وأفلت الملفات هنا</strong>
+                    <small>أو اضغط للاختيار — JPG · PNG · PDF (حتى 8MB لكل ملف)</small>
+                  </span>
+                </label>
+                {attachments.length > 0 && (
+                  <div className="ff-attach-list">
+                    {attachments.map((a, i) => (
+                      <div key={i} className="ff-attach-item">
+                        <span className="ff-attach-thumb">
+                          {a._preview
+                            ? <img src={a._preview} alt="" />
+                            : <Icon name={a.type === 'application/pdf' ? 'picture_as_pdf' : 'description'} />}
+                        </span>
+                        <span className="ff-attach-meta">
+                          <span className="ff-attach-name">{a.name}</span>
+                          <span className="ff-attach-size">{(a.size / 1024).toFixed(0)} KB · {a.type || 'ملف'}</span>
+                        </span>
+                        <button className="ff-attach-rm" onClick={() => removeAttachment(i)} aria-label="حذف">
+                          <Icon name="close" />
+                        </button>
+                      </div>
+                    ))}
+                    <div className="ff-attach-summary">
+                      {attachments.length} ملف
+                      {attachments.length > 0 && ' · سيُضاف إلى الـ PDF الموحّد كصفحات منفصلة بعد النموذج'}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* fee panel */}
@@ -496,6 +661,10 @@ function FormPage({ nav, code }) {
               <button className="f-btn" onClick={() => { setTab('orig'); setTimeout(() => window.print(), 350); }}>
                 <Icon name="print" /> طباعة
               </button>
+              <button className="f-btn" onClick={exportUnified} disabled={exporting}>
+                <Icon name={exporting ? 'hourglass_top' : 'file_save'} />
+                {exporting ? 'يجهّز…' : `PDF موحّد ${attachments.length > 0 ? `(+ ${attachments.length})` : ''}`}
+              </button>
               <button className="f-btn" onClick={() => setConfirmReset(true)}>
                 <Icon name="refresh" /> إعادة تهيئة
               </button>
@@ -503,7 +672,8 @@ function FormPage({ nav, code }) {
           </aside>
         </div>
       ) : (
-        <window.OfficialPaper svc={svc} schema={schema} form={form} />
+        <window.OfficialPaper svc={svc} schema={schema} form={form} attachments={allAttachments()}
+                              mode={printMode} setMode={setPrintMode} />
       )}
 
       {showErrors && Object.keys(errors).length > 0 && tab === 'pro' && (
