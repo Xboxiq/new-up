@@ -15,9 +15,120 @@ function bars(seed, n = 14) {
 }
 
 // =============================================================
+// USER MENU — avatar dropdown (profile + admin entry)
+// =============================================================
+function UserMenu({ nav }) {
+  const [open, setOpen] = useState(false);
+  const [, force] = useState(0);
+  useEffect(() => window.Auth && window.Auth.subscribe(() => force(n => n + 1)), []);
+  const me = window.Auth && window.Auth.currentUser();
+  const can = window.Auth ? window.Auth.can : () => false;
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+
+  if (!me) return <button className="f-avatar">?</button>;
+
+  const initial = (me.name || '?').trim().slice(0, 1);
+  const roleLbl = window.Auth.ROLE_LABELS[me.role] || me.role;
+  const goAdmin = (tab) => { setOpen(false); nav && nav('admin', { tab }); };
+  const switchTo = (id) => { window.Auth.signInAs(id); setOpen(false); };
+  const otherUsers = window.DB ? window.DB.users.list().filter(u => u.active && u.id !== me.id).slice(0, 4) : [];
+
+  return (
+    <div className="f-usermenu" ref={ref}>
+      <button className={`f-avatar f-avatar--btn ${open ? 'is-on' : ''}`}
+              onClick={() => setOpen(o => !o)}
+              aria-haspopup="menu" aria-expanded={open}
+              title={`${me.name} — ${roleLbl}`}>
+        <span className="f-avatar__txt">{initial}</span>
+        {can('admin.access') && <span className="f-avatar__badge" title="مسؤول"><Icon name="shield_person" /></span>}
+      </button>
+
+      {open && (
+        <div className="f-umenu" role="menu" dir="rtl">
+          <div className="f-umenu__head">
+            <span className="f-umenu__avatar">{initial}</span>
+            <div className="f-umenu__head-main">
+              <div className="f-umenu__name">{me.name}</div>
+              <div className="f-umenu__role">
+                {can('admin.access') && <Icon name="shield_person" />}
+                {roleLbl} {me.section && me.section !== '*' && <span className="f-umenu__sec">· {me.section}</span>}
+              </div>
+              {me.email && <div className="f-umenu__email">{me.email}</div>}
+            </div>
+          </div>
+
+          {can('admin.access') && (
+            <>
+              <div className="f-umenu__sep" />
+              <div className="f-umenu__sect-lbl">
+                <Icon name="admin_panel_settings" /> لوحة الإدارة
+              </div>
+              <button className="f-umenu__item" onClick={() => goAdmin('overview')}>
+                <Icon name="space_dashboard" /><span>نظرة عامة</span>
+              </button>
+              <button className="f-umenu__item" onClick={() => goAdmin('services')}>
+                <Icon name="apps" /><span>إدارة الخدمات</span>
+              </button>
+              <button className="f-umenu__item" onClick={() => goAdmin('tips')}>
+                <Icon name="tips_and_updates" /><span>إدارة النصائح</span>
+              </button>
+              {can('users.read') && (
+                <button className="f-umenu__item" onClick={() => goAdmin('users')}>
+                  <Icon name="group" /><span>المستخدمون</span>
+                </button>
+              )}
+              <button className="f-umenu__item" onClick={() => goAdmin('settings')}>
+                <Icon name="tune" /><span>إعدادات المركز</span>
+              </button>
+              {can('audit.read') && (
+                <button className="f-umenu__item" onClick={() => goAdmin('audit')}>
+                  <Icon name="history" /><span>سجل التدقيق</span>
+                </button>
+              )}
+            </>
+          )}
+
+          {otherUsers.length > 0 && (
+            <>
+              <div className="f-umenu__sep" />
+              <div className="f-umenu__sect-lbl">
+                <Icon name="switch_account" /> تبديل الحساب
+              </div>
+              {otherUsers.map(u => (
+                <button key={u.id} className="f-umenu__item f-umenu__item--user" onClick={() => switchTo(u.id)}>
+                  <span className="f-umenu__avatar f-umenu__avatar--sm">{u.name.slice(0,1)}</span>
+                  <span className="f-umenu__item-main">
+                    <span>{u.name}</span>
+                    <small>{window.Auth.ROLE_LABELS[u.role]}</small>
+                  </span>
+                </button>
+              ))}
+            </>
+          )}
+
+          <div className="f-umenu__sep" />
+          <button className="f-umenu__item f-umenu__item--danger" onClick={() => { window.Auth.signOut(); setOpen(false); }}>
+            <Icon name="logout" /><span>تسجيل الخروج</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================
 // TOP CHROME
 // =============================================================
-function TopChrome({ tab, setTab, dark, setDark, onCmdK }) {
+function TopChrome({ tab, setTab, dark, setDark, onCmdK, nav }) {
   return (
     <header className="f-top">
       <div className="f-top__row">
@@ -46,7 +157,7 @@ function TopChrome({ tab, setTab, dark, setDark, onCmdK }) {
           <Icon name={dark ? 'light_mode' : 'dark_mode'} />
           <span className="f-morph__lbl">{dark ? 'نهاري' : 'ليلي'}</span>
         </button>
-        <button className="f-avatar">كب</button>
+        <UserMenu nav={nav} />
       </div>
       <nav className="f-tabs">
         {[
@@ -57,7 +168,6 @@ function TopChrome({ tab, setTab, dark, setDark, onCmdK }) {
           { k: 'reports',  l: 'التقارير' },
           { k: 'pricing',  l: 'الأجور' },
           { k: 'guide',    l: 'الدليل' },
-          ...(window.Auth && window.Auth.can('admin.access') ? [{ k: 'admin', l: 'الأدمن' }] : []),
         ].map(t => (
           <button key={t.k} className={`f-tab ${tab === t.k ? 'is-on' : ''}`} onClick={() => setTab(t.k)}>
             {t.l}
@@ -616,7 +726,7 @@ function App() {
 
   return (
     <div className="f-shell">
-      <TopChrome tab={tab} setTab={(k) => nav(k)} dark={dark} setDark={setDark} onCmdK={noop} />
+      <TopChrome tab={tab} setTab={(k) => nav(k)} dark={dark} setDark={setDark} onCmdK={noop} nav={nav} />
       <main className="f-page">
         {page}
       </main>

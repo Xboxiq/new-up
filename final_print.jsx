@@ -1,50 +1,72 @@
 // =============================================================
-// FINAL — Official paper (Word-faithful print template)
-// Mirrors the exact 8-table layout of the official .docx forms:
-//   T1 title bar · T2 subscriber header · T3 address ·
-//   T4 documents matrix · T5 (opt) doc details · T6 (opt) notes ·
-//   T7 routing · T8 signatures · (opt) declaration block
+// FINAL — Word-faithful printable form
+// Mirrors the official .docx layout pt-by-pt:
+//   - Repeating header (logo + project title + company) every page
+//   - Footer "Page X of Y" via CSS counters
+//   - Title bar | header | address | docs matrix | notes | routing | signatures
+//   - Optional declaration (always starts a new page)
 // =============================================================
 
 const OF_CLASSES = ['منزلي','تجاري','صناعي','زراعي','حكومي','مجمع سكني','مشروع استثماري'];
 const OF_PHASES  = ['أحادي الطور','ثلاثي الطور'];
-const OF_ROUTING = ['خدمات المشتركين','الدائرة الفنية','الدائرة القانونية','الصندوق','شؤون الموظفين','إلغاء الطلب'];
-const OF_CENTER_NAME = 'مركز النضال — كهرباء الرصافة';
-const OF_CENTER_CODE = 'RS-014';
+const OF_ROUTING_DEFAULT = ['خدمات المشتركين','الدائرة الفنية','الدائرة القانونية','الصندوق','شؤون الموظفين','إلغاء الطلب'];
 
 function _cb(on) { return on ? '☑' : '☐'; }
-
 function _fmtDate(d = new Date()) {
-  return d.toLocaleDateString('ar-IQ-u-ca-gregory', { day:'numeric', month:'numeric', year:'numeric' });
+  return d.toLocaleDateString('ar-IQ-u-ca-gregory', { day:'2-digit', month:'2-digit', year:'numeric' });
 }
 
-// Does a doc row apply to a given class? Reproduces the Word ticking pattern:
-//  - `all:true`  → ticked in every class column
-//  - `for: 'صناعي|زراعي'` → ticked only in matching columns
-//  - else → ticked everywhere except classes listed in `not`
-function _docAppliesTo(doc, cls) {
+// Mirrors the Word ticking pattern:
+//  - all:true        → solid bullet in every class column (required)
+//  - for: '<list>'   → solid bullet only in matching classes
+//  - else            → solid bullet everywhere except classes in `not`
+function _docRequiredFor(doc, cls) {
   if (doc.all) return true;
   if (doc.for) return doc.for.split('|').map(s => s.trim()).includes(cls);
   if (doc.not) return !doc.not.split('|').map(s => s.trim()).includes(cls);
   return true;
 }
 
+// Tiny atoms
+function _PaperHeader({ s }) {
+  return (
+    <div className="of-rh" aria-hidden="true">
+      <img className="of-rh__logo" src="assets/logo.png" alt="" />
+      <div className="of-rh__txt">
+        <div className="of-rh__t1">{s.headerTitle || 'مشروع التحول الذكي في الشبكة الكهربائية لفرع توزيع كهرباء الرصافة - منطقة مركز الرصافة'}</div>
+        <div className="of-rh__t2">{s.company || 'شركة تدفق الخير'}</div>
+      </div>
+    </div>
+  );
+}
+function _PaperFooter() {
+  return (
+    <div className="of-rf" aria-hidden="true">
+      <span className="of-rf__page" />
+    </div>
+  );
+}
+
 // =============================================================
-function OfficialPaper({ svc, schema, form }) {
+function OfficialPaper({ svc, schema, form, attachments }) {
+  const settings = (window.DB && window.DB.settings.get()) || {};
   const today = _fmtDate();
   const serial = form._serial ||
-    `${svc.code}-${OF_CENTER_CODE}-${String(Math.floor(Math.random() * 9000) + 1000)}`;
+    `${svc.code}-${(settings.centerCode || 'RS-014')}-${String(Math.floor(Math.random() * 9000) + 1000)}`;
 
   const docsList = (schema.sections || [])
     .filter(sx => sx.kind === 'documents')
     .flatMap(sx => sx.list || []);
 
-  const showPhase   = (schema.sections || []).some(sx =>
-    sx.kind === 'classification' && Array.isArray(sx.phases));
+  const showPhase   = (schema.sections || []).some(sx => sx.kind === 'classification' && Array.isArray(sx.phases));
   const showClass   = (schema.sections || []).some(sx => sx.kind === 'classification');
-  const routing     = schema.routing || OF_ROUTING;
+  const routing     = schema.routing || OF_ROUTING_DEFAULT;
   const docDetails  = schema.extraDocsTable;
-  const showNotes   = !!form.reason;
+  const showNotes   = !!(form.reason || form.notes);
+  const declaration = schema.declaration;
+  const hasAttachments = attachments && attachments.length > 0;
+
+  const fileName = `${svc.code}_${(form.name || 'بدون-اسم').replace(/\s/g,'-')}_${new Date().toISOString().slice(0,10)}`;
 
   return (
     <div className="of-wrap">
@@ -52,20 +74,39 @@ function OfficialPaper({ svc, schema, form }) {
       <div className="of-toolbar no-print">
         <span className="of-toolbar__hint">
           <Icon name="info" />
-          معاينة الفورمة الأصلية — مطابقة لـ Word
+          معاينة الورقة الرسمية — مطابقة لـ Word ({svc.code})
         </span>
         <div className="of-toolbar__btns">
           <button className="f-btn" onClick={() => window.print()}>
             <Icon name="print" /> طباعة
           </button>
           <button className="f-btn f-btn--primary" onClick={() => window.print()}>
-            <Icon name="file_download" /> حفظ كـ PDF
+            <Icon name="picture_as_pdf" /> حفظ كـ PDF
           </button>
+          {window.exportFormWithAttachments && (
+            <button className="f-btn"
+                    onClick={() => window.exportFormWithAttachments({ svc, schema, form, attachments: attachments || [], fileName })}>
+              <Icon name="file_save" /> PDF موحّد {hasAttachments && <small style={{ opacity: 0.7 }}>(مع المرفقات)</small>}
+            </button>
+          )}
         </div>
       </div>
 
-      {/* PRINTABLE SHEET */}
+      {/* PRINTABLE SHEET — wrapped in a table so <thead> repeats every page */}
       <article className="of-paper" dir="rtl" id="of-print-root">
+        <table className="of-pagedoc">
+          <thead>
+            <tr><td>
+              <div className="of-sheet-header">
+                <img src="assets/logo.png" alt="" />
+                <div>
+                  <div className="of-sheet-header__t1">{settings.headerTitle || 'مشروع التحول الذكي في الشبكة الكهربائية لفرع توزيع كهرباء الرصافة - منطقة مركز الرصافة'}</div>
+                  <div className="of-sheet-header__t2">{settings.company || 'شركة تدفق الخير'}</div>
+                </div>
+              </div>
+            </td></tr>
+          </thead>
+          <tbody><tr><td>
 
         {/* ─── T1 · TITLE BAR ─────────────────────────────── */}
         <table className="of-tbl of-titlebar">
@@ -94,7 +135,7 @@ function OfficialPaper({ svc, schema, form }) {
           <tbody>
             <tr>
               <th>اسم المركز</th>
-              <td>{OF_CENTER_NAME}</td>
+              <td>{settings.centerName || 'مركز النضال — كهرباء الرصافة'}</td>
               <th>تاريخ الطلب</th>
               <td>{today}</td>
               <th>الرقم المرجعي</th>
@@ -102,7 +143,7 @@ function OfficialPaper({ svc, schema, form }) {
             </tr>
             <tr>
               <th>رقم المركز</th>
-              <td>{OF_CENTER_CODE}</td>
+              <td>{settings.centerCode || 'RS-014'}</td>
               <th>اسم المشترك / طالب الخدمة</th>
               <td>{form.name || ''}</td>
               <th>رقم البطاقة الموحدة / الهوية</th>
@@ -110,7 +151,7 @@ function OfficialPaper({ svc, schema, form }) {
             </tr>
             {showClass && (
               <tr>
-                <th>{form._classLabel || 'صنف الاشتراك'}</th>
+                <th>{form._classLabel || 'صنف الاشتراك المطلوب'}</th>
                 <td colSpan={5} className="of-checks">
                   {OF_CLASSES.map(c => (
                     <span key={c} className="of-check">
@@ -135,7 +176,6 @@ function OfficialPaper({ svc, schema, form }) {
           </tbody>
         </table>
 
-        {/* heading */}
         <h3 className="of-heading">بيانات طالب الخدمة / المشترك القانوني</h3>
 
         {/* ─── T3 · ADDRESS ───────────────────────────────── */}
@@ -162,7 +202,9 @@ function OfficialPaper({ svc, schema, form }) {
               <th>دار</th>
               <td className="of-mono">{form.dar || ''}</td>
               <th>رقم القطعة والمقاطعة</th>
-              <td colSpan={3}>{form.piece || ''}</td>
+              <td colSpan={2}>{form.piece || ''}</td>
+              <th>رقم الطابق</th>
+              <td className="of-mono">{form.floor || ''}</td>
             </tr>
             <tr>
               <th>رقم هاتف / موبايل</th>
@@ -177,44 +219,43 @@ function OfficialPaper({ svc, schema, form }) {
           </tbody>
         </table>
 
-        {/* heading */}
-        {docsList.length > 0 && (
-          <h3 className="of-heading">الوثائق / المستمسكات المطلوبة</h3>
-        )}
-
         {/* ─── T4 · DOCS MATRIX ───────────────────────────── */}
         {docsList.length > 0 && (
-          <table className="of-tbl of-docs">
-            <thead>
-              <tr>
-                <th style={{ width:'7%' }}>الحالة</th>
-                <th style={{ width:'4%' }}>#</th>
-                <th>الصنف</th>
-                {OF_CLASSES.map(c => (
-                  <th key={c} className="of-docs__cls">{c}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {docsList.map((d, i) => {
-                const dk = `doc_${i}`;
-                return (
-                  <tr key={i}>
-                    <td className="of-docs__cb">{_cb(!!(form.docs && form.docs[dk]))}</td>
-                    <td className="of-docs__n">{i + 1}</td>
-                    <td className="of-docs__name">
-                      {d.n}{d.opt && <span className="of-docs__opt"> ({d.opt})</span>}
-                    </td>
-                    {OF_CLASSES.map(c => (
-                      <td key={c} className="of-docs__cls">
-                        {_docAppliesTo(d, c) ? '☐' : <span className="of-dot">·</span>}
+          <>
+            <h3 className="of-heading">الوثائق / المستمسكات المطلوبة</h3>
+            <table className="of-tbl of-docs">
+              <thead>
+                <tr>
+                  <th style={{ width:'7%' }}>الحالة</th>
+                  <th style={{ width:'4%' }}>#</th>
+                  <th>الصنف</th>
+                  {OF_CLASSES.map(c => (
+                    <th key={c} className="of-docs__cls">{c}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {docsList.map((d, i) => {
+                  const dk = `doc_${i}`;
+                  const ticked = !!(form.docs && (form.docs[dk] || form.docs[d.n]));
+                  return (
+                    <tr key={i}>
+                      <td className="of-docs__cb">{_cb(ticked)}</td>
+                      <td className="of-docs__n">{i + 1}</td>
+                      <td className="of-docs__name">
+                        {d.n}{d.opt && <span className="of-docs__opt"> ({d.opt})</span>}
                       </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      {OF_CLASSES.map(c => (
+                        <td key={c} className="of-docs__cls">
+                          {_docRequiredFor(d, c) ? <span className="of-bullet">●</span> : '☐'}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
         )}
 
         {/* ─── T5 · DOC DETAILS (optional) ─────────────────── */}
@@ -252,7 +293,7 @@ function OfficialPaper({ svc, schema, form }) {
               <tbody>
                 <tr>
                   <th style={{ width:'22%' }}>سبب الطلب / الملاحظات</th>
-                  <td>{form.reason || ''}</td>
+                  <td>{form.reason || form.notes || ''}</td>
                 </tr>
               </tbody>
             </table>
@@ -267,7 +308,7 @@ function OfficialPaper({ svc, schema, form }) {
               <td className="of-checks">
                 {routing.map(r => (
                   <span key={r} className="of-check">
-                    <span className="of-check__b">☐</span> {r}
+                    <span className="of-check__b">{_cb(form._route === r)}</span> {r}
                   </span>
                 ))}
               </td>
@@ -285,31 +326,34 @@ function OfficialPaper({ svc, schema, form }) {
             </tr>
           </thead>
           <tbody>
-            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td><td>{form.name || ''}</td><td>&nbsp;</td></tr>
           </tbody>
         </table>
 
-        {/* ─── DECLARATION (optional, multi-paragraph) ────── */}
-        {schema.declaration && (
+        {/* ─── DECLARATION (always its own page) ─────────── */}
+        {declaration && (
           <section className="of-decl">
             <h3 className="of-heading of-heading--decl">إقرار وتعهّد والتزام</h3>
             <div className="of-decl__body">
-              {schema.declaration.split('\n').filter(Boolean).map((line, i) => (
+              {declaration.split('\n').filter(Boolean).map((line, i) => (
                 <p key={i}>{line.trim()}</p>
               ))}
             </div>
             <div className="of-decl__sign">
               <div className="of-decl__col">
-                <div className="of-decl__line" />
+                <div className="of-decl__line">{form.name || ''}</div>
                 <div className="of-decl__lbl">اسم وتوقيع مقدم الطلب</div>
               </div>
               <div className="of-decl__col">
-                <div className="of-decl__line" />
+                <div className="of-decl__line">{today}</div>
                 <div className="of-decl__lbl">التاريخ</div>
               </div>
             </div>
           </section>
         )}
+
+          </td></tr></tbody>
+        </table>
       </article>
     </div>
   );
