@@ -70,8 +70,19 @@
       writeSession(null);
       return null;
     }
-    const u = window.DB && window.DB.users.get(s.userId);
-    if (!u || !u.active) {
+    // DB may still be seeding asynchronously on first load. If the users
+    // table is empty, don't wipe the session — just return null this tick;
+    // subscribers will re-render once seed completes.
+    if (!window.DB) return null;
+    const users = window.DB.users.list();
+    if (users.length === 0) return null;
+    const u = window.DB.users.get(s.userId);
+    if (!u) {
+      // User truly missing — wipe session
+      writeSession(null);
+      return null;
+    }
+    if (!u.active) {
       writeSession(null);
       return null;
     }

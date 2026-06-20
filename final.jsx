@@ -671,8 +671,14 @@ function App() {
   }, [dark]);
 
   // Auth state: re-render whenever Auth changes (login, logout, role change…)
+  // and also when the users table changes (DB seed completes asynchronously
+  // on first load, so the initial render may have no users yet).
   const [, setAuthTick] = useState(0);
-  useEffect(() => window.Auth && window.Auth.subscribe(() => setAuthTick(t => t + 1)), []);
+  useEffect(() => {
+    const unsubA = window.Auth && window.Auth.subscribe(() => setAuthTick(t => t + 1));
+    const unsubU = window.DB && window.DB.users.subscribe(() => setAuthTick(t => t + 1));
+    return () => { unsubA && unsubA(); unsubU && unsubU(); };
+  }, []);
 
   const [route, setRoute] = useState(() => {
     try { return JSON.parse(localStorage.getItem('tq-f-route') || '{"name":"overview"}'); }
