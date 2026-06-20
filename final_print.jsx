@@ -1,16 +1,15 @@
 // =============================================================
-// FINAL — Pixel-perfect printable form
+// FINAL — Official paper: PDF-overlay rendering
 //
-// Uses HTML templates pre-generated from the official Word docs
-// via LibreOffice. The HTML is a 1:1 reproduction of the .docx
-// (same widths, borders, fonts, RTL flow, checkbox positions).
-// We substitute {{placeholders}} with the form values at render
-// time. Printing this preview produces output identical to Word.
+// We ship one pre-rendered PDF per form (forms_pdf/<CODE>.pdf) that
+// was produced by LibreOffice from the official Word file. The PDF
+// preserves the layout, fonts, RTL flow, checkbox positions, table
+// borders and page-numbers exactly as Word.
 //
-// Two artifacts to the user:
-//   * The printable preview (HTML, perfect Word fidelity)
-//   * A downloadable .docx (the exact official document with
-//     the data filled in, for archival/submission).
+// At runtime, pdf-lib draws the user's data on top of the PDF at
+// the exact field coordinates stored in forms_pdf/<CODE>.json. The
+// resulting PDF is byte-identical to Word in layout — the only
+// difference is that the empty cells now contain the form values.
 // =============================================================
 
 function OfficialPaper({ svc, schema, form, attachments }) {
@@ -18,36 +17,47 @@ function OfficialPaper({ svc, schema, form, attachments }) {
   const [state, setState] = React.useState('loading');
   const [errMsg, setErrMsg] = React.useState('');
 
+  // Re-render when svc or form values change, debounced
+  const formKey = React.useMemo(() => JSON.stringify(form), [form]);
   React.useEffect(() => {
     if (!ref.current) return;
-    if (!window.renderHtmlForm) {
+    if (!window.renderFilledPdf) {
       setState('error');
-      setErrMsg('وحدة عرض النموذج لم تُحمَّل بعد');
+      setErrMsg('وحدة PDF غير محمّلة');
       return;
     }
     setState('loading');
     let cancelled = false;
-    window.renderHtmlForm(svc, form, ref.current)
-      .then(() => { if (!cancelled) setState('ready'); })
-      .catch(e => {
-        if (cancelled) return;
-        setState('error');
-        setErrMsg(e.message || 'فشل تحميل النموذج');
-      });
-    return () => { cancelled = true; };
-  }, [svc.code, JSON.stringify(form)]);
+    const t = setTimeout(() => {
+      if (cancelled) return;
+      window.renderFilledPdf(svc, form, ref.current)
+        .then(() => { if (!cancelled) setState('ready'); })
+        .catch(e => {
+          if (cancelled) return;
+          setState('error');
+          setErrMsg(e.message || 'فشل التجهيز');
+        });
+    }, 250);
+    return () => { cancelled = true; clearTimeout(t); };
+  }, [svc.code, formKey]);
 
   const hasAttachments = attachments && attachments.length > 0;
-  const fileName = window.docxFileNameFor
-    ? window.docxFileNameFor(svc, form)
+  const fileName = window.pdfFileNameFor
+    ? window.pdfFileNameFor(svc, form)
     : `${svc.code}_${(form.name || 'بدون-اسم').replace(/\s/g,'-')}`;
 
   const onDownloadWord = async () => {
     try { await window.downloadFilledDocx(svc, form); }
     catch (e) { alert('تعذّر تنزيل ملف Word: ' + e.message); }
   };
-  const onPrint = () => window.printHtmlForm(svc, form);
-  const onSavePdf = () => window.printHtmlForm(svc, form);
+  const onDownloadPdf = async () => {
+    try { await window.downloadFilledPdf(svc, form, ref.current); }
+    catch (e) { alert('تعذّر تنزيل PDF: ' + e.message); }
+  };
+  const onPrint = async () => {
+    try { await window.printFilledPdf(ref.current); }
+    catch (e) { alert('تعذّر الطباعة: ' + e.message); }
+  };
   const onPdfWithAttach = () => {
     if (!window.exportFormWithAttachments) return;
     window.exportFormWithAttachments({ svc, schema, form, attachments: attachments || [], fileName });
@@ -57,11 +67,11 @@ function OfficialPaper({ svc, schema, form, attachments }) {
     <div className="of-wrap">
       <div className="of-toolbar no-print">
         <div className="of-toolbar__lhs">
-          <button className="f-btn f-btn--primary f-btn--lg" onClick={onDownloadWord}>
-            <Icon name="description" />
+          <button className="f-btn f-btn--primary f-btn--lg" onClick={onDownloadPdf}>
+            <Icon name="picture_as_pdf" />
             <span>
-              <strong>تنزيل ملف Word الرسمي</strong>
-              <small>للأرشفة والإرسال للجهات المختصة</small>
+              <strong>تنزيل PDF الرسمي</strong>
+              <small>مطابق ١٠٠٪ للنموذج المعتمد + بياناتك</small>
             </span>
           </button>
         </div>
@@ -69,8 +79,8 @@ function OfficialPaper({ svc, schema, form, attachments }) {
           <button className="f-btn" onClick={onPrint}>
             <Icon name="print" /> طباعة
           </button>
-          <button className="f-btn" onClick={onSavePdf}>
-            <Icon name="picture_as_pdf" /> حفظ PDF
+          <button className="f-btn" onClick={onDownloadWord}>
+            <Icon name="description" /> تنزيل Word
           </button>
           {window.exportFormWithAttachments && (
             <button className="f-btn" onClick={onPdfWithAttach}>
@@ -81,23 +91,23 @@ function OfficialPaper({ svc, schema, form, attachments }) {
         </div>
       </div>
 
-      <div className="of-lo-shell" id="of-print-root">
+      <div className="of-pdf-shell" id="of-print-root">
         {state === 'loading' && (
-          <div className="of-docx-state">
+          <div className="of-pdf-loading">
             <div className="of-docx-spinner" />
-            جاري تحميل النموذج…
+            جاري تجهيز النموذج…
           </div>
         )}
         {state === 'error' && (
           <div className="of-docx-state of-docx-state--err">
             <Icon name="warning" />
             <div>
-              <strong>تعذّر تحميل النموذج</strong>
+              <strong>تعذّر تجهيز النموذج</strong>
               <div style={{ fontSize:'0.82rem', marginTop:4, opacity:0.85 }}>{errMsg}</div>
             </div>
           </div>
         )}
-        <div ref={ref} />
+        <div ref={ref} className="of-pdf-host" />
       </div>
     </div>
   );
