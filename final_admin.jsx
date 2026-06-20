@@ -1437,45 +1437,286 @@ function SettingsTab() {
 // =============================================================
 // 6) AUDIT LOG
 // =============================================================
-function AuditTab() {
-  const rows = useStore(window.DB.audit);
-  const [q, setQ] = useState('');
-  const filtered = rows.filter(r => !q ||
-    (r.action + ' ' + r.target + ' ' + r.by).toLowerCase().includes(q.toLowerCase()));
-  const clear = () => {
-    if (!confirm('مسح كامل السجل؟')) return;
-    window.DB.audit.replaceAll([]);
+// Categorize an audit action (e.g. "user.create" → "users", "role.permission.toggle" → "roles")
+function _auditCategoryOf(action) {
+  if (!action) return 'other';
+  const first = String(action).split('.')[0];
+  const map = {
+    user:     'users',
+    users:    'users',
+    role:     'roles',
+    roles:    'roles',
+    request:  'requests',
+    requests: 'requests',
+    payment:  'payments',
+    payments: 'payments',
+    services: 'system',
+    tips:     'content',
+    settings: 'system',
+    branch:   'system',
+    branches: 'system',
+    department:'system',
+    auth:     'users',
+    session:  'users',
+    audit:    'audit',
+    report:   'reports',
+    reports:  'reports',
   };
+  return map[first] || 'system';
+}
+
+function _csvEscape(v) {
+  if (v == null) return '';
+  const s = String(v);
+  if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+function _exportAuditCsv(rows) {
+  const header = ['التاريخ','الفعل','الفئة','الهدف','المستخدم','IP','الجهاز','التفاصيل'];
+  const lines = [header.join(',')];
+  for (const r of rows) {
+    const ts  = new Date(r.ts).toLocaleString('en-CA', { hour12: false }).replace(',', '');
+    const cat = _auditCategoryOf(r.action);
+    const det = r.payload ? Object.entries(r.payload).map(([k,v]) => `${k}=${v}`).join(' | ') : '';
+    lines.push([ts, r.action, cat, r.target||'', r.by||'', r.ip||'', _parseUA(r.ua), det].map(_csvEscape).join(','));
+  }
+  const csv = '﻿' + lines.join('\r\n');   // BOM for Excel UTF-8
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `audit-log-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+const _DATE_PRESETS = [
+  { k: 'all',   l: 'الكل',           ms: null },
+  { k: 'today', l: 'اليوم',          ms: 24 * 3600 * 1000 },
+  { k: '7d',    l: 'آخر ٧ أيام',    ms: 7 * 24 * 3600 * 1000 },
+  { k: '30d',   l: 'آخر ٣٠ يوم',   ms: 30 * 24 * 3600 * 1000 },
+];
+
+function AuditTab() {
+  const rows  = useStore(window.DB.audit);
+  const users = useStore(window.DB.users);
+  const can   = window.Auth.can;
+  const toast = window.useToast();
+
+  const [q, setQ]           = useState('');
+  const [cat, setCat]       = useState('all');
+  const [userId, setUserId] = useState('all');
+  const [range, setRange]   = useState('all');
+  const [openId, setOpenId] = useState(null);
+  const [confirmClear, setConfirmClear] = useState(false);
+
+  // Filter
+  const since = (() => {
+    const p = _DATE_PRESETS.find(x => x.k === range);
+    return p && p.ms ? Date.now() - p.ms : null;
+  })();
+  const filtered = rows.filter(r => {
+    if (since && r.ts < since) return false;
+    if (cat !== 'all' && _auditCategoryOf(r.action) !== cat) return false;
+    if (userId !== 'all' && r.byId !== userId) return false;
+    if (q) {
+      const hay = (r.action + ' ' + (r.target||'') + ' ' + (r.by||'') + ' ' + JSON.stringify(r.payload||{})).toLowerCase();
+      if (!hay.includes(q.toLowerCase())) return false;
+    }
+    return true;
+  });
+
+  // Stats
+  const dayMs   = 24 * 3600 * 1000;
+  const todayN  = rows.filter(r => r.ts > Date.now() - dayMs).length;
+  const weekN   = rows.filter(r => r.ts > Date.now() - 7 * dayMs).length;
+  const uniqN   = new Set(rows.map(r => r.byId).filter(Boolean)).size;
+
+  const onExport = () => {
+    if (!can('audit.export')) return;
+    _exportAuditCsv(filtered);
+    window.DB.log('audit.export', `${filtered.length} entries`, { filters: { cat, userId, range, q: q || null } });
+    toast.push({ kind:'success', title:'تم التصدير', body:`${filtered.length} عملية` });
+  };
+  const onClear = () => {
+    window.DB.audit.replaceAll([]);
+    setConfirmClear(false);
+    toast.push({ kind:'info', title:'تم مسح السجل' });
+  };
+  const resetFilters = () => { setQ(''); setCat('all'); setUserId('all'); setRange('all'); };
+
+  const hasFilters = q || cat !== 'all' || userId !== 'all' || range !== 'all';
+
   return (
     <>
-      <div className="adm-toolbar">
-        <div className="adm-search">
-          <Icon name="search" />
-          <input placeholder="ابحث في السجل…" value={q} onChange={e => setQ(e.target.value)} />
+      {/* ---- stats strip ---- */}
+      <div className="adm-audit-stats">
+        <div className="adm-audit-stats__card">
+          <span className="adm-audit-stats__ico"><Icon name="history" /></span>
+          <div>
+            <div className="adm-audit-stats__n">{rows.length.toLocaleString('ar-IQ')}</div>
+            <div className="adm-audit-stats__l">إجمالي العمليات</div>
+          </div>
         </div>
-        <button className="f-btn" onClick={clear} style={{ color: 'var(--f-err)' }}>
-          <Icon name="delete_sweep" /> مسح السجل
-        </button>
+        <div className="adm-audit-stats__card">
+          <span className="adm-audit-stats__ico adm-audit-stats__ico--today"><Icon name="today" /></span>
+          <div>
+            <div className="adm-audit-stats__n">{todayN.toLocaleString('ar-IQ')}</div>
+            <div className="adm-audit-stats__l">اليوم</div>
+          </div>
+        </div>
+        <div className="adm-audit-stats__card">
+          <span className="adm-audit-stats__ico adm-audit-stats__ico--week"><Icon name="calendar_view_week" /></span>
+          <div>
+            <div className="adm-audit-stats__n">{weekN.toLocaleString('ar-IQ')}</div>
+            <div className="adm-audit-stats__l">آخر ٧ أيام</div>
+          </div>
+        </div>
+        <div className="adm-audit-stats__card">
+          <span className="adm-audit-stats__ico adm-audit-stats__ico--users"><Icon name="group" /></span>
+          <div>
+            <div className="adm-audit-stats__n">{uniqN.toLocaleString('ar-IQ')}</div>
+            <div className="adm-audit-stats__l">مستخدمون نشطون</div>
+          </div>
+        </div>
       </div>
+
+      {/* ---- filters bar ---- */}
+      <div className="adm-audit__filters">
+        <div className="adm-search adm-audit__search">
+          <Icon name="search" />
+          <input placeholder="ابحث في الفعل أو الهدف أو التفاصيل…"
+                 value={q} onChange={e => setQ(e.target.value)} />
+        </div>
+
+        <select className="adm-select" value={cat} onChange={e => setCat(e.target.value)}>
+          <option value="all">جميع الفئات</option>
+          {CATEGORY_ORDER.filter(c => CATEGORY_LABEL[c]).map(c => (
+            <option key={c} value={c}>{CATEGORY_LABEL[c]}</option>
+          ))}
+        </select>
+
+        <select className="adm-select" value={userId} onChange={e => setUserId(e.target.value)}>
+          <option value="all">جميع المستخدمين</option>
+          {users.map(u => (
+            <option key={u.id} value={u.id}>{u.name} (@{u.username})</option>
+          ))}
+        </select>
+
+        <div className="adm-audit__range">
+          {_DATE_PRESETS.map(p => (
+            <button key={p.k}
+                    className={`adm-audit__range-btn ${range === p.k ? 'is-on' : ''}`}
+                    onClick={() => setRange(p.k)}>
+              {p.l}
+            </button>
+          ))}
+        </div>
+
+        <div className="adm-audit__actions">
+          {hasFilters && (
+            <button className="f-btn f-btn--ghost" onClick={resetFilters}>
+              <Icon name="filter_alt_off" /> مسح الفلاتر
+            </button>
+          )}
+          {can('audit.export') && (
+            <button className="f-btn" onClick={onExport} disabled={filtered.length === 0}>
+              <Icon name="file_download" /> تصدير CSV
+            </button>
+          )}
+          {can('settings.manage') && (
+            <button className="f-btn f-btn--danger" onClick={() => setConfirmClear(true)} disabled={rows.length === 0}>
+              <Icon name="delete_sweep" /> مسح السجل
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ---- result count line ---- */}
+      <div className="adm-audit__count">
+        {hasFilters
+          ? <>عرض <strong>{filtered.length.toLocaleString('ar-IQ')}</strong> من أصل {rows.length.toLocaleString('ar-IQ')} عملية</>
+          : <>{rows.length.toLocaleString('ar-IQ')} عملية في السجل</>}
+      </div>
+
+      {/* ---- table ---- */}
       <div className="adm-audit">
         {filtered.length === 0 ? (
-          <div className="adm-empty"><Icon name="history" /><div>السجل فارغ</div></div>
-        ) : filtered.map(a => (
-          <div key={a.id} className="adm-audit__row">
-            <span className="adm-audit__ts">
-              {new Date(a.ts).toLocaleString('ar-IQ-u-ca-gregory', { dateStyle:'short', timeStyle:'short' })}
-            </span>
-            <div className="adm-audit__main">
-              <span className="adm-audit__action">{a.action}</span>
-              <span>{a.target}</span>
-              {a.payload && <span style={{ color: 'var(--f-ink-3)', fontSize: '0.78rem', marginInlineStart: 8 }}>
-                {Object.entries(a.payload).map(([k,v]) => `${k}: ${v}`).join(' · ')}
-              </span>}
-            </div>
-            <span className="adm-audit__by">{a.by}</span>
+          <div className="adm-empty">
+            <Icon name="history" />
+            <div>{hasFilters ? 'لا توجد نتائج مطابقة' : 'السجل فارغ'}</div>
+            {hasFilters && (
+              <button className="f-btn f-btn--ghost" onClick={resetFilters} style={{ marginTop: 12 }}>
+                مسح الفلاتر
+              </button>
+            )}
           </div>
-        ))}
+        ) : filtered.map(a => {
+          const acat = _auditCategoryOf(a.action);
+          const isOpen = openId === a.id;
+          return (
+            <div key={a.id} className={`adm-audit__row ${isOpen ? 'is-open' : ''}`}>
+              <button className="adm-audit__head" onClick={() => setOpenId(isOpen ? null : a.id)}>
+                <span className="adm-audit__ts" title={new Date(a.ts).toLocaleString('ar-IQ-u-ca-gregory')}>
+                  {_timeAgo(a.ts)}
+                </span>
+                <span className={`adm-audit__cat adm-audit__cat--${acat}`}>
+                  <Icon name={CATEGORY_ICON[acat] || 'lock'} />
+                  {CATEGORY_LABEL[acat] || acat}
+                </span>
+                <div className="adm-audit__main">
+                  <code className="adm-audit__action">{a.action}</code>
+                  {a.target && <span className="adm-audit__target">{a.target}</span>}
+                </div>
+                <span className="adm-audit__by">
+                  <span className="adm-audit__by-av">{(a.by || '?').slice(0,1)}</span>
+                  <span className="adm-audit__by-name">{a.by || 'مجهول'}</span>
+                </span>
+                <Icon name={isOpen ? 'expand_less' : 'expand_more'} />
+              </button>
+              {isOpen && (
+                <div className="adm-audit__detail">
+                  <div className="adm-audit__detail-grid">
+                    <div>
+                      <label>التاريخ الكامل</label>
+                      <div>{new Date(a.ts).toLocaleString('ar-IQ-u-ca-gregory', {
+                        dateStyle: 'full', timeStyle: 'medium',
+                      })}</div>
+                    </div>
+                    <div>
+                      <label>عنوان IP</label>
+                      <div><code>{a.ip || '—'}</code></div>
+                    </div>
+                    <div>
+                      <label>الجهاز / المتصفح</label>
+                      <div>{_parseUA(a.ua)}</div>
+                    </div>
+                    <div>
+                      <label>معرّف العملية</label>
+                      <div><code>{a.id}</code></div>
+                    </div>
+                  </div>
+                  {a.payload && Object.keys(a.payload).length > 0 && (
+                    <div className="adm-audit__payload">
+                      <label>التفاصيل</label>
+                      <pre>{JSON.stringify(a.payload, null, 2)}</pre>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
+
+      <window.ConfirmDialog
+        open={confirmClear} danger icon="delete_sweep"
+        title="مسح كامل سجل التدقيق؟"
+        description="سيتم حذف جميع العمليات المسجّلة نهائياً. لا يمكن استرجاعها."
+        confirmLabel="نعم، احذف الكل" cancelLabel="إلغاء"
+        onConfirm={onClear} onCancel={() => setConfirmClear(false)}
+      />
     </>
   );
 }
