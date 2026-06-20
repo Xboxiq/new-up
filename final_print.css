@@ -78,16 +78,38 @@
 }
 .pdf-field {
   position: absolute;
-  font-family: "Noto Naskh Arabic", "Tajawal", "Calibri", "Arial", sans-serif;
+  font-family: "Tajawal", "Arial", "Helvetica Neue", sans-serif;
   color: #000;
   white-space: nowrap;
-  overflow: visible;
-  display: flex;
-  align-items: center;
+  overflow: hidden;
+  display: block;
   padding: 0 2px;
   box-sizing: border-box;
-  /* faint highlight while we tune positions; remove for production */
-  /* background: rgba(255,235,59,0.15); */
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* Tajawal (matches Word's Arial CS for Arabic; bundled locally) */
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('assets/fonts/Tajawal-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('assets/fonts/Tajawal-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('assets/fonts/Tajawal-Bold.ttf') format('truetype');
 }
 
 .of-pdf-loading {

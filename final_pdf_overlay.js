@@ -87,11 +87,12 @@
 
     const pdfDoc = await window.pdfjsLib.getDocument({
       data: new Uint8Array(pdfBytes),
-      // disable fonts hacks — render exactly
       disableFontFace: false,
     }).promise;
 
-    const SCALE = 1.5;  // 1.5x for crisp display
+    const SCALE = 1.5;
+    // Shared canvas for text measurement (reused for every field)
+    const measureCtx = document.createElement('canvas').getContext('2d');
 
     for (let i = 0; i < pdfDoc.numPages; i++) {
       const page = await pdfDoc.getPage(i + 1);
@@ -117,32 +118,74 @@
         viewport,
       }).promise;
 
-      // Add field overlays for this page
       const pageInfo = meta.pages[i];
-      const pageWpt = pageInfo.width;     // PDF points
-      const pageHpt = pageInfo.height;
-      const sx = viewport.width  / pageWpt;
-      const sy = viewport.height / pageHpt;
+      const sx = viewport.width  / pageInfo.width;
+      const sy = viewport.height / pageInfo.height;
 
       for (const f of meta.fields) {
         if (f.page !== i) continue;
         const value = data[f.key];
         if (value == null || value === '') continue;
 
+        const rtl = _isRtl(value);
+        const text = String(value);
+
+        // Geometry — slight horizontal expansion so values aren't clipped
+        const padX = 3;
+        const fieldW = f.w * sx + padX * 2;
+        const fieldH = f.h * sy;
+        const fontFamily = 'Tajawal, "Arial", "Helvetica Neue", sans-serif';
+        const baseSize = f.size * sx;
+
+        // Measure single-line width; if it fits, keep it.
+        // Otherwise: shrink font-size up to 70%, then compress horizontally.
+        let fontSize = baseSize;
+        let multiLine = false;
+        measureCtx.font = `${fontSize}px ${fontFamily}`;
+        const singleW = measureCtx.measureText(text).width;
+        let scaleX = 1;
+
+        if (singleW > fieldW) {
+          // Try shrinking the font (down to 75%)
+          fontSize = Math.max(baseSize * 0.75, baseSize * (fieldW / singleW));
+          measureCtx.font = `${fontSize}px ${fontFamily}`;
+          const w2 = measureCtx.measureText(text).width;
+          if (w2 > fieldW) {
+            // If still too wide, allow wrapping to a second line
+            multiLine = true;
+            scaleX = Math.max(0.85, Math.min(1, fieldW / w2));
+          }
+        }
+
         const el = document.createElement('span');
         el.className = 'pdf-field';
-        // Slightly expand horizontally so longer values aren't clipped
-        const padX = 4;
         el.style.left   = (f.x * sx - padX) + 'px';
         el.style.top    = (f.y * sy) + 'px';
-        el.style.width  = (f.w * sx + padX * 2) + 'px';
-        el.style.height = (f.h * sy) + 'px';
-        el.style.fontSize = (f.size * sx) + 'px';
-        el.style.lineHeight = (f.h * sy) + 'px';
-        el.style.direction = _isRtl(value) ? 'rtl' : 'ltr';
-        el.style.textAlign = _isRtl(value) ? 'right' : 'center';
-        el.dir = _isRtl(value) ? 'rtl' : 'ltr';
-        el.textContent = String(value);
+        el.style.width  = fieldW + 'px';
+        el.style.fontFamily = fontFamily;
+        el.style.fontSize = fontSize + 'px';
+        el.style.direction = rtl ? 'rtl' : 'ltr';
+        el.style.textAlign = rtl ? 'right' : 'center';
+        el.dir = rtl ? 'rtl' : 'ltr';
+        if (multiLine) {
+          el.style.whiteSpace = 'normal';
+          el.style.lineHeight = '1.05';
+          // Allow up to ~3 lines downward; the cell behind it can absorb the overflow.
+          el.style.height = (fieldH * 3) + 'px';
+          el.style.display = 'flex';
+          el.style.alignItems = 'flex-start';
+          el.style.justifyContent = rtl ? 'flex-end' : 'center';
+          el.style.paddingTop = (fieldH * 0.05) + 'px';
+        } else {
+          el.style.whiteSpace = 'nowrap';
+          el.style.height = fieldH + 'px';
+          el.style.lineHeight = fieldH + 'px';
+        }
+        if (scaleX < 1) {
+          el.style.transform = `scaleX(${scaleX})`;
+          el.style.transformOrigin = rtl ? 'right top' : 'center top';
+        }
+        el.textContent = text;
         overlay.appendChild(el);
       }
 
