@@ -124,7 +124,14 @@
 <meta charset="utf-8">
 <title>طباعة</title>
 <style>
-  @page { size: A4 portrait; margin: 10mm; }
+  /* Important: docx-preview already injects the Word section's
+     margins as PADDING on section.docx. So @page margin must be
+     ZERO, otherwise margins are applied twice and the whole layout
+     shifts. We only set the page SIZE here (US Letter from sectPr). */
+  @page {
+    size: 8.5in 11in;
+    margin: 0;
+  }
   html, body { margin: 0; padding: 0; background: #fff; }
   body { direction: rtl; font-family: "Tajawal", "Arial", "Helvetica Neue", sans-serif; }
   /* Force RTL on every node — overrides docx-preview inline styles */
@@ -134,7 +141,11 @@
     unicode-bidi: embed !important;
   }
   .docx-wrapper { background: transparent !important; padding: 0 !important; }
-  section.docx { margin: 0 auto !important; box-shadow: none !important; }
+  section.docx {
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    /* docx-preview sets the section size to the docx pgSz; leave it alone */
+  }
   table { margin-left: 0 !important; margin-right: 0 !important; }
   td, th { text-align: right !important; }
   /* Latin/digit runs stay LTR */

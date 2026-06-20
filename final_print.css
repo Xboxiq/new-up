@@ -53,6 +53,9 @@
   background: transparent !important;
   padding: 0 !important;
 }
+/* docx-preview emits section.docx with the EXACT pgSz and pgMar from
+   the .docx (in pt) — don't override its width/padding. Just style
+   the frame around it. */
 .of-docx-host section.docx {
   background: #fff;
   margin: 0 auto 16px !important;
