@@ -134,17 +134,13 @@
       document.body.appendChild(stage);
     }
     await renderHtmlInto(svc, form, stage);
-    if (document.fonts && document.fonts.ready) {
-      try { await document.fonts.ready; } catch (_) { /* ignore */ }
-    }
     document.body.classList.add('printing-lo');
     const cleanup = () => {
       document.body.classList.remove('printing-lo');
-      stage.innerHTML = '';
       window.removeEventListener('afterprint', cleanup);
     };
     window.addEventListener('afterprint', cleanup);
-    setTimeout(() => window.print(), 150);
+    window.print();
   }
 
   window.fillDocxTemplate = fillTemplate;

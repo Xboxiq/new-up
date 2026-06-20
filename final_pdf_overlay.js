@@ -198,31 +198,10 @@
     return `${svc.code}_${safe}_${new Date().toISOString().slice(0,10)}`;
   }
 
-  // cloneNode(true) does NOT copy <canvas> bitmap data — copy pixels manually.
-  function _cloneForPrint(container) {
-    const clone = container.cloneNode(true);
-    const srcCanvases = container.querySelectorAll('canvas');
-    const dstCanvases = clone.querySelectorAll('canvas');
-    srcCanvases.forEach((src, i) => {
-      const dst = dstCanvases[i];
-      if (!dst) return;
-      dst.width = src.width;
-      dst.height = src.height;
-      dst.getContext('2d').drawImage(src, 0, 0);
-    });
-    return clone;
-  }
-
-  async function _waitForFonts() {
-    if (document.fonts && document.fonts.ready) {
-      try { await document.fonts.ready; } catch (_) { /* ignore */ }
-    }
-  }
-
   // ---------- Print/PDF export: use browser's native print on the rendered pages ----------
   async function printRendered(container) {
     if (!container) return;
-    await _waitForFonts();
+    // Mark document as in print-render mode so our @media print rules show only the rendered pages
     const stage = document.getElementById('pdf-print-stage') || (() => {
       const d = document.createElement('div');
       d.id = 'pdf-print-stage';
@@ -230,7 +209,9 @@
       return d;
     })();
     stage.innerHTML = '';
-    stage.appendChild(_cloneForPrint(container));
+    // Clone the container into the print stage
+    const clone = container.cloneNode(true);
+    stage.appendChild(clone);
     document.body.classList.add('printing-pdf');
     const cleanup = () => {
       document.body.classList.remove('printing-pdf');
@@ -238,7 +219,7 @@
       window.removeEventListener('afterprint', cleanup);
     };
     window.addEventListener('afterprint', cleanup);
-    setTimeout(() => window.print(), 150);
+    setTimeout(() => window.print(), 100);
   }
 
   // ---------- Download as PDF (composite canvas + overlay → PDF) ----------
