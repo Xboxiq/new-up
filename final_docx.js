@@ -116,23 +116,28 @@
     const doc = frame.contentDocument;
     doc.open();
     doc.write(`<!doctype html>
-<html dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
 <meta charset="utf-8">
 <title>طباعة</title>
 <style>
   @page { size: A4 portrait; margin: 10mm; }
   html, body { margin: 0; padding: 0; background: #fff; }
-  body { direction: rtl; font-family: "Tajawal", "Arial", sans-serif; }
-  .docx-wrapper { background: transparent !important; padding: 0 !important; }
-  section.docx { margin: 0 !important; box-shadow: none !important; }
+  body { direction: rtl; font-family: "Tajawal", "Arial", "Helvetica Neue", sans-serif; }
+  .docx-wrapper { background: transparent !important; padding: 0 !important; direction: rtl !important; }
+  section.docx { margin: 0 auto !important; box-shadow: none !important; direction: rtl !important; }
+  /* Force RTL on every table the renderer produces */
+  table { direction: rtl !important; margin-left: 0 !important; margin-right: 0 !important; }
+  td, th { direction: rtl !important; text-align: right !important; }
+  /* Latin/numeric-only paragraphs inside Arabic cells keep LTR for legibility */
+  p:lang(en) { direction: ltr; text-align: center; }
   @media print {
     section.docx { page-break-after: always; }
     section.docx:last-child { page-break-after: auto; }
   }
 </style>
 </head>
-<body><div id="root"></div></body>
+<body><div id="root" dir="rtl"></div></body>
 </html>`);
     doc.close();
 

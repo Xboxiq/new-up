@@ -39,14 +39,10 @@
   background: transparent;
   position: relative;
 }
-.of-docx-host {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 .of-docx-host .docx-wrapper {
   background: transparent !important;
   padding: 0 !important;
+  direction: rtl !important;
 }
 .of-docx-host section.docx {
   background: #fff;
@@ -55,7 +51,27 @@
     0 1px 2px rgba(0,0,0,0.06),
     0 24px 56px -20px rgba(0,0,0,0.18);
   border-radius: 2px;
-  direction: rtl;
+  direction: rtl !important;
+}
+/* docx-preview renders tables LTR by default — force RTL */
+.of-docx-host table,
+.of-docx-host section.docx table,
+.of-docx-host .docx-rendered table {
+  direction: rtl !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.of-docx-host td, .of-docx-host th {
+  direction: rtl !important;
+  text-align: right !important;
+}
+/* Number-only cells (e.g. dates, IDs) stay LTR for legibility */
+.of-docx-host td:lang(en) { direction: ltr !important; text-align: center !important; }
+/* Center the document inside the wrapper */
+.of-docx-host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .of-docx-loading {
