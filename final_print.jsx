@@ -55,7 +55,12 @@ function OfficialPaper({ svc, schema, form, attachments }) {
     catch (e) { alert('تعذّر تنزيل PDF: ' + e.message); }
   };
   const onPrint = async () => {
-    try { await window.printFilledPdf(ref.current); }
+    try {
+      // HTML preview is LibreOffice's conversion of the official Word file —
+      // printing it gives output identical to the Word template with filled data.
+      if (window.printHtmlForm) await window.printHtmlForm(svc, form);
+      else await window.printFilledPdf(ref.current);
+    }
     catch (e) { alert('تعذّر الطباعة: ' + e.message); }
   };
   const onPdfWithAttach = () => {

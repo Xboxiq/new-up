@@ -150,41 +150,84 @@
 /* ========================================================
    PRINT — show only the rendered pages
    ======================================================== */
-#pdf-print-stage { display: none; }
-.printing-pdf #pdf-print-stage {
+#pdf-print-stage,
+#lo-print-stage { display: none; }
+
+body.printing-pdf #pdf-print-stage {
   display: block;
   position: relative;
 }
 
+/* LibreOffice HTML (Word-faithful) print stage */
+body.printing-lo #lo-print-stage {
+  display: block;
+  position: relative;
+}
+.lo-doc {
+  background: #fff;
+  color: #000;
+  font-family: "Arial", "Traditional Arabic", "Simplified Arabic", "Tajawal", sans-serif;
+  font-size: 12pt;
+  line-height: 1.2;
+}
+.lo-doc table { border-collapse: collapse; }
+.lo-doc p { margin: 0; }
+
 @media print {
-  @page { size: A4 portrait; margin: 0; }
+  @page { size: A4 portrait; margin: 10mm; }
+
   body * { visibility: hidden !important; }
 
-  /* When user triggered print on our pages */
+  /* PDF-overlay print path */
   body.printing-pdf #pdf-print-stage,
   body.printing-pdf #pdf-print-stage * { visibility: visible !important; }
   body.printing-pdf #pdf-print-stage {
     position: absolute; top: 0; left: 0; right: 0;
+    display: block !important;
   }
   body.printing-pdf .pdf-page {
     box-shadow: none !important;
     border-radius: 0 !important;
     page-break-after: always;
-    margin: 0 !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.printing-pdf .pdf-page:last-child { page-break-after: auto; }
+  body.printing-pdf .pdf-canvas {
+    display: block;
     width: 100% !important;
     height: auto !important;
   }
-  body.printing-pdf .pdf-page:last-child { page-break-after: auto; }
 
-  /* Default: print the on-screen preview when triggered from browser print */
-  body:not(.printing-pdf) .pdf-page,
-  body:not(.printing-pdf) .pdf-page * { visibility: visible !important; }
-  body:not(.printing-pdf) .pdf-page {
+  /* Word-faithful HTML print path (LibreOffice export) */
+  body.printing-lo #lo-print-stage,
+  body.printing-lo #lo-print-stage * { visibility: visible !important; }
+  body.printing-lo #lo-print-stage {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: block !important;
+    background: #fff;
+  }
+  body.printing-lo .lo-doc {
+    width: 100%;
+    max-width: 190mm;
+    margin: 0 auto;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.printing-lo .lo-doc table { page-break-inside: avoid; }
+
+  /* Fallback when triggered from browser print without our class */
+  body:not(.printing-pdf):not(.printing-lo) .pdf-page,
+  body:not(.printing-pdf):not(.printing-lo) .pdf-page * { visibility: visible !important; }
+  body:not(.printing-pdf):not(.printing-lo) .pdf-page {
     position: relative;
     box-shadow: none !important;
     border-radius: 0 !important;
     page-break-after: always;
   }
 
-  .of-toolbar { display: none !important; }
+  .of-toolbar, .no-print { display: none !important; }
 }
