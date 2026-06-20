@@ -358,8 +358,6 @@ function FormPage({ nav, code }) {
   const [confirmReset, setConfirmReset] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [docFiles, setDocFiles] = useState({});
-  const [exporting, setExporting] = useState(false);
-  const [printMode, setPrintMode] = useState('legacy');  // 'legacy' = حرفية Word, 'pro' = احترافية
 
   const initial = () => ({ docs: {}, cls:'منزلي', phase:'أحادي الطور' });
   const [form, setForm] = useState(() => {
@@ -466,26 +464,6 @@ function FormPage({ nav, code }) {
   };
   const removeAttachment = (i) => setAttachments(a => a.filter((_, j) => j !== i));
 
-  const exportUnified = async () => {
-    if (!window.exportFormWithAttachments) {
-      toast && toast.push({ kind:'error', title:'وحدة التصدير غير متوفرة' });
-      return;
-    }
-    setTab('orig');
-    setExporting(true);
-    await new Promise(r => setTimeout(r, 400));
-    try {
-      const fileName = `${svc.code}_${(form.name || 'بدون-اسم').replace(/\s/g,'-')}_${new Date().toISOString().slice(0,10)}`;
-      const merged = allAttachments();
-      await window.exportFormWithAttachments({ svc, schema, form, attachments: merged, fileName });
-      toast && toast.push({ kind:'success', title:'تم تصدير الملف الموحّد', body: `${fileName}.pdf · ${merged.length} ملف` });
-      window.DB && window.DB.log('form.export', svc.code, { with: merged.length });
-    } catch (err) {
-      toast && toast.push({ kind:'error', title:'فشل التصدير', body: err.message });
-    } finally {
-      setExporting(false);
-    }
-  };
 
   const feeResult = computeFees(schema.fees, form);
   const total = useCountUp(feeResult.total || 0);
@@ -656,14 +634,7 @@ function FormPage({ nav, code }) {
                 <Icon name="send" /> تقديم الطلب
               </button>
               <button className="f-btn" onClick={() => setTab('orig')}>
-                <Icon name="description" /> عرض الأصلية
-              </button>
-              <button className="f-btn" onClick={() => { setTab('orig'); setTimeout(() => window.print(), 350); }}>
-                <Icon name="print" /> طباعة
-              </button>
-              <button className="f-btn" onClick={exportUnified} disabled={exporting}>
-                <Icon name={exporting ? 'hourglass_top' : 'file_save'} />
-                {exporting ? 'يجهّز…' : `PDF موحّد ${attachments.length > 0 ? `(+ ${attachments.length})` : ''}`}
+                <Icon name="description" /> النسخة الأصلية
               </button>
               <button className="f-btn" onClick={() => setConfirmReset(true)}>
                 <Icon name="refresh" /> إعادة تهيئة
@@ -672,8 +643,7 @@ function FormPage({ nav, code }) {
           </aside>
         </div>
       ) : (
-        <window.OfficialPaper svc={svc} schema={schema} form={form} attachments={allAttachments()}
-                              mode={printMode} setMode={setPrintMode} />
+        <window.OfficialPaper svc={svc} schema={schema} form={form} attachments={allAttachments()} />
       )}
 
       {showErrors && Object.keys(errors).length > 0 && tab === 'pro' && (

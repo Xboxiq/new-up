@@ -1,5 +1,5 @@
 /* =============================================================
-   OFFICIAL PAPER — PDF.js canvas + HTML overlay (Word-faithful)
+   OFFICIAL PAPER — Word-only flow (preview + download + print)
    ============================================================= */
 
 .of-wrap {
@@ -10,15 +10,14 @@
   padding: 16px 0 60px;
 }
 
-/* Toolbar */
 .of-toolbar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  align-items: stretch;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  max-width: 920px;
-  padding: 12px 14px;
+  max-width: 880px;
+  padding: 14px 16px;
   background: var(--f-surface);
   border: 1px solid var(--f-border);
   border-radius: var(--f-r-md);
@@ -26,93 +25,40 @@
   flex-wrap: wrap;
   box-shadow: var(--f-shadow-xs);
 }
-.of-toolbar__lhs { flex: 1; min-width: 240px; }
-.of-toolbar__btns { display: inline-flex; gap: 8px; flex-wrap: wrap; }
-.of-toolbar__btns small { font-size: 0.72rem; }
 
-.f-btn--lg { padding: 10px 16px; gap: 12px; }
-.f-btn--lg .material-symbols-outlined { font-size: 22px; }
+.f-btn--lg { padding: 12px 22px; gap: 14px; min-width: 200px; }
+.f-btn--lg .material-symbols-outlined { font-size: 26px; }
 .f-btn--lg span { display: inline-flex; flex-direction: column; align-items: flex-start; line-height: 1.2; }
-.f-btn--lg strong { font-size: 0.95rem; font-weight: 700; }
-.f-btn--lg small { font-size: 0.74rem; opacity: 0.85; font-weight: 500; }
+.f-btn--lg strong { font-size: 1rem; font-weight: 700; }
+.f-btn--lg small { font-size: 0.78rem; opacity: 0.85; font-weight: 500; }
 
-/* PDF viewer shell */
-.of-pdf-shell {
+/* docx-preview shell */
+.of-docx-shell {
   width: auto;
   max-width: 100%;
   background: transparent;
-  border-radius: var(--f-r);
   position: relative;
 }
-.of-pdf-host {
+.of-docx-host {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
 }
-
-.pdf-doc {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+.of-docx-host .docx-wrapper {
+  background: transparent !important;
+  padding: 0 !important;
 }
-.pdf-page {
-  position: relative;
+.of-docx-host section.docx {
   background: #fff;
+  margin: 0 0 16px 0;
   box-shadow:
     0 1px 2px rgba(0,0,0,0.06),
     0 24px 56px -20px rgba(0,0,0,0.18);
   border-radius: 2px;
-  overflow: hidden;
-}
-.pdf-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.pdf-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.pdf-field {
-  position: absolute;
-  font-family: "Tajawal", "Arial", "Helvetica Neue", sans-serif;
-  color: #000;
-  white-space: nowrap;
-  overflow: hidden;
-  display: block;
-  padding: 0 2px;
-  box-sizing: border-box;
-  font-weight: 500;
-  letter-spacing: 0;
+  direction: rtl;
 }
 
-/* Tajawal (matches Word's Arial CS for Arabic; bundled locally) */
-@font-face {
-  font-family: 'Tajawal';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('assets/fonts/Tajawal-Regular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Tajawal';
-  font-style: normal;
-  font-weight: 500;
-  font-display: block;
-  src: url('assets/fonts/Tajawal-Medium.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Tajawal';
-  font-style: normal;
-  font-weight: 700;
-  font-display: block;
-  src: url('assets/fonts/Tajawal-Bold.ttf') format('truetype');
-}
-
-.of-pdf-loading {
+.of-docx-loading {
   display: flex; align-items: center; justify-content: center;
   gap: 12px;
   padding: 60px 20px;
@@ -120,7 +66,6 @@
   font-family: var(--f-arab);
 }
 
-/* states */
 .of-docx-state {
   padding: 60px 20px;
   display: flex; align-items: center; justify-content: center;
@@ -148,43 +93,36 @@
 @keyframes of-spin { to { transform: rotate(360deg); } }
 
 /* ========================================================
-   PRINT — show only the rendered pages
+   PRINT — show ONLY the rendered docx pages
    ======================================================== */
-#pdf-print-stage { display: none; }
-.printing-pdf #pdf-print-stage {
-  display: block;
-  position: relative;
+@media print {
+  @page { size: A4 portrait; margin: 10mm; }
+
+  body * { visibility: hidden !important; }
+  .of-docx-host,
+  .of-docx-host * { visibility: visible !important; }
+  .of-docx-host {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .of-docx-host section.docx {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    page-break-after: always;
+  }
+  .of-docx-host section.docx:last-child { page-break-after: auto; }
+
+  .no-print,
+  .of-toolbar,
+  .f-top, .f-tabs,
+  .ff-tabs, .ff-feepanel, .ff-form,
+  .f-sigfoot, .f-floatcompare { display: none !important; }
 }
 
-@media print {
-  @page { size: A4 portrait; margin: 0; }
-  body * { visibility: hidden !important; }
-
-  /* When user triggered print on our pages */
-  body.printing-pdf #pdf-print-stage,
-  body.printing-pdf #pdf-print-stage * { visibility: visible !important; }
-  body.printing-pdf #pdf-print-stage {
-    position: absolute; top: 0; left: 0; right: 0;
-  }
-  body.printing-pdf .pdf-page {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    page-break-after: always;
-    margin: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-  }
-  body.printing-pdf .pdf-page:last-child { page-break-after: auto; }
-
-  /* Default: print the on-screen preview when triggered from browser print */
-  body:not(.printing-pdf) .pdf-page,
-  body:not(.printing-pdf) .pdf-page * { visibility: visible !important; }
-  body:not(.printing-pdf) .pdf-page {
-    position: relative;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    page-break-after: always;
-  }
-
-  .of-toolbar { display: none !important; }
+@media (max-width: 860px) {
+  .of-toolbar { flex-direction: column; }
+  .f-btn--lg { width: 100%; justify-content: center; min-width: 0; }
 }

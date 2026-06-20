@@ -1,15 +1,14 @@
 // =============================================================
-// FINAL — Form rendering & export
-//   * HTML preview: loads forms_html/<CODE>.html (LibreOffice
-//     conversion of the official Word — pixel-perfect layout)
-//     and substitutes {{placeholders}} with form values.
-//   * Word download: loads forms_word/<CODE>.docx, runs the same
-//     substitution via docxtemplater, downloads.
-//   * PDF: uses the HTML preview (window.print) — identical to
-//     the screen render.
+// FINAL — Simple Word-only flow
+//
+// 1. Fill the template .docx with the form values (docxtemplater)
+// 2. Render the filled .docx inline (docx-preview) for preview
+// 3. Two actions: تنزيل Word + طباعة
+//    "Print" uses window.print on the rendered preview.
 // =============================================================
 
 (function () {
+  let _renderedFor = null;
 
   function _today() {
     return new Date().toLocaleDateString('ar-IQ-u-ca-gregory',
@@ -18,7 +17,6 @@
   function _serial(svc, settings) {
     return `${svc.code}-${(settings.centerCode || 'RS-014')}-${String(Math.floor(Math.random()*9000)+1000)}`;
   }
-
   function _buildData(svc, form) {
     const settings = (window.DB && window.DB.settings.get()) || {};
     return {
@@ -47,12 +45,7 @@
     };
   }
 
-  function _substitute(str, data) {
-    return str.replace(/\{\{(\w+)\}\}/g, (_, k) =>
-      data[k] != null ? String(data[k]) : '');
-  }
-
-  // ---------- Word download (via docxtemplater) ----------
+  // Fill the .docx template with the form values; returns ArrayBuffer.
   async function fillTemplate(svc, form) {
     const res = await fetch(`forms_word/${svc.code}.docx`);
     if (!res.ok) throw new Error(`نموذج Word غير موجود لـ ${svc.code}`);
@@ -74,6 +67,7 @@
     return `${svc.code}_${safe}_${new Date().toISOString().slice(0,10)}`;
   }
 
+  // ----- Download as .docx -----
   async function downloadDocx(svc, form) {
     const buf = await fillTemplate(svc, form);
     const blob = new Blob([buf], { type:
@@ -83,69 +77,45 @@
       href: url, download: fileNameFor(svc, form) + '.docx',
     });
     a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
     window.DB && window.DB.log('form.docx', svc.code);
   }
 
-  // ---------- HTML preview (pixel-perfect from LibreOffice) ----------
-  const _htmlCache = new Map();
-
-  async function loadHtmlTemplate(svc) {
-    if (_htmlCache.has(svc.code)) return _htmlCache.get(svc.code);
-    const res = await fetch(`forms_html/${svc.code}.html`);
-    if (!res.ok) throw new Error(`HTML template not found: ${svc.code}`);
-    const raw = await res.text();
-    // Extract the inner <body> markup only (we'll inject into our own container)
-    const m = raw.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-    const body = (m ? m[1] : raw);
-    // Extract <style> blocks from <head> so we can inject them once
-    const styles = [];
-    raw.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, (_, css) => { styles.push(css); return ''; });
-    const cached = { body, styles };
-    _htmlCache.set(svc.code, cached);
-    return cached;
-  }
-
-  async function renderHtmlInto(svc, form, container) {
-    const tpl = await loadHtmlTemplate(svc);
-    const data = _buildData(svc, form);
+  // ----- Render preview into a DOM container -----
+  async function renderPreview(svc, form, container) {
+    const buf = await fillTemplate(svc, form);
     container.innerHTML = '';
-    // Inject style once per container
-    if (tpl.styles.length) {
-      const styleEl = document.createElement('style');
-      styleEl.textContent = tpl.styles.join('\n');
-      container.appendChild(styleEl);
-    }
-    // Inject body with placeholder substitution
-    const wrap = document.createElement('div');
-    wrap.className = 'lo-doc';
-    wrap.setAttribute('dir', 'rtl');
-    wrap.innerHTML = _substitute(tpl.body, data);
-    container.appendChild(wrap);
+    await window.docx.renderAsync(buf, container, null, {
+      className: 'docx-rendered',
+      inWrapper: true,
+      breakPages: true,
+      ignoreLastRenderedPageBreak: true,
+      experimental: false,
+      trimXmlDeclaration: true,
+      useBase64URL: true,
+      renderHeaders: true,
+      renderFooters: true,
+      renderFootnotes: false,
+    });
+    _renderedFor = svc.code;
   }
 
-  // Print using a temporary print stage with the HTML preview
-  async function printHtmlForm(svc, form) {
-    const stageId = 'lo-print-stage';
-    let stage = document.getElementById(stageId);
-    if (!stage) {
-      stage = document.createElement('div');
-      stage.id = stageId;
-      document.body.appendChild(stage);
-    }
-    await renderHtmlInto(svc, form, stage);
-    document.body.classList.add('printing-lo');
+  // ----- Print: prints the preview container directly -----
+  function printPreview() {
+    // window.print prints the whole document. Our @media print rules
+    // hide everything except the docx-rendered container.
+    document.body.classList.add('printing-docx');
     const cleanup = () => {
-      document.body.classList.remove('printing-lo');
+      document.body.classList.remove('printing-docx');
       window.removeEventListener('afterprint', cleanup);
     };
     window.addEventListener('afterprint', cleanup);
-    window.print();
+    setTimeout(() => window.print(), 50);
   }
 
-  window.fillDocxTemplate = fillTemplate;
+  window.fillFilledDocx     = fillTemplate;
   window.downloadFilledDocx = downloadDocx;
-  window.renderHtmlForm = renderHtmlInto;
-  window.printHtmlForm = printHtmlForm;
-  window.docxFileNameFor = fileNameFor;
+  window.renderFilledDocx   = renderPreview;
+  window.printFilledDocx    = printPreview;
+  window.docxFileNameFor    = fileNameFor;
 })();
