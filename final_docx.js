@@ -90,13 +90,16 @@
       className: 'docx-rendered',
       inWrapper: true,
       breakPages: true,
-      ignoreLastRenderedPageBreak: true,
-      experimental: false,
+      ignoreLastRenderedPageBreak: false,  // respect Word's page breaks (declaration page!)
+      experimental: true,
       trimXmlDeclaration: true,
       useBase64URL: true,
       renderHeaders: true,
       renderFooters: true,
       renderFootnotes: false,
+      ignoreWidth: false,
+      ignoreHeight: false,
+      defaultFont: { family: 'Arial', size: 22 },
     });
   }
 
@@ -124,13 +127,21 @@
   @page { size: A4 portrait; margin: 10mm; }
   html, body { margin: 0; padding: 0; background: #fff; }
   body { direction: rtl; font-family: "Tajawal", "Arial", "Helvetica Neue", sans-serif; }
-  .docx-wrapper { background: transparent !important; padding: 0 !important; direction: rtl !important; }
-  section.docx { margin: 0 auto !important; box-shadow: none !important; direction: rtl !important; }
-  /* Force RTL on every table the renderer produces */
-  table { direction: rtl !important; margin-left: 0 !important; margin-right: 0 !important; }
-  td, th { direction: rtl !important; text-align: right !important; }
-  /* Latin/numeric-only paragraphs inside Arabic cells keep LTR for legibility */
-  p:lang(en) { direction: ltr; text-align: center; }
+  /* Force RTL on every node — overrides docx-preview inline styles */
+  .docx-wrapper, .docx-wrapper *,
+  section.docx, section.docx * {
+    direction: rtl !important;
+    unicode-bidi: embed !important;
+  }
+  .docx-wrapper { background: transparent !important; padding: 0 !important; }
+  section.docx { margin: 0 auto !important; box-shadow: none !important; }
+  table { margin-left: 0 !important; margin-right: 0 !important; }
+  td, th { text-align: right !important; }
+  /* Latin/digit runs stay LTR */
+  *[lang="en-US"], *[lang="en"] {
+    direction: ltr !important;
+    unicode-bidi: embed !important;
+  }
   @media print {
     section.docx { page-break-after: always; }
     section.docx:last-child { page-break-after: auto; }
@@ -147,13 +158,16 @@
       className: 'docx-rendered',
       inWrapper: true,
       breakPages: true,
-      ignoreLastRenderedPageBreak: true,
-      experimental: false,
+      ignoreLastRenderedPageBreak: false,  // respect Word page breaks
+      experimental: true,
       trimXmlDeclaration: true,
       useBase64URL: true,
       renderHeaders: true,
       renderFooters: true,
       renderFootnotes: false,
+      ignoreWidth: false,
+      ignoreHeight: false,
+      defaultFont: { family: 'Arial', size: 22 },
     });
 
     // Give the layout a beat to settle, then print the iframe's window
