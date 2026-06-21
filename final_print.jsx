@@ -33,16 +33,45 @@ function OfficialPaper({ svc, form, attachments }) {
     return () => { cancelled = true; clearTimeout(t); };
   }, [svc.code, formKey]);
 
+  const toast = window.useToast && window.useToast();
   const [printing, setPrinting] = React.useState(false);
   const onPrint = async () => {
     setPrinting(true);
-    try { await window.printFilledDocx(svc, form); }
-    catch (e) { alert('تعذّر الطباعة: ' + e.message); }
-    finally { setTimeout(() => setPrinting(false), 1000); }
+    try {
+      const res = await window.printFilledDocx(svc, form);
+      if (!toast) return;
+      if (res.mode === 'browser-pdf') {
+        toast.push({ kind: 'success', title: 'جاهز للطباعة',
+                     body: 'تم التحضير داخل المتصفّح — اختر الطابعة من النافذة' });
+      } else if (res.mode === 'pdf') {
+        toast.push({ kind: 'success', title: 'جاهز للطباعة',
+                     body: 'اختر الطابعة من نافذة المتصفّح واضغط طباعة' });
+      } else if (res.mode === 'silent') {
+        toast.push({ kind: 'success', title: 'تم الإرسال للطابعة',
+                     body: res.printer && res.printer !== '(system default)'
+                       ? `الطابعة: ${res.printer}` : 'الطابعة الافتراضية' });
+      } else if (res.mode === 'pdf-failed' || res.mode === 'silent-failed') {
+        toast.push({ kind: 'warn', title: 'فشل الطباعة — تم تنزيل الملف',
+                     body: res.error || 'افتح الملف يدوياً واطبعه (Ctrl+P)' });
+      } else {
+        toast.push({ kind: 'info', title: 'خادم الطباعة غير شغّال',
+                     body: 'تم تنزيل الملف — افتحه واطبعه (Ctrl+P)' });
+      }
+    } catch (e) {
+      if (toast) toast.push({ kind: 'error', title: 'تعذّر الطباعة', body: e.message });
+      else alert('تعذّر الطباعة: ' + e.message);
+    } finally {
+      setTimeout(() => setPrinting(false), 800);
+    }
   };
   const onDownloadWord = async () => {
-    try { await window.downloadFilledDocx(svc, form); }
-    catch (e) { alert('تعذّر تنزيل ملف Word: ' + e.message); }
+    try {
+      await window.downloadFilledDocx(svc, form);
+      if (toast) toast.push({ kind: 'success', title: 'تم تنزيل ملف Word' });
+    } catch (e) {
+      if (toast) toast.push({ kind: 'error', title: 'تعذّر تنزيل ملف Word', body: e.message });
+      else alert('تعذّر تنزيل ملف Word: ' + e.message);
+    }
   };
 
   return (

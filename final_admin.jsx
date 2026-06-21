@@ -1403,6 +1403,63 @@ function SettingsTab() {
         </div>
       </div>
 
+      <div className="adm-section">
+        <h3 className="adm-section__title"><Icon name="print" /> خادم الطباعة</h3>
+        <p className="adm-section__sub">
+          عنوان خادم تحويل docx → PDF (مشترك بين كل الموظفين).
+          اتركه فارغاً لاستخدام <code>http://localhost:9876</code>.
+        </p>
+        <div className="adm-form">
+          <div className="adm-field">
+            <label>عنوان خادم الطباعة</label>
+            <input
+              value={f.printServerUrl || ''}
+              onChange={e => set('printServerUrl', e.target.value)}
+              placeholder="http://192.168.1.10:9876"
+              dir="ltr" style={{ textAlign:'start', fontFamily:'var(--f-mono)' }}
+            />
+            <small style={{ color:'var(--f-ink-3)', fontSize:'0.78rem', marginTop:4, display:'block' }}>
+              نشر مرّة واحدة على جهاز/سيرفر في الشبكة — راجع
+              <code style={{ margin:'0 4px' }}>print-server/README.md</code>
+            </small>
+          </div>
+          <div className="adm-field">
+            <label className="adm-check" style={{ cursor:'pointer', display:'inline-flex', gap:8, alignItems:'center' }}>
+              <input type="checkbox"
+                     checked={!!f.printSilent}
+                     onChange={e => set('printSilent', e.target.checked)} />
+              <span>طباعة صامتة (بدون نافذة معاينة)</span>
+            </label>
+            <small style={{ color:'var(--f-ink-3)', fontSize:'0.78rem', marginTop:4, display:'block' }}>
+              للنشر على جهاز واحد فقط — يطبع مباشرة على طابعة جهاز الخادم.
+            </small>
+          </div>
+          {can('admin.settings') && (
+            <div>
+              <button className="f-btn f-btn--primary" onClick={save}>
+                <Icon name="save" /> حفظ
+              </button>
+              <button className="f-btn" style={{ marginInlineStart: 8 }}
+                      onClick={async () => {
+                        const url = (f.printServerUrl || 'http://localhost:9876').replace(/\/+$/, '');
+                        try {
+                          const r = await fetch(url + '/ping', { cache: 'no-store' });
+                          const j = await r.json();
+                          if (j.ok) toast.push({ kind:'success', title:'الخادم يعمل',
+                                                  body:`${j.service} على ${j.platform}` });
+                          else      toast.push({ kind:'error', title:'الخادم لا يستجيب' });
+                        } catch (e) {
+                          toast.push({ kind:'error', title:'تعذّر الوصول للخادم',
+                                       body: e.message });
+                        }
+                      }}>
+                <Icon name="network_check" /> اختبار الاتصال
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
       {can('data.export') && (
         <div className="adm-section">
           <h3 className="adm-section__title"><Icon name="backup" /> النسخ الاحتياطي والاستيراد</h3>
