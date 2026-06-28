@@ -39,6 +39,8 @@
   var BRANCHES = window.BRANCHES || [];
   var fmt = window.fmt || function (n) { return String(n); };
   var secClass = function (code) { return "sec-" + String(code || "").toLowerCase(); };
+  var ART = window.AtelierArt || {};
+  var BRANCH_STATS = window.BRANCH_STATS || {};
 
   // ---- pure helpers (covered by the self-check at the bottom) -----------
   function filterServices(list, query, section) {
@@ -155,6 +157,7 @@
         el("span", {}, [ms("schedule"), " " + s.sla + "ي"]),
         el("span", { class: "at-svc__dot" }),
         el("span", {}, [ms("trending_up"), " " + s.popularity + "٪"]),
+        el("span", { class: "at-swatch", style: "margin-inline-start:auto", "aria-hidden": "true" }, [el("i"), el("i"), el("i")]),
       ]),
     ]);
     return node;
@@ -172,9 +175,10 @@
   // VIEW: HOME
   // =====================================================================
   function viewHome() {
-    // ---- masthead
+    // ---- masthead (draughtsman crosshair frame + kinetic blur-in + stat strip)
     var done = 47; // ceremonial: completed today (derived stand-in)
-    var mast = el("header", { class: "at-mast" }, [
+    var mast = el("header", { class: "at-mast at-frame" }, [
+      el("span", { class: "at-frame__x at-frame__x--ts" }), el("span", { class: "at-frame__x at-frame__x--te" }),
       el("span", { class: "at-mast__date at-kin at-kin--1" }, [
         el("span", { class: "at-mast__pulse" }),
         new Date().toLocaleDateString("ar-IQ-u-ca-gregory", { weekday: "long", day: "numeric", month: "long" }) + " · مركز الرصافة · فرع النضال",
@@ -187,14 +191,55 @@
         el("button", { class: "at-btn at-btn--glass", type: "button", on: { click: function () { go("requests"); } } },
           [ms("inbox"), "طلباتي"]),
       ]),
+      el("div", { class: "at-statstrip" }, [
+        stripItem(fmt(SERVICES.length), "خدمة"),
+        stripItem(fmt(SECTIONS.length), "أقسام"),
+        stripItem(fmt(BRANCHES.length), "مراكز"),
+        stripItem(fmt(BRANCH_STATS.subscribers || 73030), "مشترك"),
+      ]),
+      el("span", { class: "at-frame__x at-frame__x--bs" }), el("span", { class: "at-frame__x at-frame__x--be" }),
     ]);
 
-    // ---- main column: ledger + accordion
-    var main = el("div", { class: "at-col" }, [ledgerCard(), accordionCard(), extensionCard()]);
+    // ---- main column: featured bento + ledger + accordion + extension
+    var main = el("div", { class: "at-col" }, [featuredBento(), ledgerCard(), accordionCard(), extensionCard()]);
     // ---- aside: gilt seal + quick access + tip + notifs
     var aside = el("aside", { class: "at-aside" }, [sealCard(done), quickCard(), tipCard(), notifCard()]);
 
     return el("div", { class: "at-view" }, [mast, el("div", { class: "at-broadsheet" }, [main, aside])]);
+  }
+
+  function stripItem(num, label) {
+    return el("span", { class: "at-statstrip__i" }, [el("span", { class: "at-statstrip__n at-tnum", text: num }), el("span", { class: "at-statstrip__l", text: label })]);
+  }
+
+  // featured "lit window" bento (Origin §6.3c + bestdesignsonx bento) — 3D-spot tier
+  function featuredBento() {
+    var picks = ["CS0001", "CB0001", "CT0009"].map(function (c) { return SERVICE_MAP[c]; }).filter(Boolean);
+    if (!picks.length) return el("span");
+    var cards = picks.map(function (s, i) { return featureCard(s, i === 0); });
+    return el("section", {}, [
+      el("div", { class: "at-head" }, [
+        el("div", { class: "at-head__main" }, [el("span", { class: "at-eyebrow", text: "مختارات اليوم" }), el("h2", { text: "خدمات مميّزة" })]),
+        el("button", { class: "at-link", type: "button", on: { click: function () { go("services"); } } }, ["تصفّح الكل", ms("arrow_back")]),
+      ]),
+      el("div", { class: "at-bento" }, cards),
+    ]);
+  }
+  function featureCard(s, lg) {
+    var sec = SECTION_MAP[s.section] || {};
+    return el("button", { class: "at-feature " + (lg ? "at-feature--lg " : "") + secClass(s.section), type: "button", on: { click: function () { openService(s.code); } } }, [
+      el("div", { class: "at-feature__top" }, [
+        ART.spot3d ? ART.spot3d(s.icon, { lg: lg, size: lg ? 78 : 58 }) : el("span", { class: "at-svc__ico" }, [ms(s.icon)]),
+        el("span", { class: "at-feature__tag", text: (sec.name_en || sec.name) + " · " + s.section }),
+      ]),
+      el("h3", { class: "at-feature__h", text: s.name }),
+      lg ? el("p", { class: "at-feature__sub", text: sec.blurb }) : null,
+      el("div", { class: "at-feature__foot" }, [
+        el("span", { class: "at-feature__stat at-tnum" }, [ms("schedule"), " " + s.sla + "ي · " + s.popularity + "٪"]),
+        lg ? el("span", { class: "at-btn at-btn--glass at-btn--sm", "aria-hidden": "true" }, [ms("arrow_back"), "ابدأ"])
+           : el("span", { class: "at-swatch", "aria-hidden": "true" }, [el("i"), el("i"), el("i")]),
+      ]),
+    ]);
   }
 
   function ledgerCard() {
@@ -252,6 +297,7 @@
       }, [
         el("span", { class: "at-acc__rail" }, [el("span", { class: "at-mono", text: "0" + (i + 1) }), s.name]),
         el("div", { class: "at-acc__body" }, [
+          ART.lineMesh ? ART.lineMesh(s.icon) : null,
           el("span", { class: "at-acc__ico" }, [ms(s.icon)]),
           el("span", { class: "at-acc__num", text: "0" + (i + 1) + " / " + s.name_en.toUpperCase() }),
           el("h3", { class: "at-acc__h", text: s.name }),
@@ -539,7 +585,8 @@
     ])]);
   }
   function emptyState(icon, msg) {
-    return el("div", { class: "at-empty" }, [ms(icon), el("p", { text: msg })]);
+    var art = ART.iso ? ART.iso(icon === "search_off" ? "search" : "empty") : ms(icon);
+    return el("div", { class: "at-empty sec-cs" }, [art, el("p", { text: msg })]);
   }
 
   // =====================================================================
