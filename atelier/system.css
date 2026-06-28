@@ -1,0 +1,840 @@
+/* ===========================================================================
+   atelier/system.css — "البَهو · Golden-Hour Atelier"
+   A civic broadsheet front desk, not a widget dashboard.
+   Built on atelier/tokens.css (--at-*). All classes prefixed .at-.
+
+   Anti-slop guardrails kept throughout:
+   - One signature per screen = the liquid-glass dock. Content stays quiet.
+   - Depth = hairline inset + indigo-tinted soft lift (light) / glow (dark).
+   - Logical properties ONLY. tnum on numerals. Mono eyebrows.
+   - Motion: transform/opacity/filter/color only; damped spring; reduced-motion.
+   - One accent (indigo). One gilt moment (the daily seal). One focal masthead.
+   =========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-block-size: 100dvh;
+  font-family: var(--at-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--at-ink);
+  background:
+    var(--at-grad-dawn),
+    var(--at-bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; }
+::selection { background: color-mix(in srgb, var(--at-indigo) 22%, transparent); }
+
+/* shared atoms ------------------------------------------------------------ */
+.at-tnum { font-variant-numeric: tabular-nums slashed-zero; font-feature-settings: "tnum" 1, "zero" 1; }
+.at-mono { font-family: var(--at-mono); }
+.at-eyebrow {
+  font-family: var(--at-body);
+  font-size: .74rem; font-weight: 700;
+  letter-spacing: var(--at-track-eyebrow);
+  color: var(--at-ink-3);
+  display: inline-flex; align-items: center; gap: var(--at-2);
+  text-transform: none;
+}
+.at-eyebrow--mono { font-family: var(--at-mono); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
+.at-eyebrow::before {                 /* crimson lead rule — the section signature (design.md §2) */
+  content: ""; inline-size: 16px; block-size: 2px; border-radius: 2px;
+  background: var(--at-crimson); flex: none;
+}
+.ms {                                  /* Material Symbols, tuned to a 1.5px monoline (design.md §7) */
+  font-family: "Material Symbols Outlined";
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+  font-size: 20px; line-height: 1; user-select: none;
+  display: inline-block; vertical-align: middle;
+}
+.ms--fill { font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 24; }
+
+/* ───────────────────────────────────────────────────────────────
+   COLOUR STRATEGY (design.md §1, §8) — applied, not decorative:
+   · Royal Indigo  → the ONLY first-class action (primary CTA, links,
+     focus, active). Never used as a flat decorative wash.
+   · Section hue   → bound 1:1 per domain via .sec-cs/ct/cb/ca → --at-sec;
+     carries the card edge, icon tile, active tab/chip, accordion fill.
+     Never reused outside its domain.
+   · Heritage Crimson → urgent / destructive / the masthead lead rule only.
+   · Warm Gilt     → ceremonial ONLY (the daily seal + ceremonial button).
+   · Neutrals (Walnut/Dusk) do ~90% of the work; accents stay precious.
+
+   ICON TILES — one crafted treatment shared by every section-hued chip
+   (Apple app-icon feel: two-tone wash + inset hairline + top highlight,
+   design.md §7 line+mesh). Tiles inherit --at-sec from their .sec-* host.
+   ─────────────────────────────────────────────────────────────── */
+.at-svc__ico, .at-ledger__node, .at-qrow__ico, .at-tip__ico, .at-acc__ico {
+  background:
+    linear-gradient(160deg,
+      color-mix(in srgb, var(--at-sec) 18%, transparent),
+      color-mix(in srgb, var(--at-sec) 9%, transparent));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 22%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 40%, transparent);
+}
+:root[data-theme="dark"] .at-svc__ico,
+:root[data-theme="dark"] .at-ledger__node,
+:root[data-theme="dark"] .at-qrow__ico,
+:root[data-theme="dark"] .at-tip__ico,
+:root[data-theme="dark"] .at-acc__ico {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 28%, transparent),
+    inset 0 1px 0 rgba(234,231,222,.10);
+}
+/* the service-card tile lifts a touch on hover, tracking the cursor glow */
+.at-svc:hover .at-svc__ico { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 34%, transparent), inset 0 1px 0 color-mix(in srgb, #fff 45%, transparent); }
+
+/* ============================================================
+   §1 · SHELL
+   ============================================================ */
+.at-shell { max-inline-size: 1200px; margin-inline: auto; padding-inline: var(--at-5); }
+.at-main  { padding-block: var(--at-8) var(--at-24); }
+
+/* ============================================================
+   §2 · LIQUID-GLASS DOCK — the one signature (iOS-style)
+   Floating capsule, detached from the edge; frosted + sheen +
+   indigo soft lift. Active segment slides via transform.
+   ============================================================ */
+.at-dockwrap {
+  position: sticky; inset-block-start: var(--at-3); z-index: 200;
+  display: flex; justify-content: center;
+  padding-inline: var(--at-4); margin-block-start: var(--at-3);
+  pointer-events: none;
+}
+.at-dock {
+  pointer-events: auto;
+  inline-size: min(100%, 1160px);
+  display: flex; align-items: center; gap: var(--at-3);
+  padding: 9px 12px; border-radius: var(--at-r-pill);
+  background: var(--at-glass);
+  -webkit-backdrop-filter: var(--at-glass-blur);
+  backdrop-filter: var(--at-glass-blur);
+  position: relative; isolation: isolate; overflow: hidden;
+  box-shadow:
+    var(--at-hairline),
+    inset 0 1px 0 var(--at-glass-edge),
+    0 1px 2px rgba(26,23,20,.05),
+    0 20px 44px -22px rgba(43,49,128,.30);
+}
+.at-dock::before {                    /* specular lens — pure light, the "liquid" read */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(150% 100% at 16% -50%, rgba(255,255,255,.34), transparent 55%),
+    radial-gradient(120% 120% at 100% 150%, color-mix(in srgb, var(--at-indigo) 8%, transparent), transparent 60%);
+}
+:root[data-theme="dark"] .at-dock::before {
+  background:
+    radial-gradient(150% 100% at 16% -50%, rgba(234,231,222,.10), transparent 55%),
+    radial-gradient(120% 120% at 100% 150%, color-mix(in srgb, var(--at-indigo) 24%, transparent), transparent 60%);
+}
+
+.at-brand { display: inline-flex; align-items: center; gap: var(--at-2); padding-inline: var(--at-2); text-decoration: none; color: var(--at-ink); flex: none; }
+.at-brand__mark {
+  inline-size: 36px; block-size: 36px; border-radius: 12px; flex: none;
+  display: grid; place-items: center; color: var(--at-on-indigo);
+  background: linear-gradient(150deg, var(--at-indigo), var(--at-indigo-soft));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 4px 12px -4px color-mix(in srgb, var(--at-indigo) 55%, transparent);
+}
+.at-brand__name { display: flex; flex-direction: column; line-height: 1.04; }
+.at-brand__name strong { font-family: var(--at-display); font-weight: 700; font-size: 1rem; }
+.at-brand__name small { font-family: var(--at-mono); font-size: .56rem; letter-spacing: .16em; color: var(--at-ink-3); text-transform: uppercase; }
+
+/* segmented tabs */
+.at-tabs {
+  position: relative; display: flex; gap: 2px; flex: 1 1 auto; min-inline-size: 0;
+  padding: 3px; border-radius: var(--at-r-pill);
+  background: color-mix(in srgb, var(--at-ink) 5%, transparent);
+  box-shadow: inset 0 1px 2px rgba(26,23,20,.05);
+  overflow-x: auto; scrollbar-width: none;
+}
+.at-tabs::-webkit-scrollbar { display: none; }
+:root[data-theme="dark"] .at-tabs { background: rgba(255,255,255,.06); box-shadow: inset 0 1px 2px rgba(0,0,0,.3); }
+.at-tabs__ind {                        /* sliding glass indicator (transform only) */
+  position: absolute; inset-block: 3px; inset-inline-start: 0;
+  border-radius: var(--at-r-pill); background: var(--at-surface); z-index: 0; pointer-events: none;
+  box-shadow: inset 0 .5px 0 rgba(255,255,255,.7), 0 1px 2.5px rgba(26,23,20,.12), 0 3px 8px -2px rgba(26,23,20,.1);
+  transition: transform var(--at-dur-enter) var(--at-spring), inline-size var(--at-dur-enter) var(--at-spring);
+}
+:root[data-theme="dark"] .at-tabs__ind { background: color-mix(in srgb, var(--at-surface) 100%, #fff 6%); box-shadow: inset 0 .5px 0 rgba(255,255,255,.1), 0 4px 10px -2px rgba(0,0,0,.4); }
+.at-tabs__ind::after { content: ""; position: absolute; inset-inline: 24%; inset-block-end: 5px; block-size: 2px; border-radius: 2px; background: var(--at-sec); opacity: .9; }
+
+.at-tab {
+  position: relative; z-index: 1; flex: none;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 15px; border: 0; background: none; cursor: pointer;
+  border-radius: var(--at-r-pill); font-size: .87rem; font-weight: 600;
+  color: var(--at-ink-2); white-space: nowrap;
+  transition: color var(--at-dur-micro) var(--at-ease), transform var(--at-dur-enter) var(--at-spring);
+}
+.at-tab .ms { font-size: 19px; opacity: .8; }
+.at-tab:hover { color: var(--at-ink); }
+.at-tab:active { transform: scale(.95); }
+.at-tab[aria-selected="true"] { color: var(--at-ink); }
+.at-tab[aria-selected="true"] .ms { color: var(--at-sec); opacity: 1; }
+.at-tab:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-tab__badge {
+  min-inline-size: 18px; block-size: 18px; padding-inline: 5px;
+  display: inline-grid; place-items: center; border-radius: var(--at-r-pill);
+  font-family: var(--at-mono); font-size: .62rem; font-weight: 600;
+  background: color-mix(in srgb, var(--at-crimson) 16%, transparent); color: var(--at-crimson);
+}
+
+.at-dock__side { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+
+/* round icon button + monogram */
+.at-iconbtn {
+  inline-size: 36px; block-size: 36px; display: grid; place-items: center;
+  border-radius: 50%; cursor: pointer;
+  border: .5px solid color-mix(in srgb, var(--at-ink) 8%, transparent);
+  background: color-mix(in srgb, var(--at-ink) 4%, transparent); color: var(--at-ink-2);
+  transition: background var(--at-dur-micro) var(--at-ease), transform var(--at-dur-enter) var(--at-spring), color var(--at-dur-micro) var(--at-ease);
+  position: relative;
+}
+.at-iconbtn:hover { background: color-mix(in srgb, var(--at-ink) 9%, transparent); transform: scale(1.06); color: var(--at-ink); }
+.at-iconbtn:active { transform: scale(.92); }
+.at-iconbtn:focus-visible { outline: none; box-shadow: var(--at-ring); }
+:root[data-theme="dark"] .at-iconbtn { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.08); }
+.at-iconbtn__pip { position: absolute; inset-block-start: 7px; inset-inline-end: 8px; inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--at-crimson); box-shadow: 0 0 0 2px var(--at-surface); }
+.at-monogram {
+  inline-size: 36px; block-size: 36px; border: 0; cursor: pointer; border-radius: 50%;
+  background: linear-gradient(150deg, var(--at-indigo), var(--at-indigo-soft)); color: var(--at-on-indigo);
+  font-family: var(--at-display); font-weight: 700; font-size: .8rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+  transition: transform var(--at-dur-enter) var(--at-spring);
+}
+.at-monogram:active { transform: scale(.93); }
+.at-monogram:focus-visible { outline: none; box-shadow: var(--at-ring); }
+
+/* dock search (desktop) */
+.at-docksearch {
+  display: inline-flex; align-items: center; gap: 8px; flex: none;
+  padding: 8px 13px; border-radius: var(--at-r-pill);
+  background: color-mix(in srgb, var(--at-ink) 4%, transparent);
+  border: .5px solid color-mix(in srgb, var(--at-ink) 8%, transparent);
+  color: var(--at-ink-3); cursor: text; max-inline-size: 190px;
+}
+.at-docksearch input { border: 0; background: none; outline: none; font: inherit; font-size: .82rem; color: var(--at-ink); inline-size: 100%; }
+.at-docksearch kbd { font-family: var(--at-mono); font-size: .66rem; padding: 1px 6px; border-radius: 5px; background: color-mix(in srgb, var(--at-ink) 8%, transparent); }
+:root[data-theme="dark"] .at-docksearch { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.08); }
+
+/* ============================================================
+   §3 · VIEW / PANEL  (glass transition between tabs)
+   ============================================================ */
+@keyframes at-glass-in {
+  from { opacity: 0; transform: translateY(12px) scale(.992); filter: blur(7px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+.at-view { animation: at-glass-in var(--at-dur-enter) var(--at-ease-out) both; }
+.at-view > * + * { margin-block-start: var(--at-12); }
+
+/* section head */
+.at-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--at-4); margin-block-end: var(--at-6); }
+.at-head__main { min-inline-size: 0; }
+.at-head h2 { margin: 6px 0 0; font-family: var(--at-display); font-weight: 600; font-size: clamp(1.3rem, 1.05rem + 1vw, 1.75rem); letter-spacing: -.015em; color: var(--at-ink); }
+.at-head p { margin: 5px 0 0; color: var(--at-ink-2); font-size: .92rem; }
+.at-link { flex: none; display: inline-flex; align-items: center; gap: 5px; border: 0; background: none; cursor: pointer; color: var(--at-indigo); font-weight: 600; font-size: .88rem; padding: 6px 4px; }
+.at-link .ms { font-size: 18px; }
+
+/* ============================================================
+   §4 · MASTHEAD  (broadsheet — one focal moment)
+   ============================================================ */
+.at-mast { position: relative; padding-block: var(--at-4) var(--at-2); }
+.at-mast__date { display: inline-flex; align-items: center; gap: 8px; color: var(--at-ink-3); font-size: .84rem; }
+.at-mast__pulse {
+  inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--at-ok);
+  animation: at-pulse 2.4s var(--at-ease) infinite;
+}
+@keyframes at-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--at-ok) 55%, transparent); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.at-mast h1 {
+  margin: var(--at-4) 0 0; max-inline-size: 18ch;
+  font-family: var(--at-display); font-weight: 700;
+  font-size: clamp(2rem, 1.3rem + 3.4vw, 3.4rem); line-height: 1.08; letter-spacing: var(--at-track-display);
+}
+/* Arabic emphasis = colour contrast, NOT serif-italic (design.md §2) */
+.at-mast h1 b { color: var(--at-indigo); font-weight: 700; }
+.at-mast__lede { margin: var(--at-4) 0 0; color: var(--at-ink-2); max-inline-size: 52ch; font-size: 1.06rem; line-height: 1.65; }
+.at-mast__cta { display: flex; flex-wrap: wrap; gap: var(--at-3); margin-block-start: var(--at-6); }
+/* kinetic blur-in, once (reduced-motion disables it) */
+.at-kin { opacity: 0; animation: at-blurin var(--at-dur-enter) var(--at-ease-out) both; }
+.at-kin--1 { animation-delay: 40ms; } .at-kin--2 { animation-delay: 120ms; } .at-kin--3 { animation-delay: 200ms; } .at-kin--4 { animation-delay: 280ms; }
+@keyframes at-blurin { from { opacity: 0; transform: translateY(10px); filter: blur(8px); } to { opacity: 1; transform: none; filter: blur(0); } }
+
+/* ============================================================
+   BUTTONS — a small, world-class vocabulary (design.md §6.1)
+   One first-class action colour (indigo). Each variant has ONE
+   job; never stack effects. References, rebuilt on our tokens:
+   · Apple "Liquid Glass"  → .at-btn--glass (frosted + specular edge)
+   · gradientbuttons.colorion → .at-btn--primary (tonal, position-shift)
+   · Vercel crisp mono      → .at-btn--solid (ink fill) / --ghost (hairline)
+   · Origin "pill + arrow"  → .at-btn (trailing chevron affordance)
+   · typeui double focus    → refined --at-ring + offset
+   ============================================================ */
+.at-btn {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-block-size: 44px;
+  padding: 12px 20px; border-radius: var(--at-r-pill); cursor: pointer; font-weight: 600; font-size: .92rem;
+  letter-spacing: -.005em; white-space: nowrap; user-select: none;
+  border: .5px solid color-mix(in srgb, var(--at-ink) 12%, transparent);
+  background: color-mix(in srgb, var(--at-surface) 86%, transparent); color: var(--at-ink);
+  box-shadow: var(--at-hairline);
+  transition: transform var(--at-dur-enter) var(--at-spring),
+              background var(--at-dur-micro) var(--at-ease),
+              box-shadow var(--at-dur-enter) var(--at-ease),
+              border-color var(--at-dur-micro) var(--at-ease);
+}
+.at-btn:hover { background: var(--at-surface-3); transform: translateY(-1px); }
+.at-btn:active { transform: scale(.975); }
+.at-btn:focus-visible {                /* refined double ring (Walnut surface gap + indigo) */
+  outline: none;
+  box-shadow: 0 0 0 2px var(--at-bg), 0 0 0 4px color-mix(in srgb, var(--at-indigo) 55%, transparent);
+}
+.at-btn .ms { font-size: 19px; }
+.at-btn[disabled], .at-btn[aria-disabled="true"] { opacity: .5; pointer-events: none; }
+
+/* specular sweep — a single light pass on hover (Apple sheen). Owned layer. */
+.at-btn--primary::before, .at-btn--ceremonial::before, .at-btn--glass::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.28) 48%, transparent 62%);
+  transform: translateX(-130%); transition: transform var(--at-dur-enter) var(--at-ease);
+}
+.at-btn--primary:hover::before, .at-btn--ceremonial:hover::before, .at-btn--glass:hover::before { transform: translateX(130%); }
+.at-btn > * { position: relative; z-index: 1; }
+
+/* PRIMARY — the only first-class action. Tonal indigo gradient; hover
+   shifts the gradient POSITION (not hue) over a wide canvas + 1px lift. */
+.at-btn--primary {
+  border: 0; color: var(--at-on-indigo);
+  background: linear-gradient(102deg, var(--at-indigo) 0%, var(--at-indigo-soft) 55%, var(--at-indigo) 100%);
+  background-size: 200% 100%; background-position: 0% 0%;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 0 0 .5px color-mix(in srgb, var(--at-indigo) 60%, #000 8%),
+    0 6px 16px -6px color-mix(in srgb, var(--at-indigo) 55%, transparent);
+  transition: transform var(--at-dur-enter) var(--at-spring),
+              background-position var(--at-dur-enter) var(--at-ease),
+              box-shadow var(--at-dur-enter) var(--at-ease);
+}
+.at-btn--primary:hover {
+  background-position: 100% 0%; transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 0 0 .5px color-mix(in srgb, var(--at-indigo) 60%, #000 8%),
+    0 12px 26px -10px color-mix(in srgb, var(--at-indigo) 62%, transparent);
+}
+.at-btn--primary:active { transform: scale(.975); }
+
+/* GLASS — Apple "Liquid Glass": frosted, refractive, bright top edge.
+   Chrome-grade secondary on busy surfaces. Readability-gated by ≥62% fill. */
+.at-btn--glass {
+  color: var(--at-ink);
+  background: color-mix(in srgb, var(--at-surface) 62%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  border: .5px solid var(--at-glass-edge);
+  box-shadow:
+    var(--at-hairline),
+    inset 0 1px 0 var(--at-glass-edge),
+    0 8px 22px -14px rgba(43,49,128,.30);
+}
+.at-btn--glass:hover { background: color-mix(in srgb, var(--at-surface) 74%, transparent); }
+
+/* SOLID — Vercel-crisp high-contrast neutral (ink fill, surface text). */
+.at-btn--solid {
+  border: 0; color: var(--at-surface);
+  background: var(--at-ink);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 6px 16px -8px rgba(26,23,20,.5);
+}
+.at-btn--solid:hover { background: color-mix(in srgb, var(--at-ink) 88%, var(--at-bg)); }
+
+/* GHOST — hairline-only restraint (Vercel/Authkit). */
+.at-btn--ghost { background: none; box-shadow: none; border-color: var(--at-border-2); }
+.at-btn--ghost:hover { background: color-mix(in srgb, var(--at-ink) 5%, transparent); border-color: var(--at-ink-3); }
+
+/* CEREMONIAL — Warm Gilt, ink text. ONE per flow (receipt/VIP, §6.7). */
+.at-btn--ceremonial {
+  border: 0; color: var(--at-ink);
+  background: linear-gradient(102deg, var(--at-gold-soft), var(--at-gold) 70%);
+  background-size: 200% 100%;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px -6px color-mix(in srgb, var(--at-gold) 55%, transparent);
+}
+.at-btn--ceremonial:hover { background-position: 100% 0%; }
+
+/* DANGER — Heritage Crimson, destructive confirms only. */
+.at-btn--danger { border: 0; color: var(--at-on-indigo); background: var(--at-crimson); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 6px 16px -8px color-mix(in srgb, var(--at-crimson) 50%, transparent); }
+.at-btn--danger:hover { background: color-mix(in srgb, var(--at-crimson) 88%, #000); }
+
+/* sizes + icon-only */
+.at-btn--sm { min-block-size: 36px; padding: 8px 14px; font-size: .84rem; }
+.at-btn--lg { min-block-size: 52px; padding: 15px 26px; font-size: 1rem; }
+.at-btn--icon { padding: 0; inline-size: 44px; min-block-size: 44px; }
+.at-btn--icon.at-btn--sm { inline-size: 36px; }
+.at-btn--block { display: flex; inline-size: 100%; }
+
+.at-kbd { font-family: var(--at-mono); font-size: .7rem; padding: 2px 6px; border-radius: 6px; background: rgba(255,255,255,.18); border: .5px solid rgba(255,255,255,.25); }
+:root[data-theme="dark"] .at-btn--solid { color: var(--at-bg); background: var(--at-ink); }
+
+/* ============================================================
+   §5 · HOME GRID  (broadsheet: main column + inline-end aside)
+   ============================================================ */
+.at-broadsheet { display: grid; grid-template-columns: 1.65fr 1fr; gap: var(--at-8); align-items: start; }
+.at-col { display: flex; flex-direction: column; gap: var(--at-8); min-inline-size: 0; }
+.at-aside { display: flex; flex-direction: column; gap: var(--at-6); position: sticky; inset-block-start: 84px; }
+
+/* card primitive */
+.at-card { border-radius: var(--at-r-2xl); background: var(--at-surface); box-shadow: var(--at-hairline), var(--at-lift); padding: var(--at-6); }
+.at-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--at-4); margin-block-end: var(--at-5); }
+.at-card__title { display: inline-flex; align-items: center; gap: 9px; font-family: var(--at-display); font-weight: 600; font-size: 1.08rem; }
+.at-card__title .ms { font-size: 21px; color: var(--at-sec); }
+.at-card__sub { margin: 3px 0 0; color: var(--at-ink-3); font-size: .82rem; }
+
+/* ============================================================
+   §6 · THE LEDGER  (Notion-style unified stream)
+   one chronological column: updates + your activity + alerts
+   ============================================================ */
+.at-ledger { display: flex; flex-direction: column; }
+.at-ledger__row {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: var(--at-4);
+  padding-block: var(--at-4); border-block-end: 1px solid var(--at-border);
+  position: relative;
+}
+.at-ledger__row:last-child { border-block-end: 0; }
+.at-ledger__node { inline-size: 36px; block-size: 36px; flex: none; margin-block-start: 2px; display: grid; place-items: center; border-radius: 12px; background: color-mix(in srgb, var(--at-sec) 12%, transparent); color: var(--at-sec); }
+.at-ledger__node .ms { font-size: 19px; }
+.at-ledger__t { font-weight: 600; color: var(--at-ink); line-height: 1.4; }
+.at-ledger__t .at-tag { margin-inline-start: 8px; font-family: var(--at-mono); font-size: .6rem; letter-spacing: .06em; padding: 2px 7px; border-radius: var(--at-r-pill); text-transform: uppercase; background: color-mix(in srgb, var(--at-sec) 14%, transparent); color: var(--at-sec); vertical-align: middle; }
+.at-ledger__b { margin: 4px 0 0; color: var(--at-ink-2); font-size: .9rem; line-height: 1.55; }
+.at-ledger__time { font-family: var(--at-mono); font-size: .72rem; color: var(--at-ink-3); white-space: nowrap; }
+.at-ledger__row[data-urgent="1"] .at-ledger__node { background: color-mix(in srgb, var(--at-crimson) 14%, transparent); color: var(--at-crimson); }
+.at-ledger__row[data-urgent="1"] .at-ledger__t .at-tag { background: color-mix(in srgb, var(--at-crimson) 14%, transparent); color: var(--at-crimson); }
+
+/* ledger filter (segmented) */
+.at-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--at-r-pill); background: color-mix(in srgb, var(--at-ink) 5%, transparent); box-shadow: inset 0 1px 2px rgba(26,23,20,.05); }
+:root[data-theme="dark"] .at-seg { background: rgba(255,255,255,.06); }
+.at-seg__opt { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 0; background: none; cursor: pointer; border-radius: var(--at-r-pill); font-size: .8rem; font-weight: 600; color: var(--at-ink-2); transition: color var(--at-dur-micro) var(--at-ease), background var(--at-dur-enter) var(--at-spring), box-shadow var(--at-dur-enter) var(--at-ease); }
+.at-seg__opt .ms { font-size: 17px; }
+.at-seg__opt:active { transform: scale(.95); }
+.at-seg__opt[aria-selected="true"] { color: var(--at-ink); background: var(--at-surface); box-shadow: inset 0 .5px 0 rgba(255,255,255,.7), 0 1px 2.5px rgba(26,23,20,.12), 0 3px 8px -2px rgba(26,23,20,.1); }
+:root[data-theme="dark"] .at-seg__opt[aria-selected="true"] { background: color-mix(in srgb, var(--at-surface) 100%, #fff 6%); box-shadow: inset 0 .5px 0 rgba(255,255,255,.1), 0 4px 10px -2px rgba(0,0,0,.4); }
+.at-seg__opt:focus-visible { outline: none; box-shadow: var(--at-ring); }
+
+/* ============================================================
+   §7 · QUICK ACCESS  (aside) — fav / most / recent service chips
+   ============================================================ */
+.at-quick { display: flex; flex-direction: column; gap: var(--at-2); }
+.at-qrow {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--at-3);
+  padding: 10px; border-radius: var(--at-r-md); cursor: pointer; text-align: start; border: 0; background: none;
+  border-inline-start: 3px solid transparent;
+  transition: background var(--at-dur-micro) var(--at-ease), border-color var(--at-dur-micro) var(--at-ease);
+}
+.at-qrow:hover { background: var(--at-surface-2); border-inline-start-color: var(--at-sec); }
+.at-qrow:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-qrow__ico { inline-size: 36px; block-size: 36px; flex: none; display: grid; place-items: center; border-radius: 11px; background: color-mix(in srgb, var(--at-sec) 12%, transparent); color: var(--at-sec); }
+.at-qrow__ico .ms { font-size: 20px; }
+.at-qrow__main { min-inline-size: 0; }
+.at-qrow__name { font-weight: 600; font-size: .9rem; line-height: 1.3; color: var(--at-ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.at-qrow__meta { font-family: var(--at-mono); font-size: .68rem; color: var(--at-ink-3); }
+.at-star { inline-size: 30px; block-size: 30px; flex: none; display: grid; place-items: center; border: 0; border-radius: 50%; cursor: pointer; background: transparent; color: var(--at-ink-3); transition: transform var(--at-dur-enter) var(--at-spring), color var(--at-dur-micro) var(--at-ease), background var(--at-dur-micro) var(--at-ease); }
+.at-star:hover { background: color-mix(in srgb, var(--at-gold) 14%, transparent); color: var(--at-gold); }
+.at-star:active { transform: scale(.86); }
+.at-star:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-star[aria-pressed="true"] { color: var(--at-gold); }
+.at-star[aria-pressed="true"] .ms { font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24; }
+.at-star .ms { font-size: 19px; }
+
+/* ============================================================
+   §8 · GILT SEAL  (the single ceremonial moment — design.md §6.7)
+   ============================================================ */
+.at-seal {
+  position: relative; overflow: hidden;
+  border-radius: var(--at-r-2xl); padding: var(--at-6);
+  background:
+    radial-gradient(120% 130% at 100% 0%, color-mix(in srgb, var(--at-gold) 12%, transparent), transparent 55%),
+    var(--at-surface);
+  box-shadow: var(--at-hairline), var(--at-lift);
+  border-inline-start: 3px solid var(--at-gold);
+}
+.at-seal__badge {
+  inline-size: 56px; block-size: 56px; border-radius: 50%; flex: none; display: grid; place-items: center; color: var(--at-on-indigo);
+  background: var(--at-grad-seal);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px -6px color-mix(in srgb, var(--at-gold) 60%, transparent);
+  animation: at-settle var(--at-dur-enter) var(--at-spring) both;
+}
+.at-seal__badge .ms { font-size: 28px; }
+@keyframes at-settle { 0% { transform: scale(.82); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); } }
+.at-seal__val { font-family: var(--at-mono); font-weight: 600; font-size: 1.9rem; line-height: 1; color: var(--at-ink); }
+.at-seal__val small { font-size: .82rem; color: var(--at-ink-3); margin-inline-start: 5px; font-weight: 400; }
+.at-seal__lbl { color: var(--at-ink-2); font-size: .88rem; margin-block-start: 4px; }
+
+/* KPI mini stack (aside / seal companion) */
+.at-stat { display: flex; align-items: center; justify-content: space-between; gap: var(--at-3); padding-block: 11px; }
+.at-stat + .at-stat { border-block-start: 1px solid var(--at-border); }
+.at-stat__lbl { display: inline-flex; align-items: center; gap: 8px; color: var(--at-ink-2); font-size: .88rem; }
+.at-stat__lbl .ms { font-size: 18px; color: var(--at-sec); }
+.at-stat__val { font-family: var(--at-mono); font-weight: 600; font-size: 1.05rem; }
+.at-stat__delta { font-family: var(--at-mono); font-size: .72rem; padding: 2px 7px; border-radius: var(--at-r-pill); background: color-mix(in srgb, var(--at-ok) 14%, transparent); color: var(--at-ok); }
+
+/* ============================================================
+   §9 · DOMAIN ACCORDION  (horizontal — design.md §6.11)
+   four domains; active expands w/ its hue, others collapse to rails
+   ============================================================ */
+.at-accord { display: flex; gap: var(--at-3); min-block-size: 280px; }
+.at-acc {
+  position: relative; overflow: hidden; cursor: pointer; border: 0; text-align: start;
+  border-radius: var(--at-r-xl); background: var(--at-surface);
+  box-shadow: var(--at-hairline);
+  flex: 0 0 64px; transition: flex var(--at-dur-enter) var(--at-ease), box-shadow var(--at-dur-enter) var(--at-ease);
+  display: flex;
+}
+.at-acc[aria-expanded="true"] { flex: 1 1 auto; box-shadow: var(--at-hairline), var(--at-lift); background: color-mix(in srgb, var(--at-sec) 7%, var(--at-surface)); border-inline-start: 3px solid var(--at-sec); }
+.at-acc:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-acc__rail { writing-mode: vertical-rl; transform: rotate(180deg); display: flex; align-items: center; gap: 12px; padding-block: var(--at-4); padding-inline: 0; margin-inline: auto; font-weight: 600; color: var(--at-ink-2); white-space: nowrap; }
+.at-acc__rail .at-mono { font-size: .72rem; color: var(--at-ink-3); letter-spacing: .08em; }
+.at-acc[aria-expanded="true"] .at-acc__rail { display: none; }
+.at-acc__body { display: none; flex-direction: column; padding: var(--at-6); inline-size: 100%; }
+.at-acc[aria-expanded="true"] .at-acc__body { display: flex; animation: at-glass-in var(--at-dur-enter) var(--at-ease-out) both; }
+.at-acc__num { font-family: var(--at-mono); font-size: .8rem; color: var(--at-sec); letter-spacing: .1em; }
+.at-acc__h { font-family: var(--at-display); font-weight: 600; font-size: 1.4rem; margin: 6px 0 0; }
+.at-acc__blurb { color: var(--at-ink-2); margin: 8px 0 0; max-inline-size: 44ch; }
+.at-acc__ico { inline-size: 52px; block-size: 52px; border-radius: 15px; display: grid; place-items: center; background: color-mix(in srgb, var(--at-sec) 13%, transparent); color: var(--at-sec); margin-block-end: var(--at-4); }
+.at-acc__ico .ms { font-size: 28px; }
+.at-acc__links { margin-block-start: auto; padding-block-start: var(--at-5); display: flex; flex-direction: column; gap: 2px; }
+.at-acc__link { display: flex; align-items: center; justify-content: space-between; gap: var(--at-3); padding: 9px 10px; border-radius: var(--at-r-md); border: 0; background: none; cursor: pointer; text-align: start; color: var(--at-ink); font-size: .9rem; transition: background var(--at-dur-micro) var(--at-ease); }
+.at-acc__link:hover { background: color-mix(in srgb, var(--at-sec) 10%, transparent); }
+.at-acc__link .ms { font-size: 18px; color: var(--at-ink-3); }
+.at-acc__count { margin-block-start: var(--at-3); font-family: var(--at-mono); font-size: .76rem; color: var(--at-ink-3); }
+
+/* ============================================================
+   §10 · TIPS + NOTIFICATIONS  (aside cards)
+   ============================================================ */
+.at-tip { position: relative; overflow: hidden; border-radius: var(--at-r-2xl); background: var(--at-surface); box-shadow: var(--at-hairline), var(--at-lift); padding: var(--at-6); border-inline-start: 3px solid var(--at-sec); }
+.at-tip__ico { inline-size: 44px; block-size: 44px; flex: none; display: grid; place-items: center; border-radius: 14px; background: color-mix(in srgb, var(--at-sec) 12%, transparent); color: var(--at-sec); }
+.at-tip__ico .ms { font-size: 24px; }
+.at-tip__tag { font-family: var(--at-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--at-sec); }
+.at-tip__b { margin: 6px 0 0; color: var(--at-ink-2); line-height: 1.6; }
+.at-tip__nav { display: flex; align-items: center; gap: 10px; margin-block-start: var(--at-5); }
+.at-tip__count { font-family: var(--at-mono); font-size: .76rem; color: var(--at-ink-3); }
+
+.at-notif { display: flex; flex-direction: column; gap: 2px; }
+.at-notif__row { display: grid; grid-template-columns: auto 1fr auto; gap: var(--at-3); align-items: center; padding: 10px 8px; border-radius: var(--at-r-md); transition: background var(--at-dur-micro) var(--at-ease); }
+.at-notif__row:hover { background: var(--at-surface-2); }
+.at-notif__lead { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--at-sec); }
+.at-notif__t { font-weight: 600; font-size: .9rem; line-height: 1.35; }
+.at-notif__s { color: var(--at-ink-3); font-size: .76rem; font-family: var(--at-mono); }
+.at-notif__time { font-family: var(--at-mono); font-size: .72rem; color: var(--at-ink-3); white-space: nowrap; }
+
+/* ============================================================
+   §11 · SERVICE GRID + CARD  (directory tab — design.md §6.2)
+   ============================================================ */
+.at-grid { display: grid; gap: var(--at-5); grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); }
+.at-svc {
+  position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px;
+  padding: var(--at-5); text-align: start; border: 0; cursor: pointer; color: inherit;
+  border-radius: var(--at-r-2xl); border-inline-start: 3px solid var(--at-sec);
+  background: var(--at-surface); box-shadow: var(--at-hairline), var(--at-lift);
+  transition: transform var(--at-dur-enter) var(--at-spring), box-shadow var(--at-dur-enter) var(--at-ease);
+}
+.at-svc::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity var(--at-dur-enter) var(--at-ease); background: radial-gradient(220px 160px at var(--mx,80%) var(--my,0%), color-mix(in srgb, var(--at-sec) 7%, transparent), transparent 70%); }
+.at-svc:hover { transform: translateY(-2px); box-shadow: var(--at-hairline), var(--at-lift-hover); }
+.at-svc:hover::after { opacity: 1; }
+.at-svc:focus-visible { outline: none; box-shadow: var(--at-ring), var(--at-lift); }
+.at-svc__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--at-3); }
+.at-svc__ico { inline-size: 42px; block-size: 42px; flex: none; display: grid; place-items: center; border-radius: 13px; background: color-mix(in srgb, var(--at-sec) 12%, transparent); color: var(--at-sec); }
+.at-svc__ico .ms { font-size: 23px; }
+.at-svc__eyebrow { font-family: var(--at-mono); font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: var(--at-ink-3); }
+.at-svc__name { font-family: var(--at-display); font-weight: 600; font-size: 1rem; line-height: 1.32; color: var(--at-ink); }
+.at-svc__stat { margin-block-start: auto; font-family: var(--at-mono); font-size: .74rem; color: var(--at-ink-2); display: flex; gap: 10px; align-items: center; }
+.at-svc__dot { inline-size: 4px; block-size: 4px; border-radius: 50%; background: var(--at-ink-3); }
+
+/* ============================================================
+   §12 · DIRECTORY  (search + chips — design.md §6.13)
+   ============================================================ */
+.at-search { display: flex; align-items: center; gap: 10px; inline-size: 100%; padding: 12px 16px; border-radius: var(--at-r-pill); background: var(--at-surface-2); box-shadow: var(--at-hairline); color: var(--at-ink-3); }
+.at-search:focus-within { box-shadow: var(--at-hairline), var(--at-ring); }
+.at-search input { flex: 1; border: 0; background: none; outline: none; font: inherit; color: var(--at-ink); }
+.at-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.at-chip { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: var(--at-r-pill); border: .5px solid var(--at-border-2); background: var(--at-surface); color: var(--at-ink-2); font-size: .84rem; font-weight: 600; cursor: pointer; transition: transform var(--at-dur-enter) var(--at-spring), color var(--at-dur-micro) var(--at-ease), background var(--at-dur-micro) var(--at-ease); }
+.at-chip:active { transform: scale(.95); }
+.at-chip:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-chip__dot { inline-size: 9px; block-size: 9px; border-radius: 50%; background: var(--at-sec); }
+.at-chip[aria-pressed="true"] { color: var(--at-on-indigo); border-color: transparent; background: var(--at-sec); }
+.at-chip[aria-pressed="true"] .at-chip__dot { background: rgba(255,255,255,.85); }
+.at-chip__n { font-family: var(--at-mono); font-size: .7rem; opacity: .8; }
+
+/* ============================================================
+   §13 · TABLE  (cases / requests — flat & quiet, design.md §6.5)
+   ============================================================ */
+.at-tablewrap { overflow-x: auto; }
+.at-table { inline-size: 100%; border-collapse: collapse; font-size: .9rem; }
+.at-table thead th { text-align: start; padding: 12px var(--at-3); font-family: var(--at-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--at-ink-3); background: var(--at-surface-2); border-block-end: 1px solid var(--at-border); }
+.at-table tbody td { padding: 13px var(--at-3); border-block-end: 1px solid var(--at-border); vertical-align: middle; }
+.at-table tbody tr { cursor: pointer; transition: background var(--at-dur-micro) var(--at-ease); }
+.at-table tbody tr:hover { background: var(--at-surface-3); }
+.at-tname { display: flex; align-items: center; gap: 10px; }
+.at-tname .at-svc__ico { inline-size: 34px; block-size: 34px; border-radius: 10px; }
+.at-tname .ms { font-size: 19px; }
+.at-tname b { display: block; font-weight: 600; color: var(--at-ink); }
+.at-tname small { color: var(--at-ink-3); font-size: .74rem; }
+.at-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: var(--at-r-pill); font-size: .74rem; font-weight: 600; background: color-mix(in srgb, var(--at-sec) 13%, transparent); color: var(--at-sec); }
+.at-badge--urgent { background: color-mix(in srgb, var(--at-crimson) 14%, transparent); color: var(--at-crimson); }
+.at-badge--gold { background: color-mix(in srgb, var(--at-gold) 16%, transparent); color: var(--at-gold); }
+.at-badge .ms { font-size: 14px; }
+
+/* ============================================================
+   §14 · FEES  (الأجور) + BRANCHES
+   ============================================================ */
+.at-cols { display: grid; gap: var(--at-5); grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); align-items: start; }
+.at-row { display: flex; align-items: center; justify-content: space-between; gap: var(--at-3); padding-block: 11px; border-block-end: 1px solid var(--at-border); }
+.at-row:last-child { border-block-end: 0; }
+.at-row__name { color: var(--at-ink-2); font-size: .9rem; display: inline-flex; align-items: center; gap: 8px; }
+.at-row__name .ms { font-size: 17px; color: var(--at-ink-3); }
+.at-row__amt { font-family: var(--at-mono); font-weight: 600; }
+.at-row__amt small { color: var(--at-ink-3); font-weight: 400; margin-inline-start: 3px; }
+
+/* ============================================================
+   §15 · EXTENSION SLOTS  (ورشة التطوير — Vercel/Notion/Figma/Skills)
+   Notion-style "+ add" placeholders: clearly developable surfaces.
+   ============================================================ */
+.at-slots { display: grid; gap: var(--at-4); grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); }
+.at-slot { display: flex; flex-direction: column; gap: 8px; padding: var(--at-5); border-radius: var(--at-r-xl); border: 1.5px dashed var(--at-border-2); background: color-mix(in srgb, var(--at-surface) 55%, transparent); cursor: pointer; text-align: start; color: var(--at-ink-2); transition: border-color var(--at-dur-micro) var(--at-ease), background var(--at-dur-micro) var(--at-ease), transform var(--at-dur-enter) var(--at-spring); }
+.at-slot:hover { border-color: var(--at-indigo); background: color-mix(in srgb, var(--at-indigo) 4%, transparent); transform: translateY(-2px); }
+.at-slot:active { transform: scale(.99); }
+.at-slot:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-slot__top { display: flex; align-items: center; gap: 9px; }
+.at-slot__logo { inline-size: 30px; block-size: 30px; display: grid; place-items: center; border-radius: 9px; background: color-mix(in srgb, var(--at-ink) 7%, transparent); }
+.at-slot__logo .ms { font-size: 18px; }
+.at-slot__name { font-weight: 700; font-size: .92rem; color: var(--at-ink); }
+.at-slot__desc { font-size: .82rem; line-height: 1.5; }
+.at-slot__add { font-family: var(--at-mono); font-size: .7rem; color: var(--at-ink-3); display: inline-flex; align-items: center; gap: 5px; margin-block-start: auto; }
+.at-slot__add .ms { font-size: 14px; }
+
+/* empty state */
+.at-empty { text-align: center; padding: var(--at-16) var(--at-6); color: var(--at-ink-3); }
+.at-empty .ms { font-size: 42px; color: var(--at-border-2); }
+.at-empty p { margin: var(--at-3) 0 0; }
+
+/* canvas grain (≤5% — design.md §7), never behind tables/long text */
+.at-grain { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+
+/* ============================================================
+   §15b · ILLUSTRATION TIERS + BENTO + STAT STRIP + CROSSHAIRS
+   Varied, multi-platform devices (design.md §7, §10, §6.3c/6.14).
+   currentColor on these wrappers resolves to the section hue.
+   ============================================================ */
+.at-spot, .at-mesh, .at-iso { color: var(--at-sec); display: inline-block; }
+
+/* 3D spot — glossy section-hued object, white glyph on top */
+.at-spot { position: relative; flex: none; line-height: 0; filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--at-sec) 34%, transparent)); }
+.at-spot .ms { position: absolute; inset: 0; display: grid; place-items: center; color: var(--at-on-indigo); text-shadow: 0 1px 2px rgba(0,0,0,.18); }
+.at-spot__glyph { filter: drop-shadow(0 1px 2px rgba(0,0,0,.18)); }
+.at-spot--lg { filter: drop-shadow(0 16px 28px color-mix(in srgb, var(--at-sec) 38%, transparent)); }
+
+/* line + mesh — backdrop wash with a centred monoline glyph */
+.at-mesh { position: relative; inline-size: 100%; block-size: 130px; border-radius: var(--at-r-lg); overflow: hidden; }
+.at-mesh svg { position: absolute; inset: 0; }
+.at-mesh .ms { position: absolute; inset-block-start: 50%; inset-inline-end: 18px; transform: translateY(-50%); font-size: 40px; color: var(--at-sec); opacity: .9; }
+
+/* isometric — empty / landing scenes */
+.at-iso { line-height: 0; }
+
+/* ── BENTO (bestdesignsonx) — varied spans, one focal "lit window" ── */
+.at-bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--at-5); }
+.at-feature {
+  position: relative; overflow: hidden; display: flex; flex-direction: column;
+  grid-column: span 2; min-block-size: 200px;
+  padding: var(--at-6); border-radius: var(--at-r-2xl); cursor: pointer; text-align: start; border: 0;
+  border-inline-start: 3px solid var(--at-sec);
+  /* the chroma lives INSIDE the card — a lit window (Origin §6.3c) */
+  background:
+    radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--at-sec) 18%, transparent), transparent 58%),
+    var(--at-surface);
+  box-shadow: var(--at-hairline), var(--at-lift);
+  color: var(--at-ink);
+  transition: transform var(--at-dur-enter) var(--at-spring), box-shadow var(--at-dur-enter) var(--at-ease);
+}
+.at-feature:hover { transform: translateY(-3px); box-shadow: var(--at-hairline), var(--at-lift-pop); }
+.at-feature:focus-visible { outline: none; box-shadow: var(--at-ring), var(--at-lift); }
+.at-feature--lg { grid-column: span 2; grid-row: span 2; min-block-size: 100%; }
+.at-feature__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--at-4); }
+.at-feature__tag { font-family: var(--at-mono); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: var(--at-sec); padding: 4px 9px; border-radius: var(--at-r-pill); background: color-mix(in srgb, var(--at-sec) 12%, transparent); }
+.at-feature__h { font-family: var(--at-display); font-weight: 600; font-size: 1.2rem; line-height: 1.28; margin: var(--at-4) 0 0; max-inline-size: 22ch; }
+.at-feature--lg .at-feature__h { font-size: 1.55rem; }
+.at-feature__sub { color: var(--at-ink-2); font-size: .9rem; margin: 8px 0 0; max-inline-size: 36ch; }
+.at-feature__foot { margin-block-start: auto; padding-block-start: var(--at-5); display: flex; align-items: center; justify-content: space-between; gap: var(--at-3); }
+.at-feature__stat { font-family: var(--at-mono); font-size: .76rem; color: var(--at-ink-2); }
+
+/* ── SWATCH TRIO (designmd.supply §6.14) — 3 section-hue dots ── */
+.at-swatch { display: inline-flex; gap: 4px; align-items: center; }
+.at-swatch i { inline-size: 9px; block-size: 9px; border-radius: 50%; display: block; }
+.at-swatch i:nth-child(1) { background: var(--at-sec); }
+.at-swatch i:nth-child(2) { background: color-mix(in srgb, var(--at-sec) 55%, var(--at-surface)); }
+.at-swatch i:nth-child(3) { background: color-mix(in srgb, var(--at-sec) 26%, var(--at-surface)); }
+
+/* ── INLINE STAT STRIP (typeui) — bold tnum · muted label · dot sep ── */
+.at-statstrip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 0; margin-block-start: var(--at-6); }
+.at-statstrip__i { display: inline-flex; align-items: baseline; gap: 7px; padding-inline: var(--at-4); position: relative; }
+.at-statstrip__i + .at-statstrip__i::before { content: ""; position: absolute; inset-inline-start: 0; inset-block: 4px; inline-size: 1px; background: var(--at-border-2); }
+.at-statstrip__n { font-family: var(--at-mono); font-weight: 600; font-size: 1.05rem; color: var(--at-ink); }
+.at-statstrip__l { color: var(--at-ink-3); font-size: .84rem; }
+
+/* ── DRAUGHTSMAN CROSSHAIR FRAMING (coverflow / open-design) ── */
+.at-frame { position: relative; }
+.at-frame__x { position: absolute; inline-size: 14px; block-size: 14px; color: var(--at-border-2); opacity: .9; pointer-events: none; }
+.at-frame__x::before, .at-frame__x::after { content: ""; position: absolute; background: currentColor; }
+.at-frame__x::before { inset-inline-start: 50%; inset-block: 0; inline-size: 1.5px; transform: translateX(-50%); }
+.at-frame__x::after { inset-block-start: 50%; inset-inline: 0; block-size: 1.5px; transform: translateY(-50%); }
+.at-frame__x--ts { inset-block-start: -6px; inset-inline-start: -6px; }
+.at-frame__x--te { inset-block-start: -6px; inset-inline-end: -6px; }
+.at-frame__x--bs { inset-block-end: -6px; inset-inline-start: -6px; }
+.at-frame__x--be { inset-block-end: -6px; inset-inline-end: -6px; }
+
+/* ============================================================
+   §15c · «المنضدة» CONCIERGE — intent-first front desk (the home
+   signature). One Arabic command surface that routes across
+   services / branches / mahallas / cases / fees. Plus the
+   GOLDEN-HOUR sunline: the UI lit by the actual workday.
+   ============================================================ */
+.at-desk { position: relative; z-index: 30; }
+.at-desk__field {
+  display: flex; align-items: center; gap: var(--at-4);
+  padding: 18px 22px; border-radius: var(--at-r-xl);
+  background: var(--at-surface); color: var(--at-ink);
+  box-shadow: var(--at-hairline), var(--at-lift);
+  transition: box-shadow var(--at-dur-enter) var(--at-ease), transform var(--at-dur-enter) var(--at-spring);
+}
+.at-desk[data-open="1"] .at-desk__field { box-shadow: var(--at-hairline), var(--at-lift-pop), var(--at-ring); transform: translateY(-1px); }
+.at-desk__lead { inline-size: 40px; block-size: 40px; flex: none; display: grid; place-items: center; border-radius: 12px;
+  background: color-mix(in srgb, var(--at-indigo) 12%, transparent); color: var(--at-indigo); }
+.dark .at-desk__lead, :root[data-theme="dark"] .at-desk__lead { color: var(--at-indigo); }
+.at-desk__lead .ms { font-size: 23px; }
+.at-desk__input { flex: 1; min-inline-size: 0; border: 0; background: none; outline: none; font: inherit; font-size: 1.15rem; color: var(--at-ink); }
+.at-desk__input::placeholder { color: var(--at-ink-3); }
+.at-desk__hint { font-family: var(--at-mono); font-size: .7rem; color: var(--at-ink-3); padding: 4px 8px; border-radius: 7px; border: .5px solid var(--at-border-2); white-space: nowrap; }
+
+/* try-pills (designmd.me) — shown under the field when empty */
+.at-desk__try { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: var(--at-3); padding-inline: 4px; }
+.at-trychip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--at-r-pill);
+  border: .5px solid var(--at-border-2); background: var(--at-surface-2); color: var(--at-ink-2); font-size: .8rem; cursor: pointer;
+  transition: transform var(--at-dur-enter) var(--at-spring), color var(--at-dur-micro) var(--at-ease), border-color var(--at-dur-micro) var(--at-ease); }
+.at-trychip:hover { color: var(--at-ink); border-color: var(--at-ink-3); }
+.at-trychip:active { transform: scale(.95); }
+.at-trychip .ms { font-size: 16px; color: var(--at-ink-3); }
+
+/* results — a floating glass panel (chrome, so glass is allowed) */
+.at-desk__results {
+  position: absolute; inset-inline: 0; inset-block-start: calc(100% + 10px); z-index: 40;
+  border-radius: var(--at-r-xl); padding: var(--at-3);
+  background: var(--at-glass); -webkit-backdrop-filter: var(--at-glass-blur); backdrop-filter: var(--at-glass-blur);
+  box-shadow: var(--at-hairline), inset 0 1px 0 var(--at-glass-edge), 0 24px 60px -22px rgba(43,49,128,.34);
+  animation: at-glass-in var(--at-dur-enter) var(--at-ease-out) both;
+  max-block-size: min(60vh, 520px); overflow-y: auto;
+}
+.at-desk__group + .at-desk__group { margin-block-start: var(--at-2); }
+.at-desk__grouphd { font-family: var(--at-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; color: var(--at-ink-3);
+  padding: 8px 12px 4px; display: flex; align-items: center; gap: 8px; }
+.at-desk__grouphd .at-tnum { margin-inline-start: auto; }
+.at-result { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--at-3);
+  padding: 10px 12px; border-radius: var(--at-r-md); cursor: pointer; border: 0; background: none; inline-size: 100%; text-align: start;
+  border-inline-start: 3px solid transparent; transition: background var(--at-dur-micro) var(--at-ease), border-color var(--at-dur-micro) var(--at-ease); }
+.at-result:hover, .at-result.is-active { background: var(--at-surface-2); border-inline-start-color: var(--at-sec); }
+.at-result.is-active { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 28%, transparent); }
+.at-result__ico { inline-size: 34px; block-size: 34px; flex: none; display: grid; place-items: center; border-radius: 10px;
+  background: color-mix(in srgb, var(--at-sec) 13%, transparent); color: var(--at-sec); }
+.at-result__ico .ms { font-size: 19px; }
+.at-result__main { min-inline-size: 0; }
+.at-result__t { font-weight: 600; font-size: .92rem; color: var(--at-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.at-result__s { font-family: var(--at-mono); font-size: .72rem; color: var(--at-ink-3); }
+.at-result__go { font-family: var(--at-mono); font-size: .64rem; color: var(--at-ink-3); display: inline-flex; align-items: center; gap: 4px; opacity: 0; transition: opacity var(--at-dur-micro) var(--at-ease); }
+.at-result.is-active .at-result__go, .at-result:hover .at-result__go { opacity: 1; }
+.at-desk__none { padding: var(--at-6); text-align: center; color: var(--at-ink-3); font-size: .9rem; }
+
+/* ── GOLDEN-HOUR sunline — the workday rendered as light ── */
+.at-sunline { display: flex; align-items: center; gap: var(--at-3); margin-block-start: var(--at-5); }
+.at-sunline__rail { position: relative; flex: 1; block-size: 6px; border-radius: var(--at-r-pill);
+  background: color-mix(in srgb, var(--at-gold) 16%, var(--at-surface-3)); overflow: hidden; }
+.at-sunline__fill { position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: 100%; transform-origin: inline-start;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--at-gold) 35%, transparent), var(--at-gold));
+  border-radius: var(--at-r-pill); transition: transform var(--at-dur-enter) var(--at-ease); }
+.at-sunline__sun { position: absolute; inset-block-start: 50%; inline-size: 12px; block-size: 12px; border-radius: 50%; transform: translate(50%, -50%);
+  background: radial-gradient(circle at 35% 30%, var(--at-gold-soft), var(--at-gold) 70%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--at-gold) 22%, transparent), 0 2px 6px -1px color-mix(in srgb, var(--at-gold) 50%, transparent); }
+.at-sunline__lbl { font-family: var(--at-mono); font-size: .72rem; color: var(--at-ink-2); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.at-sunline__lbl .ms { font-size: 16px; color: var(--at-gold); }
+
+@media (max-width: 600px) { .at-desk__hint { display: none; } .at-desk__input { font-size: 1.02rem; } }
+
+/* ============================================================
+   §15d · BESPOKE ICONS (draw-on) + CARD REVEAL / STAGGER
+   Custom domain icons (icons.js) animate their stroke once;
+   showcase cards rise in a gentle stagger. transform/opacity only
+   (animate skill); all disabled under reduced-motion.
+   ============================================================ */
+.at-icon { display: inline-block; vertical-align: middle; color: inherit; }
+.at-icon path, .at-icon circle, .at-icon rect, .at-icon line, .at-icon polyline {
+  fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+/* white glyph variant — bespoke icon sitting on a 3D-spot blob */
+.at-icon--glyph path, .at-icon--glyph circle, .at-icon--glyph rect, .at-icon--glyph line, .at-icon--glyph polyline { stroke: var(--at-on-indigo); stroke-width: 1.6; }
+
+/* draw-on: pathLength="1" lets one keyframe trace every stroke; small stagger */
+.at-icon--draw [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: at-draw .72s var(--at-ease-out) forwards; }
+.at-icon--draw [pathLength]:nth-child(2) { animation-delay: .10s; }
+.at-icon--draw [pathLength]:nth-child(3) { animation-delay: .20s; }
+.at-icon--draw [pathLength]:nth-child(4) { animation-delay: .30s; }
+@keyframes at-draw { to { stroke-dashoffset: 0; } }
+
+/* card reveal — showcase bento + service grid rise in sequence */
+@keyframes at-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.at-bento > *, .at-grid > * { animation: at-rise var(--at-dur-enter) var(--at-ease-out) both; }
+.at-bento > *:nth-child(2), .at-grid > *:nth-child(2) { animation-delay: 50ms; }
+.at-bento > *:nth-child(3), .at-grid > *:nth-child(3) { animation-delay: 100ms; }
+.at-bento > *:nth-child(4), .at-grid > *:nth-child(4) { animation-delay: 150ms; }
+.at-grid > *:nth-child(5) { animation-delay: 200ms; }
+.at-grid > *:nth-child(6) { animation-delay: 250ms; }
+/* the featured spot lifts + brightens on hover (subtle parallax) */
+.at-feature:hover .at-spot { transform: translateY(-3px) scale(1.03); }
+.at-spot { transition: transform var(--at-dur-enter) var(--at-spring); }
+
+/* ============================================================
+   §16 · RESPONSIVE
+   ============================================================ */
+@media (max-width: 980px) {
+  .at-broadsheet { grid-template-columns: 1fr; }
+  .at-aside { position: static; }
+  .at-brand__name { display: none; }
+  .at-docksearch { display: none; }
+  .at-bento { grid-template-columns: repeat(2, 1fr); }
+  .at-feature, .at-feature--lg { grid-column: span 1; grid-row: auto; min-block-size: 180px; }
+}
+@media (max-width: 760px) {
+  .at-accord { flex-direction: column; min-block-size: 0; }
+  .at-acc { flex: none; }
+  .at-acc__rail { writing-mode: horizontal-tb; transform: none; padding: var(--at-4); margin: 0; }
+  .at-acc[aria-expanded="true"] { border-inline-start: 0; border-block-start: 3px solid var(--at-sec); }
+}
+@media (max-width: 600px) {
+  .at-tab__label { display: none; }              /* icon-only dock on phones */
+  .at-tab { padding: 9px 11px; }
+  .at-shell { padding-inline: var(--at-4); }
+  .at-bento { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   §17 · REDUCED MOTION  (design.md §5 — non-negotiable)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .at-view, .at-kin, .at-acc[aria-expanded="true"] .at-acc__body, .at-seal__badge { animation: none; opacity: 1; transform: none; filter: none; }
+  .at-bento > *, .at-grid > * { animation: none; opacity: 1; transform: none; }
+  .at-icon--draw [pathLength] { animation: none; stroke-dashoffset: 0; }
+  .at-mast__pulse { animation: none; }
+  *, *::before, *::after { transition-duration: 1ms !important; }
+}
