@@ -697,6 +697,81 @@ button { font: inherit; color: inherit; }
 .at-frame__x--be { inset-block-end: -6px; inset-inline-end: -6px; }
 
 /* ============================================================
+   §15c · «المنضدة» CONCIERGE — intent-first front desk (the home
+   signature). One Arabic command surface that routes across
+   services / branches / mahallas / cases / fees. Plus the
+   GOLDEN-HOUR sunline: the UI lit by the actual workday.
+   ============================================================ */
+.at-desk { position: relative; z-index: 30; }
+.at-desk__field {
+  display: flex; align-items: center; gap: var(--at-4);
+  padding: 18px 22px; border-radius: var(--at-r-xl);
+  background: var(--at-surface); color: var(--at-ink);
+  box-shadow: var(--at-hairline), var(--at-lift);
+  transition: box-shadow var(--at-dur-enter) var(--at-ease), transform var(--at-dur-enter) var(--at-spring);
+}
+.at-desk[data-open="1"] .at-desk__field { box-shadow: var(--at-hairline), var(--at-lift-pop), var(--at-ring); transform: translateY(-1px); }
+.at-desk__lead { inline-size: 40px; block-size: 40px; flex: none; display: grid; place-items: center; border-radius: 12px;
+  background: color-mix(in srgb, var(--at-indigo) 12%, transparent); color: var(--at-indigo); }
+.dark .at-desk__lead, :root[data-theme="dark"] .at-desk__lead { color: var(--at-indigo); }
+.at-desk__lead .ms { font-size: 23px; }
+.at-desk__input { flex: 1; min-inline-size: 0; border: 0; background: none; outline: none; font: inherit; font-size: 1.15rem; color: var(--at-ink); }
+.at-desk__input::placeholder { color: var(--at-ink-3); }
+.at-desk__hint { font-family: var(--at-mono); font-size: .7rem; color: var(--at-ink-3); padding: 4px 8px; border-radius: 7px; border: .5px solid var(--at-border-2); white-space: nowrap; }
+
+/* try-pills (designmd.me) — shown under the field when empty */
+.at-desk__try { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: var(--at-3); padding-inline: 4px; }
+.at-trychip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--at-r-pill);
+  border: .5px solid var(--at-border-2); background: var(--at-surface-2); color: var(--at-ink-2); font-size: .8rem; cursor: pointer;
+  transition: transform var(--at-dur-enter) var(--at-spring), color var(--at-dur-micro) var(--at-ease), border-color var(--at-dur-micro) var(--at-ease); }
+.at-trychip:hover { color: var(--at-ink); border-color: var(--at-ink-3); }
+.at-trychip:active { transform: scale(.95); }
+.at-trychip .ms { font-size: 16px; color: var(--at-ink-3); }
+
+/* results — a floating glass panel (chrome, so glass is allowed) */
+.at-desk__results {
+  position: absolute; inset-inline: 0; inset-block-start: calc(100% + 10px); z-index: 40;
+  border-radius: var(--at-r-xl); padding: var(--at-3);
+  background: var(--at-glass); -webkit-backdrop-filter: var(--at-glass-blur); backdrop-filter: var(--at-glass-blur);
+  box-shadow: var(--at-hairline), inset 0 1px 0 var(--at-glass-edge), 0 24px 60px -22px rgba(43,49,128,.34);
+  animation: at-glass-in var(--at-dur-enter) var(--at-ease-out) both;
+  max-block-size: min(60vh, 520px); overflow-y: auto;
+}
+.at-desk__group + .at-desk__group { margin-block-start: var(--at-2); }
+.at-desk__grouphd { font-family: var(--at-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; color: var(--at-ink-3);
+  padding: 8px 12px 4px; display: flex; align-items: center; gap: 8px; }
+.at-desk__grouphd .at-tnum { margin-inline-start: auto; }
+.at-result { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--at-3);
+  padding: 10px 12px; border-radius: var(--at-r-md); cursor: pointer; border: 0; background: none; inline-size: 100%; text-align: start;
+  border-inline-start: 3px solid transparent; transition: background var(--at-dur-micro) var(--at-ease), border-color var(--at-dur-micro) var(--at-ease); }
+.at-result:hover, .at-result.is-active { background: var(--at-surface-2); border-inline-start-color: var(--at-sec); }
+.at-result.is-active { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 28%, transparent); }
+.at-result__ico { inline-size: 34px; block-size: 34px; flex: none; display: grid; place-items: center; border-radius: 10px;
+  background: color-mix(in srgb, var(--at-sec) 13%, transparent); color: var(--at-sec); }
+.at-result__ico .ms { font-size: 19px; }
+.at-result__main { min-inline-size: 0; }
+.at-result__t { font-weight: 600; font-size: .92rem; color: var(--at-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.at-result__s { font-family: var(--at-mono); font-size: .72rem; color: var(--at-ink-3); }
+.at-result__go { font-family: var(--at-mono); font-size: .64rem; color: var(--at-ink-3); display: inline-flex; align-items: center; gap: 4px; opacity: 0; transition: opacity var(--at-dur-micro) var(--at-ease); }
+.at-result.is-active .at-result__go, .at-result:hover .at-result__go { opacity: 1; }
+.at-desk__none { padding: var(--at-6); text-align: center; color: var(--at-ink-3); font-size: .9rem; }
+
+/* ── GOLDEN-HOUR sunline — the workday rendered as light ── */
+.at-sunline { display: flex; align-items: center; gap: var(--at-3); margin-block-start: var(--at-5); }
+.at-sunline__rail { position: relative; flex: 1; block-size: 6px; border-radius: var(--at-r-pill);
+  background: color-mix(in srgb, var(--at-gold) 16%, var(--at-surface-3)); overflow: hidden; }
+.at-sunline__fill { position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: 100%; transform-origin: inline-start;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--at-gold) 35%, transparent), var(--at-gold));
+  border-radius: var(--at-r-pill); transition: transform var(--at-dur-enter) var(--at-ease); }
+.at-sunline__sun { position: absolute; inset-block-start: 50%; inline-size: 12px; block-size: 12px; border-radius: 50%; transform: translate(50%, -50%);
+  background: radial-gradient(circle at 35% 30%, var(--at-gold-soft), var(--at-gold) 70%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--at-gold) 22%, transparent), 0 2px 6px -1px color-mix(in srgb, var(--at-gold) 50%, transparent); }
+.at-sunline__lbl { font-family: var(--at-mono); font-size: .72rem; color: var(--at-ink-2); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.at-sunline__lbl .ms { font-size: 16px; color: var(--at-gold); }
+
+@media (max-width: 600px) { .at-desk__hint { display: none; } .at-desk__input { font-size: 1.02rem; } }
+
+/* ============================================================
    §16 · RESPONSIVE
    ============================================================ */
 @media (max-width: 980px) {

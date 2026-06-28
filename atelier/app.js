@@ -41,6 +41,8 @@
   var secClass = function (code) { return "sec-" + String(code || "").toLowerCase(); };
   var ART = window.AtelierArt || {};
   var BRANCH_STATS = window.BRANCH_STATS || {};
+  var MAHALLA_INDEX = window.MAHALLA_INDEX || {};
+  var BRANCH_MAP = window.BRANCH_MAP || {};
 
   // ---- pure helpers (covered by the self-check at the bottom) -----------
   function filterServices(list, query, section) {
@@ -57,7 +59,38 @@
   function mostUsed(list, n) {
     return list.slice().sort(function (a, b) { return b.popularity - a.popularity; }).slice(0, n || 6);
   }
-  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed };
+  // normalise Arabic-Indic / Persian digits → Latin (so "محلة ١٤٣" matches "143")
+  function toLatinDigits(s) {
+    return String(s)
+      .replace(/[\u0660-\u0669]/g, function (d) { return d.charCodeAt(0) - 0x0660; })
+      .replace(/[\u06f0-\u06f9]/g, function (d) { return d.charCodeAt(0) - 0x06f0; });
+  }
+  // «المنضدة» — one query, routed across every domain. Pure: returns plain data.
+  function searchAll(q) {
+    var raw = (q || "").trim();
+    var out = { services: [], branches: [], cases: [], fees: [] };
+    if (!raw) return out;
+    var ql = toLatinDigits(raw).toLowerCase();
+    out.services = SERVICES.filter(function (s) { return (s.name + " " + s.code).toLowerCase().indexOf(ql) !== -1; })
+      .slice(0, 5).map(function (s) { return { type: "service", id: s.code, title: s.name, sub: s.code + " · " + ((SECTION_MAP[s.section] || {}).name || ""), section: s.section, icon: s.icon }; });
+    var br = BRANCHES.filter(function (b) { return (b.name + " " + b.id).toLowerCase().indexOf(ql) !== -1; });
+    if (/^\d+$/.test(ql) && MAHALLA_INDEX[ql]) { var hit = BRANCH_MAP[MAHALLA_INDEX[ql]]; if (hit && br.indexOf(hit) === -1) br = [hit].concat(br); }
+    out.branches = br.slice(0, 4).map(function (b) { return { type: "branch", id: b.id, title: b.name, sub: b.id + " · " + b.mahallas.length + " محلة" + (/^\d+$/.test(ql) && MAHALLA_INDEX[ql] === b.id ? " · تشمل محلة " + ql : ""), section: "CT", icon: "apartment" }; });
+    out.cases = CASES.filter(function (c) { return (c.id + " " + c.subscriber).toLowerCase().indexOf(ql) !== -1; })
+      .slice(0, 4).map(function (c) { var s = SERVICE_MAP[c.svc] || {}; return { type: "case", id: c.id, title: c.subscriber, sub: c.id + " · " + c.status, section: s.section || "CS", icon: "description" }; });
+    var fees = [];
+    Object.keys(PRICING).forEach(function (k) { PRICING[k].items.forEach(function (it) { if ((it.name + " " + PRICING[k].label).toLowerCase().indexOf(ql) !== -1) fees.push({ type: "fee", id: k + ":" + it.key, title: it.name, sub: PRICING[k].label + " · " + fmt(it.amount) + " د.ع", section: "CB", icon: "request_quote" }); }); });
+    out.fees = fees.slice(0, 4);
+    return out;
+  }
+  // golden-hour: progress through the branch workday (0..1) + minutes left. Pure.
+  function goldenProgress(now, startH, endH) {
+    var mins = now.getHours() * 60 + now.getMinutes();
+    var s = startH * 60, e = endH * 60;
+    var pct = Math.max(0, Math.min(1, (mins - s) / (e - s)));
+    return { pct: pct, remainMin: Math.max(0, e - mins) };
+  }
+  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed, searchAll: searchAll, goldenProgress: goldenProgress };
 
   // ---- persisted state --------------------------------------------------
   function load(key, fallback) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : fallback; } catch (e) { return fallback; } }
@@ -175,7 +208,7 @@
   // VIEW: HOME
   // =====================================================================
   function viewHome() {
-    // ---- masthead (draughtsman crosshair frame + kinetic blur-in + stat strip)
+    // ---- masthead (crosshair frame · kinetic blur-in · golden-hour sunline · stat strip)
     var done = 47; // ceremonial: completed today (derived stand-in)
     var mast = el("header", { class: "at-mast at-frame" }, [
       el("span", { class: "at-frame__x at-frame__x--ts" }), el("span", { class: "at-frame__x at-frame__x--te" }),
@@ -183,14 +216,9 @@
         el("span", { class: "at-mast__pulse" }),
         new Date().toLocaleDateString("ar-IQ-u-ca-gregory", { weekday: "long", day: "numeric", month: "long" }) + " · مركز الرصافة · فرع النضال",
       ]),
-      el("h1", { class: "at-kin at-kin--2", html: "أهلاً أستاذ رامز — <b>كل خدماتك في مكانٍ واحد</b>" }),
-      el("p", { class: "at-mast__lede at-kin at-kin--3", text: "ابدأ خدمة، تابع طلباتك، واطّلع على آخر التحديثات والنصائح في عمودٍ واحد هادئ — لا فوضى لوحات، بل مكتب عملٍ منظّم." }),
-      el("div", { class: "at-mast__cta at-kin at-kin--4" }, [
-        el("button", { class: "at-btn at-btn--primary", type: "button", on: { click: function () { go("services"); } } },
-          [ms("bolt"), "ابدأ خدمة", el("span", { class: "at-kbd", text: "⌘K" })]),
-        el("button", { class: "at-btn at-btn--glass", type: "button", on: { click: function () { go("requests"); } } },
-          [ms("inbox"), "طلباتي"]),
-      ]),
+      el("h1", { class: "at-kin at-kin--2", html: "أهلاً أستاذ رامز — <b>قُل ما تريد فعله</b>" }),
+      el("p", { class: "at-mast__lede at-kin at-kin--3", text: "اكتب نيّتك في المنضدة أدناه وستذهب مباشرةً إلى الخدمة أو الفرع أو المحلة أو الطلب — لا تنقّل بين القوائم." }),
+      sunline(),
       el("div", { class: "at-statstrip" }, [
         stripItem(fmt(SERVICES.length), "خدمة"),
         stripItem(fmt(SECTIONS.length), "أقسام"),
@@ -205,11 +233,80 @@
     // ---- aside: gilt seal + quick access + tip + notifs
     var aside = el("aside", { class: "at-aside" }, [sealCard(done), quickCard(), tipCard(), notifCard()]);
 
-    return el("div", { class: "at-view" }, [mast, el("div", { class: "at-broadsheet" }, [main, aside])]);
+    return el("div", { class: "at-view" }, [mast, deskHero(), el("div", { class: "at-broadsheet" }, [main, aside])]);
   }
 
   function stripItem(num, label) {
     return el("span", { class: "at-statstrip__i" }, [el("span", { class: "at-statstrip__n at-tnum", text: num }), el("span", { class: "at-statstrip__l", text: label })]);
+  }
+
+  // golden-hour sunline — the workday rendered as light (08:00 → 16:00 branch hours)
+  function sunline() {
+    var g = goldenProgress(new Date(), 8, 16);
+    var pct = Math.round(g.pct * 100), label;
+    if (g.pct <= 0) label = "الدوام لم يبدأ";
+    else if (g.pct >= 1) label = "انتهى الدوام";
+    else { var h = Math.floor(g.remainMin / 60), m = g.remainMin % 60; label = "تبقّى " + (h ? h + "س " : "") + m + "د"; }
+    return el("div", { class: "at-sunline at-kin at-kin--4" }, [
+      el("span", { class: "at-sunline__lbl" }, [ms("wb_twilight"), "الدوام"]),
+      el("div", { class: "at-sunline__rail" }, [
+        el("span", { class: "at-sunline__fill", style: "transform:scaleX(" + g.pct.toFixed(3) + ")" }),
+        el("span", { class: "at-sunline__sun", style: "inset-inline-start:" + pct + "%" }),
+      ]),
+      el("span", { class: "at-sunline__lbl at-tnum", text: pct + "٪ · " + label }),
+    ]);
+  }
+
+  // «المنضدة» — the concierge command surface (the home signature).
+  // Self-contained: handles its own input/keys/results without re-rendering
+  // the whole view (so focus is never lost while typing).
+  function deskHero() {
+    var TRY = [["عمل اشتراك جديد", "add_home"], ["محلة ١٤٣", "pin_drop"], ["TQ-2026", "tag"], ["أجور الكشف", "request_quote"], ["فحص مقياس", "fact_check"]];
+    var q = "", flat = [], active = -1;
+    var input = el("input", { class: "at-desk__input", id: "at-desk-input", type: "search", autocomplete: "off", spellcheck: "false", "aria-label": "منضدة الأوامر", placeholder: "اكتب ما تريد فعله… خدمة، فرع، محلة، رقم طلب، أو أجور" });
+    var results = el("div", { class: "at-desk__results", role: "listbox", hidden: true });
+    var tryRow = el("div", { class: "at-desk__try" }, TRY.map(function (t) {
+      return el("button", { class: "at-trychip", type: "button", on: { click: function () { input.value = t[0]; q = t[0]; recompute(); input.focus(); } } }, [ms(t[1]), t[0]]);
+    }));
+    var wrap = el("div", { class: "at-desk", "data-open": "0" }, [
+      el("div", { class: "at-desk__field" }, [el("span", { class: "at-desk__lead" }, [ms("bolt")]), input, el("span", { class: "at-desk__hint", text: "⌘K" })]),
+      tryRow, results,
+    ]);
+
+    function act(it) { if (!it) return; if (it.type === "service") openService(it.id); else if (it.type === "branch") go("branches"); else if (it.type === "case") go("requests"); else if (it.type === "fee") go("fees"); }
+    function setActive(i) { active = i; var n = results.querySelectorAll(".at-result"); for (var k = 0; k < n.length; k++) { var on = k === i; n[k].classList.toggle("is-active", on); if (on) n[k].scrollIntoView({ block: "nearest" }); } }
+    function recompute() {
+      var g = searchAll(q); flat = []; clear(results);
+      if (!q) { wrap.setAttribute("data-open", "0"); results.hidden = true; tryRow.hidden = false; return; }
+      tryRow.hidden = true; wrap.setAttribute("data-open", "1"); results.hidden = false;
+      var groups = [["services", "الخدمات", "apps"], ["branches", "الفروع والمحلات", "hub"], ["cases", "الطلبات", "inbox"], ["fees", "الأجور", "payments"]];
+      var total = g.services.length + g.branches.length + g.cases.length + g.fees.length;
+      if (!total) { results.appendChild(el("div", { class: "at-desk__none", text: "لا نتائج لـ «" + q + "». جرّب رقم محلة، أو رقم طلب، أو اسم خدمة." })); return; }
+      groups.forEach(function (gr) {
+        var items = g[gr[0]]; if (!items.length) return;
+        var rows = [el("div", { class: "at-desk__grouphd" }, [ms(gr[2]), gr[1], el("span", { class: "at-tnum", text: String(items.length) })])];
+        items.forEach(function (it) {
+          var idx = flat.length; flat.push(it);
+          rows.push(el("button", { class: "at-result " + secClass(it.section), type: "button", role: "option", on: { click: function () { act(it); }, mouseenter: function () { setActive(idx); } } }, [
+            el("span", { class: "at-result__ico" }, [ms(it.icon)]),
+            el("span", { class: "at-result__main" }, [el("span", { class: "at-result__t", text: it.title }), el("span", { class: "at-result__s", text: it.sub })]),
+            el("span", { class: "at-result__go" }, [ms("subdirectory_arrow_left"), "فتح"]),
+          ]));
+        });
+        results.appendChild(el("div", { class: "at-desk__group" }, rows));
+      });
+      active = -1;
+    }
+    input.addEventListener("input", function () { q = input.value; recompute(); });
+    input.addEventListener("focus", function () { if (q) recompute(); });
+    input.addEventListener("blur", function () { setTimeout(function () { wrap.setAttribute("data-open", "0"); results.hidden = true; if (!q) tryRow.hidden = false; }, 150); });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") { e.preventDefault(); if (flat.length) setActive((active + 1) % flat.length); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); if (flat.length) setActive((active - 1 + flat.length) % flat.length); }
+      else if (e.key === "Enter") { e.preventDefault(); act(active >= 0 ? flat[active] : flat[0]); }
+      else if (e.key === "Escape") { input.value = ""; q = ""; recompute(); input.blur(); }
+    });
+    return wrap;
   }
 
   // featured "lit window" bento (Origin §6.3c + bestdesignsonx bento) — 3D-spot tier
@@ -669,7 +766,12 @@
     render();
     window.addEventListener("resize", placeIndicator);
     window.addEventListener("keydown", function (e) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); go("services"); var i = $(".at-search input"); if (i) i.focus(); }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        var d = document.getElementById("at-desk-input");
+        if (!d) { go("home"); setTimeout(function () { var x = document.getElementById("at-desk-input"); if (x) x.focus(); }, 80); }
+        else d.focus();
+      }
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
@@ -685,5 +787,7 @@
     console.assert(filterServices(sample, "لا يوجد", "ALL").length === 0, "filter: no match");
     console.assert(toggleId(["a"], "b").length === 2 && toggleId(["a", "b"], "b").length === 1, "toggleId add/remove");
     console.assert(mostUsed(sample, 1)[0].code === "CB0001", "mostUsed: by popularity");
+    console.assert(goldenProgress({ getHours: function () { return 12; }, getMinutes: function () { return 0; } }, 8, 16).pct === 0.5, "goldenProgress: noon = 0.5");
+    console.assert(searchAll("").services.length === 0 && searchAll("cb0001").services.length === 1, "searchAll: empty vs code match");
   })();
 })();
