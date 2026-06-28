@@ -1,0 +1,739 @@
+/* =============================================================
+   FINAL_HOME — Tadfuq Al-Khayr · صفحة رئيسية
+   Additive, last-loaded layer (design.md §12). Everything is
+   scoped under .hm so it never collides with the live app.
+
+   Guardrails honoured:
+   - Tokens only: --ds-* aliased to the live --f-* system + the
+     design.md §17.1 elevation values. No raw hex/px accents.
+   - Elevation: --ds-hairline insets + --ds-lift (indigo-tinted
+     soft) / dark glow. Never a flat gray box-shadow.
+   - One signature per screen = the liquid-glass dock. Content
+     surfaces stay quiet (hairline + --section-c edge).
+   - Logical properties ONLY (inline/block, inset-inline-start…).
+   - Motion: transform / opacity / filter / color only; damped
+     spring --ds-spring-soft (<=6% overshoot); reduced-motion safe.
+   - tnum on every numeral; mono eyebrow for structural labels.
+   ============================================================= */
+
+/* ---------- §0 · Token bridge (design.md §12: alias --ds-* → --f-*) ---------- */
+.hm {
+  --ds-bg:         var(--f-bg);
+  --ds-bg-2:       var(--f-bg-2);
+  --ds-surface:    var(--f-surface);
+  --ds-surface-2:  var(--f-surface-2);
+  --ds-surface-3:  var(--f-surface-3);
+  --ds-border:     var(--f-border);
+  --ds-border-2:   var(--f-border-2);
+  --ds-ink:        var(--f-ink);
+  --ds-ink-2:      var(--f-ink-2);
+  --ds-ink-3:      var(--f-ink-3);
+
+  --ds-indigo:      var(--f-navy);
+  --ds-indigo-soft: var(--f-navy-soft);
+  --ds-crimson:     var(--f-crimson);
+  --ds-gold:        var(--f-gold);
+  --ds-cs: var(--f-cs);  --ds-ct: var(--f-ct);
+  --ds-cb: var(--f-cb);  --ds-ca: var(--f-ca);
+
+  /* type */
+  --ds-font-display: "Alexandria", "Readex Pro", "Clash Display", Georgia, serif;
+  --ds-font-body:    "Readex Pro", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --ds-font-mono:    "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
+
+  /* space + radius (4px base) */
+  --ds-2:8px; --ds-3:12px; --ds-4:16px; --ds-5:20px; --ds-6:24px;
+  --ds-8:32px; --ds-10:40px; --ds-12:48px; --ds-16:64px;
+  --ds-r-md:12px; --ds-r-lg:16px; --ds-r-xl:20px; --ds-r-2xl:28px; --ds-r-pill:999px;
+
+  /* motion */
+  --ds-ease-standard: cubic-bezier(.4,0,.2,1);
+  --ds-ease-entrance: cubic-bezier(.16,1,.3,1);
+  --ds-spring-soft:   cubic-bezier(.34,1.3,.64,1);   /* damped, <=6% overshoot */
+  --ds-dur-micro:180ms; --ds-dur-enter:280ms; --ds-dur-exit:200ms;
+
+  /* elevation — design.md §17.1 (light) */
+  --ds-hairline:   inset 0 0 0 1px var(--ds-border);
+  --ds-lift:       0 1px 2px rgba(26,23,20,.04), 0 8px 24px -12px rgba(43,49,128,.14);
+  --ds-lift-hover: 0 1px 2px rgba(26,23,20,.04), 0 14px 32px -14px rgba(43,49,128,.20);
+  --ds-ring:       0 0 0 2px color-mix(in srgb, var(--ds-indigo) 38%, transparent);
+
+  /* default per-surface section hue (overridden inline) */
+  --section-c: var(--ds-indigo);
+
+  color: var(--ds-ink);
+  font-family: var(--ds-font-body);
+}
+
+/* dark — design.md §17.1: lift by glow, not heavier shadow */
+.dark .hm {
+  --ds-lift:       0 0 0 1px rgba(142,148,255,.10), 0 12px 40px -16px rgba(0,0,0,.6), inset 0 1px 0 rgba(234,231,222,.06);
+  --ds-lift-hover: 0 0 0 1px rgba(142,148,255,.16), 0 18px 48px -16px rgba(0,0,0,.66), inset 0 1px 0 rgba(234,231,222,.08);
+}
+
+.hm *, .hm *::before, .hm *::after { box-sizing: border-box; }
+.hm [hidden] { display: none !important; }
+
+/* shared numeral discipline */
+.hm .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1, "zero" 1; }
+
+/* eyebrow — the structural signature label (design.md §2) */
+.hm .hm-eyebrow {
+  font-family: var(--ds-font-mono);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ds-ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-2);
+}
+/* Arabic eyebrow: no caps/wide-Latin tracking (design.md §2 rule) */
+.hm .hm-eyebrow[lang="ar"], .hm .hm-eyebrow.is-ar {
+  font-family: var(--ds-font-body);
+  letter-spacing: .04em;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* ============================================================
+   §1 · SHELL
+   ============================================================ */
+.hm {
+  min-block-size: 100dvh;
+  background:
+    radial-gradient(120% 80% at 100% -10%, color-mix(in srgb, var(--ds-indigo) 5%, transparent), transparent 60%),
+    var(--ds-bg);
+  padding-block-end: var(--ds-16);
+}
+.hm-main {
+  max-inline-size: 1180px;
+  margin-inline: auto;
+  padding-inline: var(--ds-5);
+  padding-block-start: var(--ds-6);
+}
+
+/* ============================================================
+   §2 · LIQUID-GLASS DOCK  — the one signature (iOS-style)
+   Floating capsule, detached from the edge, frosted + sheen +
+   soft indigo lift. Active segment slides via transform.
+   ============================================================ */
+.hm-dock-wrap {
+  position: sticky;
+  inset-block-start: var(--ds-3);
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  padding-inline: var(--ds-4);
+  margin-block-end: var(--ds-8);
+  pointer-events: none;            /* only the dock itself is interactive */
+}
+.hm-dock {
+  pointer-events: auto;
+  inline-size: min(100%, 1120px);
+  display: flex;
+  align-items: center;
+  gap: var(--ds-3);
+  padding: 9px 12px;
+  border-radius: var(--ds-r-pill);
+  /* frosted liquid glass — design.md §6.3 (surface >= 72%) */
+  background: color-mix(in srgb, var(--ds-surface) 74%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+  box-shadow:
+    var(--ds-hairline),
+    inset 0 1px 0 rgba(255,255,255,.55),                 /* top sheen edge */
+    0 1px 2px rgba(26,23,20,.05),
+    0 18px 40px -20px rgba(43,49,128,.28);               /* indigo lift */
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: box-shadow var(--ds-dur-enter) var(--ds-ease-standard);
+}
+/* specular lens highlight — the "liquid" read; pure light, no color */
+.hm-dock::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(140% 100% at 18% -40%, rgba(255,255,255,.34), transparent 55%),
+    radial-gradient(120% 100% at 100% 140%, color-mix(in srgb, var(--ds-indigo) 8%, transparent), transparent 60%);
+  pointer-events: none;
+}
+.dark .hm-dock {
+  background: color-mix(in srgb, var(--ds-surface) 64%, transparent);
+  box-shadow:
+    var(--ds-hairline),
+    inset 0 1px 0 rgba(234,231,222,.08),
+    0 18px 44px -18px rgba(0,0,0,.6);
+}
+.dark .hm-dock::before {
+  background:
+    radial-gradient(140% 100% at 18% -40%, rgba(234,231,222,.10), transparent 55%),
+    radial-gradient(120% 100% at 100% 140%, color-mix(in srgb, var(--ds-indigo) 22%, transparent), transparent 60%);
+}
+
+/* brand lockup */
+.hm-dock__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-2);
+  padding-inline: var(--ds-2);
+  text-decoration: none;
+  color: var(--ds-ink);
+  flex: none;
+}
+.hm-dock__mark {
+  inline-size: 34px; block-size: 34px;
+  border-radius: 11px;
+  display: grid; place-items: center;
+  background: linear-gradient(150deg, var(--ds-indigo), var(--ds-indigo-soft));
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 4px 12px -4px color-mix(in srgb, var(--ds-indigo) 55%, transparent);
+  flex: none;
+}
+.hm-dock__mark .material-symbols-outlined { font-size: 20px; }
+.hm-dock__name { display: flex; flex-direction: column; line-height: 1.05; }
+.hm-dock__name strong { font-family: var(--ds-font-display); font-weight: 700; font-size: .98rem; }
+.hm-dock__name small {
+  font-family: var(--ds-font-mono); font-size: .58rem; letter-spacing: .14em;
+  color: var(--ds-ink-3); text-transform: uppercase;
+}
+
+/* segmented tabs ---------------------------------------------------------- */
+.hm-dock__tabs {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  padding: 3px;
+  border-radius: var(--ds-r-pill);
+  background: color-mix(in srgb, var(--ds-ink) 5%, transparent);
+  box-shadow: inset 0 1px 2px rgba(26,23,20,.05);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hm-dock__tabs::-webkit-scrollbar { display: none; }
+.dark .hm-dock__tabs { background: rgba(255,255,255,.06); box-shadow: inset 0 1px 2px rgba(0,0,0,.3); }
+
+/* the sliding glass indicator (moved with transform only) */
+.hm-dock__ind {
+  position: absolute;
+  inset-block: 3px;
+  inset-inline-start: 0;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-surface);
+  box-shadow:
+    inset 0 .5px 0 rgba(255,255,255,.7),
+    0 1px 2.5px rgba(26,23,20,.12),
+    0 3px 8px -2px rgba(26,23,20,.10);
+  transition: transform var(--ds-dur-enter) var(--ds-spring-soft),
+              inline-size var(--ds-dur-enter) var(--ds-spring-soft);
+  z-index: 0;
+  pointer-events: none;
+}
+.dark .hm-dock__ind {
+  background: color-mix(in srgb, var(--ds-surface) 100%, #fff 6%);
+  box-shadow: inset 0 .5px 0 rgba(255,255,255,.10), 0 4px 10px -2px rgba(0,0,0,.4);
+}
+.hm-dock__ind::after {                       /* active section underline */
+  content: "";
+  position: absolute;
+  inset-inline: 22%;
+  inset-block-end: 5px;
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--section-c);
+  opacity: .9;
+}
+
+.hm-dock__tab {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 15px;
+  border: 0;
+  background: none;
+  border-radius: var(--ds-r-pill);
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 600;
+  color: var(--ds-ink-2);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--ds-dur-micro) var(--ds-ease-standard),
+              transform var(--ds-dur-enter) var(--ds-spring-soft);
+}
+.hm-dock__tab .material-symbols-outlined { font-size: 19px; opacity: .85; }
+.hm-dock__tab:hover { color: var(--ds-ink); }
+.hm-dock__tab:active { transform: scale(.95); }
+.hm-dock__tab.is-on { color: var(--ds-ink); }
+.hm-dock__tab.is-on .material-symbols-outlined { color: var(--section-c); opacity: 1; }
+.hm-dock__tab__badge {
+  min-inline-size: 18px; padding-inline: 5px; block-size: 18px;
+  display: inline-grid; place-items: center;
+  border-radius: var(--ds-r-pill);
+  font-family: var(--ds-font-mono); font-size: .62rem; font-weight: 600;
+  background: color-mix(in srgb, var(--ds-crimson) 16%, transparent);
+  color: var(--ds-crimson);
+}
+.hm-dock__tab:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+
+/* trailing controls */
+.hm-dock__side { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+.hm-iconbtn {
+  inline-size: 36px; block-size: 36px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: .5px solid color-mix(in srgb, var(--ds-ink) 8%, transparent);
+  background: color-mix(in srgb, var(--ds-ink) 4%, transparent);
+  color: var(--ds-ink-2);
+  cursor: pointer;
+  transition: background var(--ds-dur-micro) var(--ds-ease-standard),
+              transform var(--ds-dur-enter) var(--ds-spring-soft);
+}
+.hm-iconbtn:hover { background: color-mix(in srgb, var(--ds-ink) 9%, transparent); transform: scale(1.06); }
+.hm-iconbtn:active { transform: scale(.92); }
+.hm-iconbtn:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+.dark .hm-iconbtn { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.07); }
+.hm-iconbtn .material-symbols-outlined { font-size: 20px; }
+
+.hm-avatar {
+  inline-size: 36px; block-size: 36px; border: 0; cursor: pointer;
+  border-radius: 50%;
+  background: linear-gradient(150deg, var(--ds-indigo), var(--ds-indigo-soft));
+  color: #fff; font-weight: 700; font-family: var(--ds-font-display);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+  transition: transform var(--ds-dur-enter) var(--ds-spring-soft);
+}
+.hm-avatar:active { transform: scale(.93); }
+.hm-avatar:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+
+/* ============================================================
+   §3 · GLASS TAB TRANSITION  (نقلات زجاجية)
+   transform + opacity + filter only — never layout.
+   ============================================================ */
+@keyframes hm-glass-in {
+  from { opacity: 0; transform: translateY(10px) scale(.992); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+.hm-panel { animation: hm-glass-in var(--ds-dur-enter) var(--ds-ease-entrance) both; }
+.hm-panel > * + * { margin-block-start: var(--ds-8); }
+
+/* ============================================================
+   §4 · SECTION HEAD (eyebrow + title + action)
+   ============================================================ */
+.hm-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--ds-4); }
+.hm-head__main { min-inline-size: 0; }
+.hm-head h2 {
+  margin: 4px 0 0;
+  font-family: var(--ds-font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.05rem + 1vw, 1.7rem);
+  letter-spacing: -.015em;
+  color: var(--ds-ink);
+}
+.hm-head__sub { margin: 4px 0 0; color: var(--ds-ink-2); font-size: .92rem; }
+.hm-link {
+  flex: none;
+  display: inline-flex; align-items: center; gap: 5px;
+  border: 0; background: none; cursor: pointer;
+  color: var(--ds-indigo); font: inherit; font-weight: 600; font-size: .88rem;
+  padding: 6px 4px;
+}
+.hm-link .material-symbols-outlined { font-size: 18px; }
+.dark .hm-link { color: var(--f-cs); }
+
+/* ============================================================
+   §5 · HERO  (masthead — one focal moment)
+   ============================================================ */
+.hm-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--ds-6);
+  padding: var(--ds-8);
+  border-radius: var(--ds-r-2xl);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-hairline), var(--ds-lift);
+  overflow: hidden;
+}
+.hm-hero::after {                         /* faint section-mesh, < 8% */
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(70% 120% at 100% 0%, color-mix(in srgb, var(--ds-indigo) 6%, transparent), transparent 60%);
+  pointer-events: none;
+}
+.hm-hero__date { display: inline-flex; align-items: center; gap: 7px; color: var(--ds-ink-3); font-size: .82rem; }
+.hm-hero__pulse {
+  inline-size: 7px; block-size: 7px; border-radius: 50%;
+  background: var(--f-ok, #2F7D55);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--f-ok, #2F7D55) 60%, transparent);
+  animation: hm-pulse 2.4s var(--ds-ease-standard) infinite;
+}
+@keyframes hm-pulse { 0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--f-ok,#2F7D55) 55%,transparent);} 70%{box-shadow:0 0 0 7px transparent;} 100%{box-shadow:0 0 0 0 transparent;} }
+.hm-hero h1 {
+  margin: var(--ds-3) 0 0;
+  font-family: var(--ds-font-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 1.2rem + 2.2vw, 2.7rem);
+  line-height: 1.12;
+  letter-spacing: -.02em;
+}
+.hm-hero h1 em { font-style: normal; color: var(--ds-indigo); }
+.dark .hm-hero h1 em { color: var(--f-cs); }
+.hm-hero__lede { margin: var(--ds-3) 0 0; color: var(--ds-ink-2); max-inline-size: 46ch; line-height: 1.6; }
+.hm-hero__cta { margin-block-start: var(--ds-6); display: flex; flex-wrap: wrap; gap: var(--ds-3); }
+
+/* hero aside — a quiet KPI stack */
+.hm-hero__aside {
+  position: relative;
+  display: flex; flex-direction: column; gap: var(--ds-3);
+  padding: var(--ds-4);
+  border-radius: var(--ds-r-xl);
+  background: var(--ds-surface-2);
+  box-shadow: var(--ds-hairline);
+}
+.hm-mini { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-3); }
+.hm-mini + .hm-mini { padding-block-start: var(--ds-3); border-block-start: 1px solid var(--ds-border); }
+.hm-mini__lbl { display: inline-flex; align-items: center; gap: 8px; color: var(--ds-ink-2); font-size: .86rem; }
+.hm-mini__lbl .material-symbols-outlined { font-size: 18px; color: var(--section-c); }
+.hm-mini__val { font-family: var(--ds-font-mono); font-weight: 600; font-size: 1.05rem; }
+
+/* buttons ---------------------------------------------------------------- */
+.hm-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 18px;
+  border-radius: var(--ds-r-pill);
+  border: .5px solid color-mix(in srgb, var(--ds-ink) 12%, transparent);
+  background: color-mix(in srgb, var(--ds-surface) 86%, transparent);
+  color: var(--ds-ink); font: inherit; font-weight: 600; font-size: .9rem;
+  cursor: pointer; min-block-size: 44px;
+  box-shadow: var(--ds-hairline);
+  transition: transform var(--ds-dur-enter) var(--ds-spring-soft), background var(--ds-dur-micro) var(--ds-ease-standard);
+}
+.hm-btn:hover { background: var(--ds-surface-3); }
+.hm-btn:active { transform: scale(.97); }
+.hm-btn:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+.hm-btn .material-symbols-outlined { font-size: 19px; }
+.hm-btn--primary {
+  border: 0; color: #fff;
+  /* tonal brand gradient — allowed on the primary CTA only (design.md §6.1) */
+  background: linear-gradient(102deg, var(--ds-indigo), var(--ds-indigo-soft));
+  background-size: 160% 100%;
+  background-position: 0% 0%;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 6px 16px -6px color-mix(in srgb, var(--ds-indigo) 55%, transparent);
+  transition: transform var(--ds-dur-enter) var(--ds-spring-soft), background-position var(--ds-dur-enter) var(--ds-ease-standard);
+}
+.hm-btn--primary:hover { background-position: 100% 0%; transform: translateY(-1px); }
+.hm-btn--ghost { background: none; box-shadow: none; border-color: var(--ds-border-2); }
+.hm-kbd {
+  font-family: var(--ds-font-mono); font-size: .7rem;
+  padding: 2px 6px; border-radius: 6px;
+  background: color-mix(in srgb, var(--ds-ink) 8%, transparent);
+  border: .5px solid color-mix(in srgb, var(--ds-ink) 10%, transparent);
+}
+
+/* ============================================================
+   §6 · CARD primitive + grids
+   ============================================================ */
+.hm-card {
+  border-radius: var(--ds-r-2xl);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-hairline), var(--ds-lift);
+  padding: var(--ds-6);
+}
+.hm-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ds-4); margin-block-end: var(--ds-5); }
+.hm-card__title { display: inline-flex; align-items: center; gap: 9px; font-family: var(--ds-font-display); font-weight: 600; font-size: 1.05rem; }
+.hm-card__title .material-symbols-outlined { font-size: 20px; color: var(--section-c); }
+.hm-card__sub { margin: 3px 0 0; color: var(--ds-ink-3); font-size: .82rem; }
+
+.hm-grid { display: grid; gap: var(--ds-5); }
+.hm-grid--3 { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+.hm-grid--svc { grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
+.hm-two { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--ds-6); align-items: start; }
+
+/* ============================================================
+   §7 · SERVICE CARD (design.md §6.2 anatomy)
+   ============================================================ */
+.hm-svc {
+  position: relative;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: var(--ds-5);
+  text-align: start;
+  border: 0;
+  border-radius: var(--ds-r-2xl);
+  border-inline-start: 3px solid var(--section-c);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-hairline), var(--ds-lift);
+  cursor: pointer; font: inherit; color: inherit;
+  overflow: hidden;
+  transition: transform var(--ds-dur-enter) var(--ds-spring-soft), box-shadow var(--ds-dur-enter) var(--ds-ease-standard);
+}
+.hm-svc::after {                         /* owned cursor-glow layer (one only) */
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(220px 160px at var(--mx, 80%) var(--my, 0%), color-mix(in srgb, var(--section-c) 7%, transparent), transparent 70%);
+  opacity: 0; transition: opacity var(--ds-dur-enter) var(--ds-ease-standard);
+  pointer-events: none;
+}
+.hm-svc:hover { transform: translateY(-2px); box-shadow: var(--ds-hairline), var(--ds-lift-hover); }
+.hm-svc:hover::after { opacity: 1; }
+.hm-svc:focus-visible { outline: none; box-shadow: var(--ds-ring), var(--ds-lift); }
+.hm-svc__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ds-3); }
+.hm-svc__ico {
+  inline-size: 42px; block-size: 42px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--section-c) 12%, transparent);
+  color: var(--section-c);
+}
+.hm-svc__ico .material-symbols-outlined { font-size: 23px; }
+.hm-svc__eyebrow { font-family: var(--ds-font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ds-ink-3); }
+.hm-svc__name { font-family: var(--ds-font-display); font-weight: 600; font-size: 1rem; line-height: 1.3; color: var(--ds-ink); }
+.hm-svc__stat { margin-block-start: auto; font-family: var(--ds-font-mono); font-size: .76rem; color: var(--ds-ink-2); display: flex; gap: 10px; align-items: center; }
+.hm-svc__dot { inline-size: 4px; block-size: 4px; border-radius: 50%; background: var(--ds-ink-3); }
+
+/* star / pin (editable favorite) */
+.hm-star {
+  inline-size: 34px; block-size: 34px; flex: none;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; cursor: pointer;
+  background: color-mix(in srgb, var(--ds-ink) 4%, transparent);
+  color: var(--ds-ink-3);
+  transition: transform var(--ds-dur-enter) var(--ds-spring-soft), color var(--ds-dur-micro) var(--ds-ease-standard), background var(--ds-dur-micro) var(--ds-ease-standard);
+}
+.hm-star:hover { background: color-mix(in srgb, var(--ds-gold) 14%, transparent); color: var(--ds-gold); }
+.hm-star:active { transform: scale(.88); }
+.hm-star:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+.hm-star.is-on { color: var(--ds-gold); background: color-mix(in srgb, var(--ds-gold) 16%, transparent); }
+.hm-star.is-on .material-symbols-outlined { font-variation-settings: "FILL" 1; }
+.dark .hm-star { background: rgba(255,255,255,.06); }
+
+/* ============================================================
+   §8 · SUBTABS (favorites · recent · most-used)  segmented
+   ============================================================ */
+.hm-seg {
+  display: inline-flex; gap: 2px; padding: 3px;
+  border-radius: var(--ds-r-pill);
+  background: color-mix(in srgb, var(--ds-ink) 5%, transparent);
+  box-shadow: inset 0 1px 2px rgba(26,23,20,.05);
+}
+.dark .hm-seg { background: rgba(255,255,255,.06); }
+.hm-seg__opt {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border: 0; background: none; cursor: pointer;
+  border-radius: var(--ds-r-pill); font: inherit; font-size: .82rem; font-weight: 600;
+  color: var(--ds-ink-2);
+  transition: color var(--ds-dur-micro) var(--ds-ease-standard), background var(--ds-dur-enter) var(--ds-spring-soft), box-shadow var(--ds-dur-enter) var(--ds-ease-standard);
+}
+.hm-seg__opt .material-symbols-outlined { font-size: 18px; }
+.hm-seg__opt:active { transform: scale(.95); }
+.hm-seg__opt.is-on {
+  color: var(--ds-ink);
+  background: var(--ds-surface);
+  box-shadow: inset 0 .5px 0 rgba(255,255,255,.7), 0 1px 2.5px rgba(26,23,20,.12), 0 3px 8px -2px rgba(26,23,20,.1);
+}
+.dark .hm-seg__opt.is-on { background: color-mix(in srgb, var(--ds-surface) 100%, #fff 6%); box-shadow: inset 0 .5px 0 rgba(255,255,255,.1), 0 4px 10px -2px rgba(0,0,0,.4); }
+.hm-seg__opt:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+
+/* ============================================================
+   §9 · UPDATES FEED  (آخر التحديثات)  — Notion-style block list
+   ============================================================ */
+.hm-feed { display: flex; flex-direction: column; }
+.hm-feed__row {
+  position: relative;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: var(--ds-4);
+  padding: var(--ds-4) 0;
+  border-block-end: 1px solid var(--ds-border);
+}
+.hm-feed__row:last-child { border-block-end: 0; }
+.hm-feed__node {
+  inline-size: 34px; block-size: 34px; flex: none; margin-block-start: 2px;
+  display: grid; place-items: center; border-radius: 11px;
+  background: color-mix(in srgb, var(--section-c) 12%, transparent);
+  color: var(--section-c);
+}
+.hm-feed__node .material-symbols-outlined { font-size: 19px; }
+.hm-feed__title { font-weight: 600; color: var(--ds-ink); }
+.hm-feed__title .hm-tag {
+  margin-inline-start: 8px; font-family: var(--ds-font-mono); font-size: .62rem; letter-spacing: .06em;
+  padding: 2px 7px; border-radius: var(--ds-r-pill); text-transform: uppercase;
+  background: color-mix(in srgb, var(--section-c) 14%, transparent); color: var(--section-c);
+}
+.hm-feed__body { margin: 4px 0 0; color: var(--ds-ink-2); font-size: .88rem; line-height: 1.55; }
+.hm-feed__time { font-family: var(--ds-font-mono); font-size: .72rem; color: var(--ds-ink-3); white-space: nowrap; }
+
+/* ============================================================
+   §10 · TIPS + NOTIFICATIONS
+   ============================================================ */
+.hm-tip {
+  position: relative;
+  border-radius: var(--ds-r-2xl);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-hairline), var(--ds-lift);
+  padding: var(--ds-6);
+  border-inline-start: 3px solid var(--section-c);
+  overflow: hidden;
+}
+.hm-tip__ico { inline-size: 44px; block-size: 44px; display: grid; place-items: center; border-radius: 14px; background: color-mix(in srgb, var(--section-c) 12%, transparent); color: var(--section-c); }
+.hm-tip__ico .material-symbols-outlined { font-size: 24px; }
+.hm-tip__tag { font-family: var(--ds-font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--section-c); }
+.hm-tip__title { margin: 8px 0 0; font-family: var(--ds-font-display); font-weight: 600; font-size: 1.15rem; }
+.hm-tip__body { margin: 8px 0 0; color: var(--ds-ink-2); line-height: 1.6; }
+.hm-tip__nav { display: flex; align-items: center; gap: 10px; margin-block-start: var(--ds-5); }
+.hm-tip__count { font-family: var(--ds-font-mono); font-size: .76rem; color: var(--ds-ink-3); }
+
+.hm-notif { display: flex; flex-direction: column; gap: 2px; }
+.hm-notif__row {
+  display: grid; grid-template-columns: auto 1fr auto; gap: var(--ds-3); align-items: center;
+  padding: var(--ds-3) var(--ds-2);
+  border-radius: var(--ds-r-md);
+  transition: background var(--ds-dur-micro) var(--ds-ease-standard);
+}
+.hm-notif__row:hover { background: var(--ds-surface-2); }
+.hm-notif__lead { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--section-c); }
+.hm-notif__main { min-inline-size: 0; }
+.hm-notif__t { font-weight: 600; font-size: .9rem; }
+.hm-notif__s { color: var(--ds-ink-3); font-size: .78rem; font-family: var(--ds-font-mono); }
+.hm-notif__time { font-family: var(--ds-font-mono); font-size: .72rem; color: var(--ds-ink-3); white-space: nowrap; }
+
+/* ============================================================
+   §11 · DIRECTORY  (services / search — design.md §6.13)
+   ============================================================ */
+.hm-search {
+  display: flex; align-items: center; gap: 10px;
+  inline-size: 100%;
+  padding: 11px 15px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-surface-2);
+  box-shadow: var(--ds-hairline);
+  color: var(--ds-ink-3);
+}
+.hm-search:focus-within { box-shadow: var(--ds-hairline), var(--ds-ring); }
+.hm-search input { flex: 1; border: 0; background: none; font: inherit; color: var(--ds-ink); outline: none; }
+.hm-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.hm-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 13px; border-radius: var(--ds-r-pill);
+  border: .5px solid var(--ds-border-2); background: var(--ds-surface);
+  color: var(--ds-ink-2); font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
+  transition: transform var(--ds-dur-enter) var(--ds-spring-soft), color var(--ds-dur-micro) var(--ds-ease-standard);
+}
+.hm-chip:active { transform: scale(.95); }
+.hm-chip:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+.hm-chip__dot { inline-size: 9px; block-size: 9px; border-radius: 50%; background: var(--chip-c, var(--ds-ink-3)); }
+.hm-chip.is-on { color: #fff; border-color: transparent; background: var(--chip-c, var(--ds-indigo)); }
+.hm-chip.is-on .hm-chip__dot { background: rgba(255,255,255,.85); }
+.hm-chip__n { font-family: var(--ds-font-mono); font-size: .7rem; opacity: .8; }
+
+/* table (flat, quiet — design.md §6.5) */
+.hm-table { inline-size: 100%; border-collapse: collapse; font-size: .9rem; }
+.hm-table thead th {
+  text-align: start; padding: 11px var(--ds-3);
+  font-family: var(--ds-font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ds-ink-3); background: var(--ds-surface-2);
+  border-block-end: 1px solid var(--ds-border);
+}
+.hm-table thead th:first-child { border-start-start-radius: var(--ds-r-md); }
+.hm-table thead th:last-child { border-start-end-radius: var(--ds-r-md); }
+.hm-table tbody td { padding: 12px var(--ds-3); border-block-end: 1px solid var(--ds-border); vertical-align: middle; }
+.hm-table tbody tr { transition: background var(--ds-dur-micro) var(--ds-ease-standard); cursor: pointer; }
+.hm-table tbody tr:hover { background: var(--ds-surface-3); }
+.hm-table__name { display: flex; align-items: center; gap: 10px; }
+.hm-table__name .hm-svc__ico { inline-size: 34px; block-size: 34px; border-radius: 10px; }
+.hm-table__name .material-symbols-outlined { font-size: 19px; }
+.hm-table__main b { display: block; font-weight: 600; color: var(--ds-ink); }
+.hm-table__main small { color: var(--ds-ink-3); font-size: .76rem; }
+.hm-code { font-family: var(--ds-font-mono); color: var(--ds-ink-2); }
+.hm-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--ds-r-pill);
+  font-size: .74rem; font-weight: 600;
+  background: color-mix(in srgb, var(--section-c) 13%, transparent); color: var(--section-c);
+}
+.hm-badge--urgent { background: color-mix(in srgb, var(--ds-crimson) 14%, transparent); color: var(--ds-crimson); }
+
+/* ============================================================
+   §12 · FEES  (الأجور)  — quiet tables
+   ============================================================ */
+.hm-fees { display: grid; gap: var(--ds-5); grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.hm-fee__row { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-3); padding: 11px 0; border-block-end: 1px solid var(--ds-border); }
+.hm-fee__row:last-child { border-block-end: 0; }
+.hm-fee__name { color: var(--ds-ink-2); font-size: .9rem; }
+.hm-fee__amt { font-family: var(--ds-font-mono); font-weight: 600; }
+.hm-fee__amt small { color: var(--ds-ink-3); font-weight: 400; margin-inline-start: 3px; }
+
+/* ============================================================
+   §13 · EXTENSION SLOTS  (Vercel · Notion · Figma · Skills)
+   Notion-style "+ add block" placeholders — clearly marked,
+   developable surfaces (design intent, not faux content).
+   ============================================================ */
+.hm-slots { display: grid; gap: var(--ds-4); grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.hm-slot {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: var(--ds-5);
+  border-radius: var(--ds-r-xl);
+  border: 1.5px dashed var(--ds-border-2);
+  background: color-mix(in srgb, var(--ds-surface) 60%, transparent);
+  color: var(--ds-ink-2);
+  cursor: pointer; font: inherit; text-align: start;
+  transition: border-color var(--ds-dur-micro) var(--ds-ease-standard), background var(--ds-dur-micro) var(--ds-ease-standard), transform var(--ds-dur-enter) var(--ds-spring-soft);
+}
+.hm-slot:hover { border-color: var(--ds-indigo); background: color-mix(in srgb, var(--ds-indigo) 4%, transparent); transform: translateY(-2px); }
+.hm-slot:active { transform: scale(.99); }
+.hm-slot:focus-visible { outline: none; box-shadow: var(--ds-ring); }
+.hm-slot__top { display: flex; align-items: center; gap: 9px; }
+.hm-slot__logo { inline-size: 30px; block-size: 30px; display: grid; place-items: center; border-radius: 9px; background: color-mix(in srgb, var(--ds-ink) 7%, transparent); }
+.hm-slot__logo .material-symbols-outlined { font-size: 18px; }
+.hm-slot__name { font-weight: 700; font-size: .92rem; color: var(--ds-ink); }
+.hm-slot__add { font-family: var(--ds-font-mono); font-size: .7rem; color: var(--ds-ink-3); display: inline-flex; align-items: center; gap: 5px; }
+.hm-slot__desc { font-size: .82rem; line-height: 1.5; color: var(--ds-ink-2); }
+
+/* small KPI strip ------------------------------------------------------- */
+.hm-kpis { display: grid; gap: var(--ds-4); grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.hm-kpi {
+  padding: var(--ds-5); border-radius: var(--ds-r-xl);
+  background: var(--ds-surface); box-shadow: var(--ds-hairline), var(--ds-lift);
+  border-inline-start: 3px solid var(--section-c);
+}
+.hm-kpi__lbl { display: inline-flex; align-items: center; gap: 7px; color: var(--ds-ink-2); font-size: .82rem; }
+.hm-kpi__lbl .material-symbols-outlined { font-size: 18px; color: var(--section-c); }
+.hm-kpi__val { margin-block-start: 8px; font-family: var(--ds-font-mono); font-weight: 600; font-size: 1.7rem; line-height: 1; }
+.hm-kpi__val small { font-size: .9rem; color: var(--ds-ink-3); margin-inline-start: 4px; }
+.hm-kpi__sub { margin-block-start: 6px; color: var(--ds-ink-3); font-size: .76rem; }
+
+/* empty hint */
+.hm-empty { text-align: center; padding: var(--ds-12) var(--ds-6); color: var(--ds-ink-3); }
+.hm-empty .material-symbols-outlined { font-size: 40px; color: var(--ds-border-2); }
+.hm-empty p { margin: var(--ds-3) 0 0; }
+
+/* ============================================================
+   §14 · RESPONSIVE
+   ============================================================ */
+@media (max-width: 920px) {
+  .hm-hero { grid-template-columns: 1fr; }
+  .hm-two { grid-template-columns: 1fr; }
+  .hm-dock__name { display: none; }
+}
+@media (max-width: 600px) {
+  .hm-dock__tab span:not(.material-symbols-outlined):not(.hm-dock__tab__badge) { display: none; }  /* icon-only dock on small screens */
+  .hm-dock__tab { padding: 9px 11px; }
+  .hm-main { padding-inline: var(--ds-4); }
+  .hm-hero { padding: var(--ds-6); }
+}
+
+/* ============================================================
+   §15 · REDUCED MOTION  (design.md §5 — non-negotiable)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .hm-panel { animation: none; }
+  .hm-hero__pulse { animation: none; }
+  .hm *, .hm *::before, .hm *::after { transition-duration: 1ms !important; }
+}
