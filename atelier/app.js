@@ -184,7 +184,7 @@
       el("div", { class: "at-mast__cta at-kin at-kin--4" }, [
         el("button", { class: "at-btn at-btn--primary", type: "button", on: { click: function () { go("services"); } } },
           [ms("bolt"), "ابدأ خدمة", el("span", { class: "at-kbd", text: "⌘K" })]),
-        el("button", { class: "at-btn at-btn--ghost", type: "button", on: { click: function () { go("requests"); } } },
+        el("button", { class: "at-btn at-btn--glass", type: "button", on: { click: function () { go("requests"); } } },
           [ms("inbox"), "طلباتي"]),
       ]),
     ]);
@@ -288,6 +288,8 @@
         stat("CT", "pending_actions", "قيد المعالجة", fmt(KPIS.pending || 213), null),
         stat("CB", "verified", "نسبة الرضا", (KPIS.satisfaction || 94) + "٪", null),
       ]),
+      el("button", { class: "at-btn at-btn--ceremonial at-btn--sm at-btn--block", type: "button", style: "margin-top:var(--at-5)" },
+        [ms("workspace_premium"), "تنزيل ملخّص اليوم"]),
     ]);
   }
   function stat(sec, icon, label, val, delta) {

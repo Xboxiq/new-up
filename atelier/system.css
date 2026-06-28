@@ -56,6 +56,42 @@ button { font: inherit; color: inherit; }
 }
 .ms--fill { font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 24; }
 
+/* ───────────────────────────────────────────────────────────────
+   COLOUR STRATEGY (design.md §1, §8) — applied, not decorative:
+   · Royal Indigo  → the ONLY first-class action (primary CTA, links,
+     focus, active). Never used as a flat decorative wash.
+   · Section hue   → bound 1:1 per domain via .sec-cs/ct/cb/ca → --at-sec;
+     carries the card edge, icon tile, active tab/chip, accordion fill.
+     Never reused outside its domain.
+   · Heritage Crimson → urgent / destructive / the masthead lead rule only.
+   · Warm Gilt     → ceremonial ONLY (the daily seal + ceremonial button).
+   · Neutrals (Walnut/Dusk) do ~90% of the work; accents stay precious.
+
+   ICON TILES — one crafted treatment shared by every section-hued chip
+   (Apple app-icon feel: two-tone wash + inset hairline + top highlight,
+   design.md §7 line+mesh). Tiles inherit --at-sec from their .sec-* host.
+   ─────────────────────────────────────────────────────────────── */
+.at-svc__ico, .at-ledger__node, .at-qrow__ico, .at-tip__ico, .at-acc__ico {
+  background:
+    linear-gradient(160deg,
+      color-mix(in srgb, var(--at-sec) 18%, transparent),
+      color-mix(in srgb, var(--at-sec) 9%, transparent));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 22%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 40%, transparent);
+}
+:root[data-theme="dark"] .at-svc__ico,
+:root[data-theme="dark"] .at-ledger__node,
+:root[data-theme="dark"] .at-qrow__ico,
+:root[data-theme="dark"] .at-tip__ico,
+:root[data-theme="dark"] .at-acc__ico {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 28%, transparent),
+    inset 0 1px 0 rgba(234,231,222,.10);
+}
+/* the service-card tile lifts a touch on hover, tracking the cursor glow */
+.at-svc:hover .at-svc__ico { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 34%, transparent), inset 0 1px 0 color-mix(in srgb, #fff 45%, transparent); }
+
 /* ============================================================
    §1 · SHELL
    ============================================================ */
@@ -231,29 +267,119 @@ button { font: inherit; color: inherit; }
 .at-kin--1 { animation-delay: 40ms; } .at-kin--2 { animation-delay: 120ms; } .at-kin--3 { animation-delay: 200ms; } .at-kin--4 { animation-delay: 280ms; }
 @keyframes at-blurin { from { opacity: 0; transform: translateY(10px); filter: blur(8px); } to { opacity: 1; transform: none; filter: blur(0); } }
 
-/* buttons ---------------------------------------------------------------- */
+/* ============================================================
+   BUTTONS — a small, world-class vocabulary (design.md §6.1)
+   One first-class action colour (indigo). Each variant has ONE
+   job; never stack effects. References, rebuilt on our tokens:
+   · Apple "Liquid Glass"  → .at-btn--glass (frosted + specular edge)
+   · gradientbuttons.colorion → .at-btn--primary (tonal, position-shift)
+   · Vercel crisp mono      → .at-btn--solid (ink fill) / --ghost (hairline)
+   · Origin "pill + arrow"  → .at-btn (trailing chevron affordance)
+   · typeui double focus    → refined --at-ring + offset
+   ============================================================ */
 .at-btn {
-  display: inline-flex; align-items: center; gap: 8px; min-block-size: 44px;
-  padding: 11px 18px; border-radius: var(--at-r-pill); cursor: pointer; font-weight: 600; font-size: .92rem;
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-block-size: 44px;
+  padding: 12px 20px; border-radius: var(--at-r-pill); cursor: pointer; font-weight: 600; font-size: .92rem;
+  letter-spacing: -.005em; white-space: nowrap; user-select: none;
   border: .5px solid color-mix(in srgb, var(--at-ink) 12%, transparent);
   background: color-mix(in srgb, var(--at-surface) 86%, transparent); color: var(--at-ink);
   box-shadow: var(--at-hairline);
-  transition: transform var(--at-dur-enter) var(--at-spring), background var(--at-dur-micro) var(--at-ease);
+  transition: transform var(--at-dur-enter) var(--at-spring),
+              background var(--at-dur-micro) var(--at-ease),
+              box-shadow var(--at-dur-enter) var(--at-ease),
+              border-color var(--at-dur-micro) var(--at-ease);
 }
-.at-btn:hover { background: var(--at-surface-3); }
-.at-btn:active { transform: scale(.97); }
-.at-btn:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-btn:hover { background: var(--at-surface-3); transform: translateY(-1px); }
+.at-btn:active { transform: scale(.975); }
+.at-btn:focus-visible {                /* refined double ring (Walnut surface gap + indigo) */
+  outline: none;
+  box-shadow: 0 0 0 2px var(--at-bg), 0 0 0 4px color-mix(in srgb, var(--at-indigo) 55%, transparent);
+}
 .at-btn .ms { font-size: 19px; }
-.at-btn--primary {                     /* tonal brand gradient — primary CTA only (design.md §6.1) */
-  border: 0; color: var(--at-on-indigo);
-  background: linear-gradient(102deg, var(--at-indigo), var(--at-indigo-soft));
-  background-size: 160% 100%; background-position: 0% 0%;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 6px 16px -6px color-mix(in srgb, var(--at-indigo) 55%, transparent);
-  transition: transform var(--at-dur-enter) var(--at-spring), background-position var(--at-dur-enter) var(--at-ease);
+.at-btn[disabled], .at-btn[aria-disabled="true"] { opacity: .5; pointer-events: none; }
+
+/* specular sweep — a single light pass on hover (Apple sheen). Owned layer. */
+.at-btn--primary::before, .at-btn--ceremonial::before, .at-btn--glass::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.28) 48%, transparent 62%);
+  transform: translateX(-130%); transition: transform var(--at-dur-enter) var(--at-ease);
 }
-.at-btn--primary:hover { background-position: 100% 0%; transform: translateY(-1px); }
+.at-btn--primary:hover::before, .at-btn--ceremonial:hover::before, .at-btn--glass:hover::before { transform: translateX(130%); }
+.at-btn > * { position: relative; z-index: 1; }
+
+/* PRIMARY — the only first-class action. Tonal indigo gradient; hover
+   shifts the gradient POSITION (not hue) over a wide canvas + 1px lift. */
+.at-btn--primary {
+  border: 0; color: var(--at-on-indigo);
+  background: linear-gradient(102deg, var(--at-indigo) 0%, var(--at-indigo-soft) 55%, var(--at-indigo) 100%);
+  background-size: 200% 100%; background-position: 0% 0%;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 0 0 .5px color-mix(in srgb, var(--at-indigo) 60%, #000 8%),
+    0 6px 16px -6px color-mix(in srgb, var(--at-indigo) 55%, transparent);
+  transition: transform var(--at-dur-enter) var(--at-spring),
+              background-position var(--at-dur-enter) var(--at-ease),
+              box-shadow var(--at-dur-enter) var(--at-ease);
+}
+.at-btn--primary:hover {
+  background-position: 100% 0%; transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 0 0 .5px color-mix(in srgb, var(--at-indigo) 60%, #000 8%),
+    0 12px 26px -10px color-mix(in srgb, var(--at-indigo) 62%, transparent);
+}
+.at-btn--primary:active { transform: scale(.975); }
+
+/* GLASS — Apple "Liquid Glass": frosted, refractive, bright top edge.
+   Chrome-grade secondary on busy surfaces. Readability-gated by ≥62% fill. */
+.at-btn--glass {
+  color: var(--at-ink);
+  background: color-mix(in srgb, var(--at-surface) 62%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  border: .5px solid var(--at-glass-edge);
+  box-shadow:
+    var(--at-hairline),
+    inset 0 1px 0 var(--at-glass-edge),
+    0 8px 22px -14px rgba(43,49,128,.30);
+}
+.at-btn--glass:hover { background: color-mix(in srgb, var(--at-surface) 74%, transparent); }
+
+/* SOLID — Vercel-crisp high-contrast neutral (ink fill, surface text). */
+.at-btn--solid {
+  border: 0; color: var(--at-surface);
+  background: var(--at-ink);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 6px 16px -8px rgba(26,23,20,.5);
+}
+.at-btn--solid:hover { background: color-mix(in srgb, var(--at-ink) 88%, var(--at-bg)); }
+
+/* GHOST — hairline-only restraint (Vercel/Authkit). */
 .at-btn--ghost { background: none; box-shadow: none; border-color: var(--at-border-2); }
+.at-btn--ghost:hover { background: color-mix(in srgb, var(--at-ink) 5%, transparent); border-color: var(--at-ink-3); }
+
+/* CEREMONIAL — Warm Gilt, ink text. ONE per flow (receipt/VIP, §6.7). */
+.at-btn--ceremonial {
+  border: 0; color: var(--at-ink);
+  background: linear-gradient(102deg, var(--at-gold-soft), var(--at-gold) 70%);
+  background-size: 200% 100%;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px -6px color-mix(in srgb, var(--at-gold) 55%, transparent);
+}
+.at-btn--ceremonial:hover { background-position: 100% 0%; }
+
+/* DANGER — Heritage Crimson, destructive confirms only. */
+.at-btn--danger { border: 0; color: var(--at-on-indigo); background: var(--at-crimson); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 6px 16px -8px color-mix(in srgb, var(--at-crimson) 50%, transparent); }
+.at-btn--danger:hover { background: color-mix(in srgb, var(--at-crimson) 88%, #000); }
+
+/* sizes + icon-only */
+.at-btn--sm { min-block-size: 36px; padding: 8px 14px; font-size: .84rem; }
+.at-btn--lg { min-block-size: 52px; padding: 15px 26px; font-size: 1rem; }
+.at-btn--icon { padding: 0; inline-size: 44px; min-block-size: 44px; }
+.at-btn--icon.at-btn--sm { inline-size: 36px; }
+.at-btn--block { display: flex; inline-size: 100%; }
+
 .at-kbd { font-family: var(--at-mono); font-size: .7rem; padding: 2px 6px; border-radius: 6px; background: rgba(255,255,255,.18); border: .5px solid rgba(255,255,255,.25); }
+:root[data-theme="dark"] .at-btn--solid { color: var(--at-bg); background: var(--at-ink); }
 
 /* ============================================================
    §5 · HOME GRID  (broadsheet: main column + inline-end aside)
