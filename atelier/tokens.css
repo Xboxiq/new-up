@@ -1,0 +1,128 @@
+/* ===========================================================================
+   atelier/tokens.css — "البَهو · Golden-Hour Atelier" token core
+   Namespace: --at-*   ·   dual-theme   ·   RTL-first
+   Mirrors design.md §1 / §17.1 — the canonical Tadfuq Al-Khayr palette.
+   A fresh core (NOT aliased to --f-* / --nl-* / --ms-*); never collides.
+   =========================================================================== */
+
+:root {
+  /* ── Light · Walnut Ivory (design.md §1.1) — warm paper, never pure white ── */
+  --at-bg:        #F6F2E9;
+  --at-bg-2:      #EFEADC;
+  --at-surface:   #FFFFFF;
+  --at-surface-2: #FBF8F1;
+  --at-surface-3: #F2ECDD;
+  --at-border:    #E4DDCB;
+  --at-border-2:  #D4C9AF;
+  --at-ink:       #1A1714;
+  --at-ink-2:     #4A453C;
+  --at-ink-3:     #897F6B;
+
+  /* ── Identity accents (design.md §1.3) ── */
+  --at-indigo:       #2B3180;   /* Royal Indigo — the ONLY first-class action color */
+  --at-indigo-soft:  #3A41A6;
+  --at-on-indigo:    #FFFFFF;
+  --at-crimson:      #9B1C2E;   /* Heritage Crimson — urgent / destructive / section lead rule */
+  --at-crimson-soft: #C24151;
+  --at-gold:         #B0851F;   /* Warm Gilt — ceremonial ONLY (one per flow) */
+  --at-gold-soft:    #D8B255;
+
+  /* ── Semantic (design.md §1.4) ── */
+  --at-ok:   #2F7D55;
+  --at-warn: #B0791A;
+  --at-err:  #A83232;
+
+  /* ── Four section hues, 1:1 with domains (design.md §1.5, OKLCH) ── */
+  --at-cs: oklch(0.52 0.13 262);   /* Subscriptions · Cobalt   */
+  --at-ct: oklch(0.58 0.10 70);    /* Technical     · Bronze   */
+  --at-cb: oklch(0.56 0.09 195);   /* Billing       · Teal     */
+  --at-ca: oklch(0.53 0.11 15);    /* Complaints    · Rosewood */
+
+  /* ── Liquid-glass chrome (design.md §6.3 — surface ≥ 72% to stay readable) ── */
+  --at-glass:      color-mix(in srgb, var(--at-surface) 74%, transparent);
+  --at-glass-edge: rgba(255, 255, 255, 0.55);
+  --at-glass-blur: blur(22px) saturate(150%);
+
+  /* ── Elevation — light: hairline inset + indigo-tinted soft lift (design.md §4) ── */
+  --at-hairline:   inset 0 0 0 1px var(--at-border);
+  --at-lift:       0 1px 2px rgba(26,23,20,.04), 0 8px 24px -12px rgba(43,49,128,.14);
+  --at-lift-hover: 0 1px 2px rgba(26,23,20,.04), 0 14px 32px -14px rgba(43,49,128,.20);
+  --at-lift-pop:   0 2px 6px rgba(26,23,20,.05), 0 22px 50px -20px rgba(43,49,128,.26);
+  --at-ring:       0 0 0 2px color-mix(in srgb, var(--at-indigo) 38%, transparent);
+
+  /* ── Typography (design.md §2) — each Latin face has an Arabic counterpart ── */
+  --at-display: "Alexandria", "Readex Pro", "Clash Display", Georgia, serif;
+  --at-body:    "Readex Pro", "IBM Plex Sans Arabic", system-ui, -apple-system, sans-serif;
+  --at-mono:    "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
+
+  --at-track-display: -0.022em;   /* tight negative on display (never on Arabic body) */
+  --at-track-eyebrow: 0.04em;     /* Arabic eyebrow: gentle, not wide-Latin tracking */
+
+  /* ── Radius (design.md §5) ── */
+  --at-r-sm: 8px; --at-r-md: 12px; --at-r-lg: 16px; --at-r-xl: 20px; --at-r-2xl: 28px; --at-r-pill: 999px;
+
+  /* ── Spacing (4px base) ── */
+  --at-1:4px; --at-2:8px; --at-3:12px; --at-4:16px; --at-5:20px; --at-6:24px;
+  --at-8:32px; --at-10:40px; --at-12:48px; --at-16:64px; --at-20:80px; --at-24:96px; --at-30:120px;
+
+  /* ── Motion (design.md §5) — damped, weighty, never bouncy ── */
+  --at-ease:       cubic-bezier(.4, 0, .2, 1);
+  --at-ease-out:   cubic-bezier(.16, 1, .3, 1);     /* decelerate-in */
+  --at-ease-exit:  cubic-bezier(.4, 0, 1, 1);       /* accelerate-out */
+  --at-spring:     cubic-bezier(.34, 1.3, .64, 1);  /* <=6% overshoot */
+  --at-dur-micro:  180ms;
+  --at-dur-enter:  280ms;
+  --at-dur-exit:   200ms;
+
+  color-scheme: light;
+}
+
+/* ── Dark · Indigo Dusk (design.md §1.2 / §17.1) — lifted navy, never OLED black ── */
+:root[data-theme="dark"] {
+  --at-bg:        #161B36;
+  --at-bg-2:      #1B2142;
+  --at-surface:   #222A4F;
+  --at-surface-2: #2A3358;
+  --at-surface-3: #313B63;
+  --at-border:    #353F6B;
+  --at-border-2:  #45517F;
+  --at-ink:       #EAE7DE;
+  --at-ink-2:     #B7B9C9;
+  --at-ink-3:     #8488A0;
+
+  --at-indigo:       #8E94FF;   /* dark-mode accent (links/focus/active/glow) */
+  --at-indigo-soft:  #3A41A6;   /* readable indigo button fill on dusk (AA w/ white) */
+  --at-on-indigo:    #FFFFFF;
+  --at-crimson:      #E07385;
+  --at-crimson-soft: #EC95A3;
+  --at-gold:         #E3C268;
+  --at-gold-soft:    #F0D88F;
+
+  --at-ok:   #4FB07E;
+  --at-warn: #D6A23A;
+  --at-err:  #E0686A;
+
+  /* section hues lifted ~0.72 L for dark legibility (design.md §1.5) */
+  --at-cs: oklch(0.72 0.12 262);
+  --at-ct: oklch(0.74 0.09 70);
+  --at-cb: oklch(0.73 0.08 195);
+  --at-ca: oklch(0.72 0.10 15);
+
+  --at-glass:      color-mix(in srgb, var(--at-surface) 64%, transparent);
+  --at-glass-edge: rgba(234, 231, 222, 0.10);
+
+  /* dark: lift by glow + faint top inner highlight (design.md §4) */
+  --at-hairline:   inset 0 0 0 1px var(--at-border);
+  --at-lift:       0 0 0 1px rgba(142,148,255,.10), 0 12px 40px -16px rgba(0,0,0,.6), inset 0 1px 0 rgba(234,231,222,.06);
+  --at-lift-hover: 0 0 0 1px rgba(142,148,255,.16), 0 18px 48px -16px rgba(0,0,0,.66), inset 0 1px 0 rgba(234,231,222,.08);
+  --at-lift-pop:   0 0 0 1px rgba(142,148,255,.18), 0 24px 60px -18px rgba(0,0,0,.7), inset 0 1px 0 rgba(234,231,222,.08);
+
+  color-scheme: dark;
+}
+
+/* per-domain hue helpers (bind --at-sec on any surface; default = indigo) */
+:root { --at-sec: var(--at-indigo); }
+.sec-cs { --at-sec: var(--at-cs); }
+.sec-ct { --at-sec: var(--at-ct); }
+.sec-cb { --at-sec: var(--at-cb); }
+.sec-ca { --at-sec: var(--at-ca); }

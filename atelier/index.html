@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="تدفّق الخير — البَهو · الصفحة الرئيسية لخدمات المشتركين (إعادة تصميم متكاملة)" />
+  <meta name="theme-color" content="#F6F2E9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#161B36" media="(prefers-color-scheme: dark)" />
+  <title>تدفّق الخير · البَهو — الصفحة الرئيسية</title>
+
+  <!-- Fonts (design.md §2): Alexandria/Readex Pro (display+body Arabic), IBM Plex Sans Arabic,
+       JetBrains Mono (eyebrow + tabular numerals), Material Symbols (monoline icons §7). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700;800&family=Readex+Pro:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300..700,0..1,-50..200&display=block" />
+
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="system.css" />
+</head>
+<body>
+  <!-- canvas grain ≤5% (design.md §7) — never behind tables/long text -->
+  <div class="at-grain" aria-hidden="true"></div>
+
+  <!-- app mounts here -->
+  <div id="at-root"></div>
+
+  <!-- Reused data layer (same project idea, same files) -->
+  <script src="../data.js"></script>
+  <script src="../final_branches_data.js"></script>
+
+  <!-- The new build -->
+  <script src="app.js"></script>
+
+  <noscript style="display:block;max-width:640px;margin:64px auto;padding:0 24px;font-family:system-ui;color:#4A453C">
+    هذه الصفحة تعتمد على JavaScript لعرض الخدمات والبيانات الحيّة. فضلاً فعّل JavaScript.
+  </noscript>
+</body>
+</html>
