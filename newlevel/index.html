@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تدفّق الخير · منصة العمليات — Tayyār</title>
-  <meta name="description" content="منصة عمليات خدمات المشتركين لتوزيع الكهرباء — نظام تيّار" />
+  <title>تدفّق الخير · غرفة العمليات — Tayyār</title>
+  <meta name="description" content="غرفة عمليات خدمات المشتركين لتوزيع الكهرباء — نظام تيّار" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="system.css" />
 </head>
 <body>
+  <div class="nl-canvas" aria-hidden="true"></div>
+
   <!-- icon sprite (monoline, currentColor, 1.6px) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
@@ -26,245 +28,204 @@
       <symbol id="i-elec" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v6M17 3v6M5 9h14l-1 5a6 6 0 0 1-12 0L5 9Z"/><path d="M12 19v3"/></symbol>
       <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2.5-1.5L10 21l2-1.5L14 21l2.5-1.5L19 21V3l-2.5 1.5L14 3l-2 1.5L10 3 7.5 4.5 5 3Z"/><path d="M9 8h6M9 12h6"/></symbol>
       <symbol id="i-report" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3Z"/><path d="M12 10v4M12 17h0"/></symbol>
-      <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 5-5 4 3 6-7"/><path d="M18 7h3v3"/></symbol>
+      <symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.2 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v5M12 17h0"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 24h12l4-8 6 16 4-8h6"/><circle cx="8" cy="24" r="2"/><circle cx="40" cy="24" r="2"/></symbol>
     </defs>
   </svg>
 
   <div class="nl-app">
-    <!-- ── top bar ── -->
+    <!-- ── top bar (liquid glass) ── -->
     <header class="nl-topbar">
       <div class="nl-shell nl-topbar-in">
         <div class="nl-brand">
-          <span class="nl-mark"><svg width="17" height="17"><use href="#i-bolt"/></svg></span>
+          <span class="nl-mark"><svg width="18" height="18"><use href="#i-bolt"/></svg></span>
           <div>
             <div class="nl-brand-name">تدفّق الخير</div>
             <div class="nl-brand-tag">TAYYAR · OPS</div>
           </div>
         </div>
-
         <nav class="nl-tabs" aria-label="مجالات الخدمة">
-          <button class="nl-tab" aria-selected="true">نظرة عامة</button>
+          <button class="nl-tab" aria-selected="true">غرفة العمليات</button>
           <button class="nl-tab seg-cs"><span class="nl-tab-dot"></span>الاشتراكات</button>
           <button class="nl-tab seg-ct"><span class="nl-tab-dot"></span>الفنية</button>
           <button class="nl-tab seg-cb"><span class="nl-tab-dot"></span>الفواتير</button>
           <button class="nl-tab seg-ca"><span class="nl-tab-dot"></span>الشكاوى</button>
         </nav>
-
         <div class="nl-actions">
           <label class="nl-search">
             <svg width="16" height="16" aria-hidden="true"><use href="#i-search"/></svg>
-            <input type="search" placeholder="بحث برقم الطلب أو المشترك" aria-label="بحث" />
+            <input type="search" placeholder="رقم طلب أو مشترك" aria-label="بحث" />
             <kbd>/</kbd>
           </label>
-          <button class="nl-icon-btn" id="themeToggle" aria-label="تبديل السمة">
-            <svg width="19" height="19" class="ic-sun" aria-hidden="true"><use href="#i-moon"/></svg>
-          </button>
-          <button class="nl-icon-btn" aria-label="التنبيهات">
-            <svg width="19" height="19" aria-hidden="true"><use href="#i-bell"/></svg>
-            <span class="nl-pip"></span>
-          </button>
+          <button class="nl-icon-btn" id="themeToggle" aria-label="تبديل السمة"><svg width="19" height="19" aria-hidden="true"><use href="#i-moon"/></svg></button>
+          <button class="nl-icon-btn" aria-label="التنبيهات"><svg width="19" height="19" aria-hidden="true"><use href="#i-bell"/></svg><span class="nl-pip"></span></button>
           <button class="nl-monogram" aria-label="الحساب">ك م</button>
         </div>
       </div>
     </header>
 
     <main class="nl-shell" style="flex:1">
-      <!-- ── page head (Tier 1) ── -->
-      <div class="nl-page-head">
-        <div>
-          <h1 class="nl-h1">نظرة عامة على العمليات</h1>
-          <p class="nl-sub">حركة طلبات المشتركين عبر المجالات الأربعة في الوقت الحالي. المسار النشط يحمل التيّار النحاسي.</p>
-        </div>
-        <button class="nl-btn nl-btn--primary">
-          <svg width="18" height="18" aria-hidden="true"><use href="#i-plus"/></svg>
-          طلب خدمة جديد
-        </button>
-      </div>
+      <div class="nl-circuit">
+        <div class="nl-bus" aria-hidden="true"></div>
+        <div class="nl-stack">
 
-      <!-- ── KPI strip (Tier 2) ── -->
-      <section class="nl-kpis" aria-label="مؤشرات اليوم">
-        <article class="nl-kpi nl-rise">
-          <div class="nl-kpi-top">
-            <span class="nl-kpi-label">طلبات اليوم</span>
-            <span class="nl-delta nl-delta--up"><svg width="12" height="12" aria-hidden="true"><use href="#i-trend"/></svg> 12</span>
-          </div>
-          <div class="nl-kpi-num">84</div>
-        </article>
-        <article class="nl-kpi nl-rise">
-          <div class="nl-kpi-top">
-            <span class="nl-kpi-label">قيد المعالجة</span>
-            <span class="nl-delta nl-delta--warn">213</span>
-          </div>
-          <div class="nl-kpi-num">213</div>
-        </article>
-        <article class="nl-kpi nl-rise">
-          <div class="nl-kpi-top"><span class="nl-kpi-label">المحصّل اليوم</span></div>
-          <div class="nl-kpi-num">4,810,000 <span class="nl-kpi-unit">د.ع</span></div>
-        </article>
-        <article class="nl-kpi nl-rise">
-          <div class="nl-kpi-top">
-            <span class="nl-kpi-label">رضا المشتركين</span>
-            <span class="nl-delta nl-delta--up"><svg width="12" height="12" aria-hidden="true"><use href="#i-trend"/></svg> 2</span>
-          </div>
-          <div class="nl-kpi-num">94<span class="nl-kpi-unit">%</span></div>
-        </article>
-      </section>
+          <!-- ── node 1: masthead ── -->
+          <section class="nl-seg is-live" style="--nl-flow:left">
+            <div class="nl-mast">
+              <h1 class="nl-display nl-kin" data-kin>غرفة عمليات الخدمة</h1>
+              <p class="nl-mast-sub">المسار النشط يحمل التيّار النحاسي عبر القضيب الرئيسي. كل مجال خدمة يتفرّع منه — والطلبات الحيّة تنبض حتى تُغلق.</p>
+              <div class="nl-mast-row">
+                <button class="nl-btn nl-btn--primary"><svg width="18" height="18" aria-hidden="true"><use href="#i-plus"/></svg> طلب خدمة جديد</button>
+                <span class="nl-live-chip"><span class="dot"></span> 84 طلب يجري اليوم · التيّار نشط</span>
+              </div>
+            </div>
+          </section>
 
-      <!-- ── work area (Tier 2) ── -->
-      <div class="nl-work">
-        <!-- work table -->
-        <section class="nl-panel">
-          <div class="nl-panel-head">
-            <h2 class="nl-h3">أحدث الطلبات</h2>
-            <button class="nl-btn nl-btn--quiet">عرض الكل
-              <svg width="16" height="16" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
-            </button>
-          </div>
-          <div class="nl-table-wrap">
-            <table class="nl-table">
-              <thead>
-                <tr>
-                  <th>رقم الطلب</th><th>المجال</th><th>الخدمة</th><th>المشترك</th>
-                  <th>الحالة</th><th>الأجور</th><th>المدة</th><th>الموظف</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="is-live">
-                  <td><span class="nl-ref">TQ-2026-08-1417</span></td>
-                  <td class="seg-cs"><span class="nl-code"><span class="nl-code-dot"></span>CS</span></td>
-                  <td>عمل اشتراك جديد</td>
-                  <td><span class="nl-person"><span class="nl-av">عح</span>علي عبدالله حسين</span></td>
-                  <td><span class="nl-badge nl-badge--prog">فحص ميداني</span></td>
-                  <td class="nl-fee">135,000</td>
-                  <td class="nl-age">2 س</td>
-                  <td>م. كرار</td>
-                </tr>
-                <tr>
-                  <td><span class="nl-ref">TQ-2026-08-1413</span></td>
-                  <td class="seg-ct"><span class="nl-code"><span class="nl-code-dot"></span>CT</span></td>
-                  <td>فحص مقياس / تبديل / صيانة</td>
-                  <td><span class="nl-person"><span class="nl-av">هم</span>هدى محمود إبراهيم</span></td>
-                  <td><span class="nl-badge nl-badge--wait">بانتظار الدفع</span></td>
-                  <td class="nl-fee">25,000</td>
-                  <td class="nl-age">4 س</td>
-                  <td>م. زينب</td>
-                </tr>
-                <tr>
-                  <td><span class="nl-ref">TQ-2026-08-1409</span> <span class="nl-flag nl-flag--vip">VIP</span></td>
-                  <td class="seg-cb"><span class="nl-code"><span class="nl-code-dot"></span>CB</span></td>
-                  <td>تسوية مالية / تقسيط</td>
-                  <td><span class="nl-person"><span class="nl-av">حج</span>حسن جاسم العبيدي</span></td>
-                  <td><span class="nl-badge nl-badge--wait">موافقة مدير</span></td>
-                  <td class="nl-fee nl-faint">—</td>
-                  <td class="nl-age">أمس</td>
-                  <td>م. أحمد</td>
-                </tr>
-                <tr class="is-live">
-                  <td><span class="nl-ref">TQ-2026-08-1407</span> <span class="nl-flag nl-flag--urgent">عاجل</span></td>
-                  <td class="seg-ca"><span class="nl-code"><span class="nl-code-dot"></span>CA</span></td>
-                  <td>إبلاغ عن حالة خطر</td>
-                  <td><span class="nl-person"><span class="nl-av">سن</span>سرى ناجي كاظم</span></td>
-                  <td><span class="nl-badge nl-badge--late">فريق طوارئ</span></td>
-                  <td class="nl-fee nl-faint">—</td>
-                  <td class="nl-age">أمس</td>
-                  <td>م. مصطفى</td>
-                </tr>
-                <tr>
-                  <td><span class="nl-ref">TQ-2026-08-1402</span></td>
-                  <td class="seg-cs"><span class="nl-code"><span class="nl-code-dot"></span>CS</span></td>
-                  <td>نقل ملكية اشتراك</td>
-                  <td><span class="nl-person"><span class="nl-av">أع</span>أحمد علي الجبوري</span></td>
-                  <td><span class="nl-badge nl-badge--wait">تحقق قانوني</span></td>
-                  <td class="nl-fee nl-faint">—</td>
-                  <td class="nl-age">يومان</td>
-                  <td>م. كرار</td>
-                </tr>
-                <tr class="is-live">
-                  <td><span class="nl-ref">TQ-2026-08-1395</span></td>
-                  <td class="seg-ct"><span class="nl-code"><span class="nl-code-dot"></span>CT</span></td>
-                  <td>تغيير موقع المقياس</td>
-                  <td><span class="nl-person"><span class="nl-av">مر</span>مريم رياض الزبيدي</span></td>
-                  <td><span class="nl-badge nl-badge--prog">قيد التنفيذ</span></td>
-                  <td class="nl-fee">35,000</td>
-                  <td class="nl-age">3 أيام</td>
-                  <td>م. زينب</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+          <!-- ── node 2: instrument panel (current-meter) ── -->
+          <section class="nl-seg">
+            <div class="nl-seg-head"><div class="nl-seg-title"><h2 class="nl-h2">قراءة الحِمل</h2><span class="nl-code-label">LIVE LOAD · اليوم</span></div></div>
+            <div class="nl-meter">
+              <div class="nl-meter-cell">
+                <span class="nl-meter-label">الحِمل الجاري</span>
+                <span class="nl-meter-val">84 <span class="u">طلب / اليوم</span> <span class="nl-meter-delta up">▲ 12</span></span>
+                <span class="nl-gauge"><i style="inline-size:64%"></i></span>
+              </div>
+              <div class="nl-meter-cell">
+                <span class="nl-meter-label">في الطابور</span>
+                <span class="nl-meter-val">213</span>
+                <span class="nl-meter-delta warn">حِمل مرتفع</span>
+              </div>
+              <div class="nl-meter-cell">
+                <span class="nl-meter-label">المُحصّل</span>
+                <span class="nl-meter-val">4.81<span class="u">م د.ع</span></span>
+                <span class="nl-meter-delta up">▲ 7%</span>
+              </div>
+              <div class="nl-meter-cell">
+                <span class="nl-meter-label">الرضا</span>
+                <span class="nl-meter-val">94<span class="u">%</span></span>
+                <span class="nl-meter-delta up">▲ 2</span>
+              </div>
+            </div>
+          </section>
 
-        <!-- quick-start aside -->
-        <aside class="nl-aside">
-          <section class="nl-panel">
-            <div class="nl-panel-head"><h2 class="nl-h3">بدء سريع</h2></div>
-            <div class="nl-quick">
-              <button class="nl-quick-item seg-cs">
-                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-apartment"/></svg></span>
-                <span class="nl-quick-body">
-                  <span class="nl-quick-name">الاشتراكات</span>
-                  <span class="nl-quick-meta">12 مفتوح · ‏~3 ي معدل</span>
+          <!-- ── node 3: domain accordion ── -->
+          <section class="nl-seg">
+            <div class="nl-seg-head"><div class="nl-seg-title"><h2 class="nl-h2">المجالات الأربعة</h2><span class="nl-code-label">اختر فرعاً من القضيب</span></div></div>
+            <div class="nl-acc" id="acc">
+              <button class="nl-acc-panel seg-cs" aria-expanded="true">
+                <span class="nl-acc-rail"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-apartment"/></svg></span><span class="nl-acc-railname">الاشتراكات</span><span class="nl-acc-count">12</span></span>
+                <span class="nl-acc-body">
+                  <span class="nl-acc-art"><svg width="120" height="120" aria-hidden="true"><use href="#i-grid"/></svg></span>
+                  <span class="nl-acc-top"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-apartment"/></svg></span><span class="nl-acc-code">CS · SUBSCRIPTIONS</span></span>
+                  <span class="nl-acc-name">الاشتراكات</span>
+                  <span class="nl-acc-blurb">فتح اشتراكات جديدة، نقل ملكية، تغيير الصنف، إيقاف وتفعيل الخدمة.</span>
+                  <span class="nl-acc-foot">
+                    <span class="nl-acc-stats"><span class="nl-acc-stat"><span class="k">12</span> <span class="l">طلب مفتوح</span></span><span class="nl-acc-stat"><span class="k">~3</span><span class="l">أيام معدل</span></span><span class="nl-acc-stat"><span class="k">11</span><span class="l">خدمة</span></span></span>
+                    <span class="nl-acc-go">دخول المجال <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg></span>
+                  </span>
                 </span>
-                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
               </button>
-              <button class="nl-quick-item seg-ct">
-                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-elec"/></svg></span>
-                <span class="nl-quick-body">
-                  <span class="nl-quick-name">الفنية</span>
-                  <span class="nl-quick-meta">7 مفتوح · ‏~9 ي معدل</span>
+              <button class="nl-acc-panel seg-ct" aria-expanded="false">
+                <span class="nl-acc-rail"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-elec"/></svg></span><span class="nl-acc-railname">الفنية</span><span class="nl-acc-count">7</span></span>
+                <span class="nl-acc-body">
+                  <span class="nl-acc-art"><svg width="120" height="120" aria-hidden="true"><use href="#i-grid"/></svg></span>
+                  <span class="nl-acc-top"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-elec"/></svg></span><span class="nl-acc-code">CT · TECHNICAL</span></span>
+                  <span class="nl-acc-name">الفنية</span>
+                  <span class="nl-acc-blurb">فحص المقاييس، تغيير الكابلات، تعديل القوة والجهد، تغيير الموقع.</span>
+                  <span class="nl-acc-foot">
+                    <span class="nl-acc-stats"><span class="nl-acc-stat"><span class="k">7</span><span class="l">طلب مفتوح</span></span><span class="nl-acc-stat"><span class="k">~9</span><span class="l">أيام معدل</span></span><span class="nl-acc-stat"><span class="k">9</span><span class="l">خدمات</span></span></span>
+                    <span class="nl-acc-go">دخول المجال <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg></span>
+                  </span>
                 </span>
-                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
               </button>
-              <button class="nl-quick-item seg-cb">
-                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-receipt"/></svg></span>
-                <span class="nl-quick-body">
-                  <span class="nl-quick-name">الفواتير</span>
-                  <span class="nl-quick-meta">9 مفتوح · ‏~2 ي معدل</span>
+              <button class="nl-acc-panel seg-cb" aria-expanded="false">
+                <span class="nl-acc-rail"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-receipt"/></svg></span><span class="nl-acc-railname">الفواتير</span><span class="nl-acc-count">9</span></span>
+                <span class="nl-acc-body">
+                  <span class="nl-acc-art"><svg width="120" height="120" aria-hidden="true"><use href="#i-grid"/></svg></span>
+                  <span class="nl-acc-top"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-receipt"/></svg></span><span class="nl-acc-code">CB · BILLING</span></span>
+                  <span class="nl-acc-name">الفواتير</span>
+                  <span class="nl-acc-blurb">دفع القوائم، التقسيط، التسويات المالية، نسخ القوائم.</span>
+                  <span class="nl-acc-foot">
+                    <span class="nl-acc-stats"><span class="nl-acc-stat"><span class="k">9</span><span class="l">طلب مفتوح</span></span><span class="nl-acc-stat"><span class="k">~2</span><span class="l">أيام معدل</span></span><span class="nl-acc-stat"><span class="k">6</span><span class="l">خدمات</span></span></span>
+                    <span class="nl-acc-go">دخول المجال <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg></span>
+                  </span>
                 </span>
-                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
               </button>
-              <button class="nl-quick-item seg-ca">
-                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-report"/></svg></span>
-                <span class="nl-quick-body">
-                  <span class="nl-quick-name">الشكاوى والتقارير</span>
-                  <span class="nl-quick-meta">6 مفتوح · ‏~4 ي معدل</span>
+              <button class="nl-acc-panel seg-ca" aria-expanded="false">
+                <span class="nl-acc-rail"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-report"/></svg></span><span class="nl-acc-railname">الشكاوى</span><span class="nl-acc-count">6</span></span>
+                <span class="nl-acc-body">
+                  <span class="nl-acc-art"><svg width="120" height="120" aria-hidden="true"><use href="#i-grid"/></svg></span>
+                  <span class="nl-acc-top"><span class="nl-acc-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-report"/></svg></span><span class="nl-acc-code">CA · REPORTS</span></span>
+                  <span class="nl-acc-name">الشكاوى والتقارير</span>
+                  <span class="nl-acc-blurb">إبلاغات التلاعب، الأخطار، الشكاوى الإدارية، أضرار الشبكة.</span>
+                  <span class="nl-acc-foot">
+                    <span class="nl-acc-stats"><span class="nl-acc-stat"><span class="k">6</span><span class="l">طلب مفتوح</span></span><span class="nl-acc-stat"><span class="k">~4</span><span class="l">أيام معدل</span></span><span class="nl-acc-stat"><span class="k">4</span><span class="l">خدمات</span></span></span>
+                    <span class="nl-acc-go">دخول المجال <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg></span>
+                  </span>
                 </span>
-                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
               </button>
             </div>
           </section>
-        </aside>
+
+          <!-- ── node 4: live queue — lit-window showcase + stream ── -->
+          <section class="nl-seg is-live" style="--nl-flow:left">
+            <div class="nl-seg-head"><div class="nl-seg-title"><h2 class="nl-h2">الطلبات الحيّة</h2><span class="nl-code-label">المسار المُكهرب</span></div><button class="nl-btn nl-btn--quiet">كل الطلبات <svg width="16" height="16" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg></button></div>
+            <div class="nl-live-grid">
+              <!-- lit window: the emergency moment -->
+              <article class="nl-window seg-ca">
+                <div class="nl-window-head"><span class="nl-window-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-warn"/></svg></span><span class="nl-window-code">CA0002 · أولوية قصوى</span></div>
+                <h3>بلاغ حالة خطر</h3>
+                <p>يُشعَر فريق الطوارئ فوراً قبل تسجيل الطلب. لا يُترك دون متابعة.</p>
+                <div class="nl-window-num">1</div>
+                <div class="nl-window-foot"><span class="nl-faint nl-mono">TQ-2026-08-1407 · سرى ناجي كاظم</span><button class="nl-btn nl-btn--ghost nl-btn--sm">فتح البلاغ</button></div>
+              </article>
+              <!-- stream -->
+              <div class="nl-stream">
+                <div class="nl-stream-head"><h3 class="nl-h3">قيد التنفيذ الآن</h3><span class="nl-code-label nl-mono">6 / 213</span></div>
+                <div class="nl-row is-live seg-cs">
+                  <span class="nl-code"><span class="nl-code-dot"></span>CS</span>
+                  <span class="nl-av">عح</span>
+                  <span class="who"><b>عمل اشتراك جديد</b><span>علي عبدالله حسين · TQ-1417</span></span>
+                  <span class="nl-badge nl-badge--prog">فحص ميداني</span>
+                  <span class="nl-age">2 س</span>
+                </div>
+                <div class="nl-row seg-ct">
+                  <span class="nl-code"><span class="nl-code-dot"></span>CT</span>
+                  <span class="nl-av">هم</span>
+                  <span class="who"><b>فحص مقياس</b><span>هدى محمود إبراهيم · TQ-1413</span></span>
+                  <span class="nl-badge nl-badge--wait">بانتظار الدفع</span>
+                  <span class="nl-age">4 س</span>
+                </div>
+                <div class="nl-row seg-cb">
+                  <span class="nl-code"><span class="nl-code-dot"></span>CB</span>
+                  <span class="nl-av">حج</span>
+                  <span class="who"><b>تسوية مالية · تقسيط <span class="nl-flag nl-flag--vip">VIP</span></b><span>حسن جاسم العبيدي · TQ-1409</span></span>
+                  <span class="nl-badge nl-badge--wait">موافقة مدير</span>
+                  <span class="nl-age">أمس</span>
+                </div>
+                <div class="nl-row is-live seg-ca">
+                  <span class="nl-code"><span class="nl-code-dot"></span>CA</span>
+                  <span class="nl-av">سن</span>
+                  <span class="who"><b>بلاغ حالة خطر <span class="nl-flag nl-flag--urgent">عاجل</span></b><span>سرى ناجي كاظم · TQ-1407</span></span>
+                  <span class="nl-badge nl-badge--late">فريق طوارئ</span>
+                  <span class="nl-age">أمس</span>
+                </div>
+                <div class="nl-row is-live seg-ct">
+                  <span class="nl-code"><span class="nl-code-dot"></span>CT</span>
+                  <span class="nl-av">مر</span>
+                  <span class="who"><b>تغيير موقع المقياس</b><span>مريم رياض الزبيدي · TQ-1395</span></span>
+                  <span class="nl-badge nl-badge--prog">قيد التنفيذ</span>
+                  <span class="nl-age">3 أيام</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
       </div>
 
-      <!-- ── activity feed (Tier 3, ambient) ── -->
-      <section class="nl-feed-wrap" aria-label="آخر النشاط">
-        <h2 class="nl-h3" style="margin-block-end:var(--nl-3)">آخر النشاط</h2>
-        <div class="nl-feed">
-          <div class="nl-feed-item">
-            <span class="nl-feed-dot" style="background:var(--nl-err)"></span>
-            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1407</span> · أُحيل بلاغ الخطر إلى <b>فريق الطوارئ</b></span>
-            <span class="nl-feed-time">09:42</span>
-          </div>
-          <div class="nl-feed-item">
-            <span class="nl-feed-dot" style="background:var(--nl-ok)"></span>
-            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1390</span> · اكتمل <b>دفع قائمة الأجور</b> وصدر الإيصال</span>
-            <span class="nl-feed-time">09:18</span>
-          </div>
-          <div class="nl-feed-item">
-            <span class="nl-feed-dot" style="background:var(--nl-cs)"></span>
-            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1417</span> · جُدوِل <b>كشف ميداني</b> لاشتراك جديد</span>
-            <span class="nl-feed-time">08:55</span>
-          </div>
-          <div class="nl-feed-item">
-            <span class="nl-feed-dot" style="background:var(--nl-warn)"></span>
-            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1409</span> · بانتظار <b>موافقة مدير الفرع</b> على التقسيط</span>
-            <span class="nl-feed-time">أمس</span>
-          </div>
-        </div>
-      </section>
-
-      <footer class="nl-footer">
-        <span>تدفّق الخير · منصة عمليات خدمات المشتركين</span>
+      <footer class="nl-shell nl-footer">
+        <span>تدفّق الخير · غرفة عمليات خدمات المشتركين</span>
         <span class="nl-mono">Tayyār v1 · نظام تيّار · 2026</span>
       </footer>
     </main>
@@ -275,33 +236,39 @@
       var root = document.documentElement;
       var btn = document.getElementById('themeToggle');
       var icon = btn.querySelector('use');
-      function set(theme) {
-        root.setAttribute('data-theme', theme);
-        icon.setAttribute('href', theme === 'dark' ? '#i-sun' : '#i-moon');
-        try { localStorage.setItem('nl-theme', theme); } catch (e) {}
-      }
-      try {
-        var saved = localStorage.getItem('nl-theme');
-        if (saved) set(saved);
-        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) set('dark');
-      } catch (e) {}
-      btn.addEventListener('click', function () {
-        set(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      function set(t){ root.setAttribute('data-theme', t); icon.setAttribute('href', t==='dark'?'#i-sun':'#i-moon'); try{localStorage.setItem('nl-theme',t);}catch(e){} }
+      try { var s = localStorage.getItem('nl-theme'); if (s) set(s); else if (matchMedia('(prefers-color-scheme: dark)').matches) set('dark'); } catch(e){}
+      btn.addEventListener('click', function(){ set(root.getAttribute('data-theme')==='dark'?'light':'dark'); });
+
+      // kinetic masthead: split into words
+      document.querySelectorAll('[data-kin]').forEach(function(el){
+        el.innerHTML = el.textContent.trim().split(/\s+/).map(function(w){return '<span>'+w+'</span>';}).join(' ');
       });
-      // "/" focuses search (keyboard-initiated, never animated)
-      document.addEventListener('keydown', function (e) {
-        if (e.key === '/' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
-          e.preventDefault();
-          var s = document.querySelector('.nl-search input');
-          if (s) s.focus();
-        }
-      });
-      // domain tabs: move the active rail
-      document.querySelectorAll('.nl-tab').forEach(function (t) {
-        t.addEventListener('click', function () {
-          document.querySelectorAll('.nl-tab').forEach(function (x) { x.setAttribute('aria-selected', 'false'); });
-          t.setAttribute('aria-selected', 'true');
+
+      // domain accordion: one open at a time
+      var acc = document.getElementById('acc');
+      acc.querySelectorAll('.nl-acc-panel').forEach(function(p){
+        p.addEventListener('click', function(){
+          acc.querySelectorAll('.nl-acc-panel').forEach(function(x){ x.setAttribute('aria-expanded','false'); });
+          p.setAttribute('aria-expanded','true');
         });
+        p.addEventListener('mouseenter', function(){
+          acc.querySelectorAll('.nl-acc-panel').forEach(function(x){ x.setAttribute('aria-expanded','false'); });
+          p.setAttribute('aria-expanded','true');
+        });
+      });
+
+      // domain tabs active rail
+      document.querySelectorAll('.nl-tab').forEach(function(t){
+        t.addEventListener('click', function(){
+          document.querySelectorAll('.nl-tab').forEach(function(x){ x.setAttribute('aria-selected','false'); });
+          t.setAttribute('aria-selected','true');
+        });
+      });
+
+      // "/" focuses search (keyboard-initiated, never animated)
+      document.addEventListener('keydown', function(e){
+        if (e.key === '/' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); var s=document.querySelector('.nl-search input'); if(s)s.focus(); }
       });
     })();
   </script>
