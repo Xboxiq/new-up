@@ -1,0 +1,105 @@
+/* =============================================================
+   FINAL — Elevation / polish layer (loaded last)
+   Principles extracted (not copied) from Linear, Stripe, Vercel,
+   Notion, Ramp: layered surface depth, lifted-paper edge highlights,
+   tabular numerals, tonal status pills, composed empty/loading states,
+   refined chips and micro-details.
+   Override-only — preserves structure, IA, RTL, a11y.
+   No text gradients · no bounce · transform/opacity motion only.
+   ============================================================= */
+
+/* ---- 1 · Surfaces: lifted-paper depth + softer hairline border ---- */
+.f-card,
+.f-stats {
+  border-color: color-mix(in srgb, var(--f-border) 72%, transparent);
+  box-shadow:
+    0 1px 2px rgba(22, 21, 19, 0.04),
+    0 6px 16px -8px rgba(22, 21, 19, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+.f-body.dark .f-card,
+.f-body.dark .f-stats {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.30),
+    0 10px 28px -12px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+.f-card__head { border-block-end-color: color-mix(in srgb, var(--f-border) 64%, transparent); }
+.f-card__foot { border-block-start-color: color-mix(in srgb, var(--f-border) 64%, transparent); }
+
+/* ---- 2 · Numerals: tabular alignment across all data ---- */
+.f-stat__val, .f-stat__sub, .f-stat__delta,
+.f-feed__time, .f-feed__code, .f-feed__sub,
+.f-mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+.f-stat__val { font-size: 2rem; letter-spacing: -0.03em; }
+
+/* ---- 3 · Metric delta → tonal pill (Ramp / Stripe) ---- */
+.f-stat__delta {
+  padding-block: 2px;
+  padding-inline: 8px;
+  border-radius: var(--f-r-pill);
+}
+.f-stat__delta.up { background: color-mix(in srgb, var(--f-ok) 12%, transparent); }
+.f-stat__delta.dn { background: color-mix(in srgb, var(--f-err) 12%, transparent); }
+
+/* ---- 4 · (intentionally omitted) ----
+   Section-header icons use an app-wide "ghost duotone" treatment
+   (final_icons.css: background:none) — a deliberate, consistent
+   language. We respect it rather than reintroduce a chip. */
+
+/* ---- 5 · Activity feed: tonal status pill + ringed lead + identity hover ---- */
+.f-feed__status {
+  padding-block: 3px;
+  padding-inline: 10px;
+  border-radius: var(--f-r-pill);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--lead-c, var(--f-ink-3)) 10%, transparent);
+  color: color-mix(in srgb, var(--lead-c, var(--f-ink-2)) 65%, var(--f-ink));
+}
+.f-feed__lead {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lead-c, var(--f-navy)) 16%, transparent);
+}
+.f-feed__row { transition: background var(--f-dur-micro) var(--f-ease-standard); }
+.f-feed__row:hover {
+  background: color-mix(in srgb, var(--lead-c, var(--f-navy)) 5%, var(--f-surface-2));
+}
+
+/* ---- 6 · Express tile icon chip: inset depth ---- */
+.f-exp__ico {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 4px 10px -6px color-mix(in srgb, var(--e-c) 55%, transparent);
+}
+
+/* ---- 7 · Empty state: composed art + measured body ---- */
+.fui-empty__ico {
+  box-shadow: var(--f-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.fui-empty__body { max-width: 42ch; }
+
+/* ---- 8 · Skeleton: calmer, lower-contrast shimmer ---- */
+.fui-skel { animation-duration: 1.8s; opacity: 0.9; }
+
+/* ---- 9 · Toast: layered elevation ---- */
+.fui-toast {
+  box-shadow:
+    0 1px 2px rgba(22, 21, 19, 0.05),
+    0 18px 40px -16px rgba(22, 21, 19, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.f-body.dark .fui-toast {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 20px 44px -16px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ---- 10 · Global micro-details ---- */
+::selection { background: color-mix(in srgb, var(--f-navy) 22%, transparent); }
+:where(.f-btn, .f-tab, .f-exp, .f-dept, .f-feed__row, .f-stat):focus-visible {
+  outline: none;
+  box-shadow: var(--f-ring);
+}

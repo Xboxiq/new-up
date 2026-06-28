@@ -12,20 +12,84 @@ const FC_STAGES = [
   { ico: 'verified',       l: 'الإغلاق' },
 ];
 const FC_STATUS_STAGE = {
+  'استلام الطلب': 0,
   'فحص ميداني': 1, 'بانتظار الدفع': 3, 'موافقة مدير': 2,
   'فريق طوارئ': 4, 'تحقق قانوني': 2, 'قيد التنفيذ': 4,
+  'مغلقة': 5,
 };
+
+// Relative-time label for persisted requests (Arabic).
+function fcTimeAgo(ts) {
+  if (!ts) return '—';
+  const s = Math.max(1, Math.floor((Date.now() - ts) / 1000));
+  if (s < 60) return 'الآن';
+  const m = Math.floor(s / 60);
+  if (m < 60) return `منذ ${m} دقيقة`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `منذ ${h} ساعة`;
+  const d = Math.floor(h / 24);
+  if (d === 1) return 'أمس';
+  return `منذ ${d} يوم`;
+}
 
 function CasesPage({ nav }) {
   const [filter, setFilter] = useState('all');
   const [open, setOpen] = useState(null);
+  const toast = window.useToast ? window.useToast() : null;
 
-  const list = useMemo(() => {
-    if (filter === 'all') return window.RECENT_CASES;
-    if (filter === 'urgent') return window.RECENT_CASES.filter(c => c.priority === 'urgent');
-    if (filter === 'vip') return window.RECENT_CASES.filter(c => c.priority === 'vip');
-    return window.RECENT_CASES.filter(c => window.SERVICE_MAP[c.svc].section === filter);
-  }, [filter]);
+  // Live persisted requests (created via the form) — re-render on change.
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!window.DB || !window.DB.requests) return;
+    return window.DB.requests.subscribe(() => setTick(t => t + 1));
+  }, []);
+
+  // Persisted requests (newest first) mapped to the case-row shape,
+  // then the seeded demo cases. Skip any unknown service codes.
+  const allCases = useMemo(() => {
+    const reqs = (window.DB && window.DB.requests ? window.DB.requests.list() : [])
+      .slice()
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+      .filter(r => window.SERVICE_MAP[r.svc])
+      .map(r => ({
+        id: r.no || r.id,
+        recId: r.id,
+        svc: r.svc,
+        subscriber: r.subscriber,
+        status: r.status,
+        fee: r.fee,
+        age: fcTimeAgo(r.createdAt),
+        officer: r.officer || '—',
+        priority: r.priority || 'standard',
+        isReal: true,
+      }));
+    return [...reqs, ...window.RECENT_CASES];
+  }, [filter, tick]);
+
+  const matches = (c, k) => {
+    if (k === 'all') return true;
+    if (k === 'urgent') return c.priority === 'urgent';
+    if (k === 'vip') return c.priority === 'vip';
+    const svc = window.SERVICE_MAP[c.svc];
+    return svc && svc.section === k;
+  };
+
+  const list = allCases.filter(c => matches(c, filter));
+
+  const closeCase = (c) => {
+    if (!c.isReal) {
+      toast && toast.push({ kind: 'info', title: 'حالة تجريبية', body: 'هذه حالة عرض توضيحي ولا يمكن إغلاقها.' });
+      return;
+    }
+    window.scheduleUndoableAction({
+      msg: 'سيتم إغلاق الحالة ' + c.id,
+      onCommit: () => {
+        window.DB.requests.update(c.recId, { status: 'مغلقة' });
+        window.DB.log && window.DB.log('request.close', c.id);
+      },
+      onUndo: () => {},
+    });
+  };
 
   return (
     <div className="fp-enter" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -40,21 +104,35 @@ function CasesPage({ nav }) {
           </h2>
           <span className="f-h2__sub">اضغط على أي حالة لكشف مسارها الكامل — النقطة النابضة هي المرحلة الحالية</span>
         </div>
-        <button className="f-btn f-btn--primary"><Icon name="add" /> حالة جديدة</button>
+        <button className="f-btn f-btn--primary" onClick={() => nav('services')}>
+          <Icon name="add" /> حالة جديدة
+        </button>
       </div>
 
       <div className="fc-filter">
-        {[['all', 'الكل', window.RECENT_CASES.length],
-          ['urgent', 'عاجل', window.RECENT_CASES.filter(c => c.priority === 'urgent').length],
-          ['vip', 'VIP', window.RECENT_CASES.filter(c => c.priority === 'vip').length],
-          ...window.SECTIONS.map(s => [s.code, s.name, window.RECENT_CASES.filter(c => window.SERVICE_MAP[c.svc].section === s.code).length]),
-        ].map(([k, l, n]) => (
+        {[['all', 'الكل'],
+          ['urgent', 'عاجل'],
+          ['vip', 'VIP'],
+          ...window.SECTIONS.map(s => [s.code, s.name]),
+        ].map(([k, l]) => (
           <button key={k} className={`fc-chip ${filter === k ? 'is-on' : ''}`} onClick={() => setFilter(k)}>
-            {l} <span className="fc-chip__n">{n}</span>
+            {l} <span className="fc-chip__n">{allCases.filter(c => matches(c, k)).length}</span>
           </button>
         ))}
       </div>
 
+      {list.length === 0 ? (
+        <window.EmptyState
+          icon="inbox"
+          title={filter === 'all' ? 'لا توجد حالات بعد' : 'لا حالات في هذا التصنيف'}
+          body={filter === 'all'
+            ? 'ابدأ بتقديم طلب خدمة جديد وسيظهر هنا لمتابعة مساره.'
+            : 'جرّب تصنيفًا آخر أو اعرض كل الحالات.'}
+          action={filter === 'all'
+            ? { label: 'حالة جديدة', icon: 'add', onClick: () => nav('services') }
+            : { label: 'عرض الكل', icon: 'list', onClick: () => setFilter('all') }}
+        />
+      ) : (
       <div className="f-card">
         {list.map(c => {
           const svc = window.SERVICE_MAP[c.svc];
@@ -62,6 +140,7 @@ function CasesPage({ nav }) {
                         c.priority === 'vip'    ? 'var(--f-warn)' : DEPT_COLORS[svc.section];
           const stage = FC_STATUS_STAGE[c.status] ?? 1;
           const isOpen = open === c.id;
+          const isClosed = c.status === 'مغلقة';
           return (
             <div key={c.id} className={`fc-row ${isOpen ? 'is-open' : ''}`} style={{ '--lead-c': leadC }}>
               <div className="fc-row__head" onClick={() => setOpen(isOpen ? null : c.id)}>
@@ -70,6 +149,10 @@ function CasesPage({ nav }) {
                   <div className="fc-row__t">
                     <span className="fc-row__code">{svc.code}</span>
                     {c.subscriber}
+                    {c.isReal && <span className="fc-row__new" style={{
+                      marginInlineStart: 8, fontSize: '.66rem', fontWeight: 800,
+                      padding: '2px 8px', borderRadius: 999, color: 'var(--f-cs)',
+                      background: 'color-mix(in srgb, var(--f-cs) 12%, transparent)' }}>جديد</span>}
                   </div>
                   <div className="fc-row__s">{c.id} · {svc.name}</div>
                 </div>
@@ -88,22 +171,23 @@ function CasesPage({ nav }) {
                   ))}
                 </div>
                 <div className="fc-row__actions">
-                  <button className="fc-row__close" onClick={(e) => {
-                    e.stopPropagation();
-                    window.scheduleUndoableAction({
-                      msg: 'سيتم إغلاق الحالة ' + c.id,
-                      onCommit: () => {},
-                      onUndo: () => {}
-                    });
-                  }}>
-                    <Icon name="check_circle" /> إغلاق الحالة
-                  </button>
+                  {isClosed ? (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6,
+                                   color: 'var(--f-ok)', fontWeight: 700, fontSize: '.85rem' }}>
+                      <Icon name="verified" size={16} /> حالة مغلقة
+                    </span>
+                  ) : (
+                    <button className="fc-row__close" onClick={(e) => { e.stopPropagation(); closeCase(c); }}>
+                      <Icon name="check_circle" /> إغلاق الحالة
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+      )}
     </div>
   );
 }

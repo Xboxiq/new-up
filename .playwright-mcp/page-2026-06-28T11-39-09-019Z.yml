@@ -1,0 +1,237 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img [ref=e6]
+      - text: تدفّق الخير
+      - generic [ref=e8]: MIRSAD
+    - navigation "الأقسام" [ref=e10]:
+      - link "نظرة عامة" [ref=e11] [cursor=pointer]:
+        - /url: "#"
+      - link "الاشتراكات CS" [ref=e12] [cursor=pointer]:
+        - /url: "#"
+        - text: الاشتراكات
+        - generic [ref=e14]: CS
+      - link "الفنّي CT" [ref=e15] [cursor=pointer]:
+        - /url: "#"
+        - text: الفنّي
+        - generic [ref=e17]: CT
+      - link "الفوترة CB" [ref=e18] [cursor=pointer]:
+        - /url: "#"
+        - text: الفوترة
+        - generic [ref=e20]: CB
+      - link "الشكاوى CA" [ref=e21] [cursor=pointer]:
+        - /url: "#"
+        - text: الشكاوى
+        - generic [ref=e23]: CA
+    - generic [ref=e24]:
+      - button "بحث" [ref=e25] [cursor=pointer]:
+        - img [ref=e26]
+      - button "تبديل الثيم" [ref=e28] [cursor=pointer]:
+        - img [ref=e29]
+      - button "التنبيهات" [ref=e31] [cursor=pointer]:
+        - img [ref=e32]
+      - generic "نوف القحطاني" [ref=e35]: نق
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: نظرة عامة · التشغيل
+          - heading "صباح الخير، نوف" [level=1] [ref=e41]
+          - generic [ref=e42]:
+            - generic [ref=e43]: ١٤٢ طلبًا مفتوحًا عبر الأقسام الأربعة
+            - generic [ref=e44]: ·
+            - generic [ref=e45]: الأربعاء ٢٨ يونيو · المناوبة الصباحية
+        - button "طلب جديد" [ref=e46] [cursor=pointer]:
+          - img [ref=e47]
+          - text: طلب جديد
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]: الطلبات المفتوحة
+            - generic [ref=e53]: "142"
+            - generic [ref=e54]:
+              - img [ref=e55]
+              - text: 6 عن أمس
+          - generic [ref=e57]:
+            - generic [ref=e58]: المتأخّرة
+            - generic [ref=e59]: "18"
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - text: 3 عن أمس
+          - generic [ref=e63]:
+            - generic [ref=e64]: أُغلقت اليوم
+            - generic [ref=e65]: "37"
+            - generic [ref=e66]:
+              - img [ref=e67]
+              - text: 12 عن أمس
+          - generic [ref=e69]:
+            - generic [ref=e70]: متوسط الإغلاق
+            - generic [ref=e71]: 2.1 يوم
+            - generic [ref=e72]:
+              - img [ref=e73]
+              - text: 0.3 أسرع
+          - generic [ref=e75]:
+            - generic [ref=e76]: رضا المراجعين
+            - generic [ref=e77]: 94%
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - text: 1.4 نقطة
+        - generic [ref=e81]:
+          - generic [ref=e82]:
+            - generic [ref=e83]:
+              - heading "الطلبات المفتوحة" [level=2] [ref=e84]
+              - link "عرض الكل (142)" [ref=e85] [cursor=pointer]:
+                - /url: "#"
+            - table [ref=e86]:
+              - rowgroup [ref=e87]:
+                - row "المرجع الخدمة القسم الحالة العمر المسند إليه" [ref=e88]:
+                  - columnheader "المرجع" [ref=e89]
+                  - columnheader "الخدمة" [ref=e90]
+                  - columnheader "القسم" [ref=e91]
+                  - columnheader "الحالة" [ref=e92]
+                  - columnheader "العمر" [ref=e93]
+                  - columnheader "المسند إليه" [ref=e94]
+              - rowgroup [ref=e95]:
+                - row "CS-2026-0142 طلب اشتراك جديد الاشتراكات CS جديد 2س نق نوف القحطاني" [ref=e96]:
+                  - cell "CS-2026-0142" [ref=e97]
+                  - cell "طلب اشتراك جديد" [ref=e98]
+                  - cell "الاشتراكات CS" [ref=e99]:
+                    - generic [ref=e100]:
+                      - text: الاشتراكات
+                      - generic [ref=e102]: CS
+                  - cell "جديد" [ref=e103]:
+                    - generic [ref=e104]: جديد
+                  - cell "2س" [ref=e106]
+                  - cell "نق نوف القحطاني" [ref=e107]:
+                    - generic [ref=e108]:
+                      - generic [ref=e109]: نق
+                      - generic [ref=e110]: نوف القحطاني
+                - row "CT-2026-0098 بلاغ انقطاع الفنّي CT قيد المعالجة 5س سع سعد العتيبي" [ref=e111]:
+                  - cell "CT-2026-0098" [ref=e112]
+                  - cell "بلاغ انقطاع" [ref=e113]
+                  - cell "الفنّي CT" [ref=e114]:
+                    - generic [ref=e115]:
+                      - text: الفنّي
+                      - generic [ref=e117]: CT
+                  - cell "قيد المعالجة" [ref=e118]:
+                    - generic [ref=e119]: قيد المعالجة
+                  - cell "5س" [ref=e121]
+                  - cell "سع سعد العتيبي" [ref=e122]:
+                    - generic [ref=e123]:
+                      - generic [ref=e124]: سع
+                      - generic [ref=e125]: سعد العتيبي
+                - row "CB-2026-0231 اعتراض على فاتورة الفوترة CB بانتظار العميل 1ي 3س رد ريم الدوسري" [ref=e126]:
+                  - cell "CB-2026-0231" [ref=e127]
+                  - cell "اعتراض على فاتورة" [ref=e128]
+                  - cell "الفوترة CB" [ref=e129]:
+                    - generic [ref=e130]:
+                      - text: الفوترة
+                      - generic [ref=e132]: CB
+                  - cell "بانتظار العميل" [ref=e133]:
+                    - generic [ref=e134]: بانتظار العميل
+                  - cell "1ي 3س" [ref=e136]
+                  - cell "رد ريم الدوسري" [ref=e137]:
+                    - generic [ref=e138]:
+                      - generic [ref=e139]: رد
+                      - generic [ref=e140]: ريم الدوسري
+                - row "CA-2026-0076 شكوى خدمة الشكاوى CA متأخّر 3ي 6س مش ماجد الشهري" [ref=e141]:
+                  - cell "CA-2026-0076" [ref=e142]
+                  - cell "شكوى خدمة" [ref=e143]
+                  - cell "الشكاوى CA" [ref=e144]:
+                    - generic [ref=e145]:
+                      - text: الشكاوى
+                      - generic [ref=e147]: CA
+                  - cell "متأخّر" [ref=e148]:
+                    - generic [ref=e149]: متأخّر
+                  - cell "3ي 6س" [ref=e151]
+                  - cell "مش ماجد الشهري" [ref=e152]:
+                    - generic [ref=e153]:
+                      - generic [ref=e154]: مش
+                      - generic [ref=e155]: ماجد الشهري
+                - row "CS-2026-0140 نقل اشتراك الاشتراكات CS قيد المعالجة 8س لح لمى الحربي" [ref=e156]:
+                  - cell "CS-2026-0140" [ref=e157]
+                  - cell "نقل اشتراك" [ref=e158]
+                  - cell "الاشتراكات CS" [ref=e159]:
+                    - generic [ref=e160]:
+                      - text: الاشتراكات
+                      - generic [ref=e162]: CS
+                  - cell "قيد المعالجة" [ref=e163]:
+                    - generic [ref=e164]: قيد المعالجة
+                  - cell "8س" [ref=e166]
+                  - cell "لح لمى الحربي" [ref=e167]:
+                    - generic [ref=e168]:
+                      - generic [ref=e169]: لح
+                      - generic [ref=e170]: لمى الحربي
+                - row "CT-2026-0095 طلب صيانة الفنّي CT مكتمل 4س عز عبدالله الزهراني" [ref=e171]:
+                  - cell "CT-2026-0095" [ref=e172]
+                  - cell "طلب صيانة" [ref=e173]
+                  - cell "الفنّي CT" [ref=e174]:
+                    - generic [ref=e175]:
+                      - text: الفنّي
+                      - generic [ref=e177]: CT
+                  - cell "مكتمل" [ref=e178]:
+                    - generic [ref=e179]: مكتمل
+                  - cell "4س" [ref=e181]
+                  - cell "عز عبدالله الزهراني" [ref=e182]:
+                    - generic [ref=e183]:
+                      - generic [ref=e184]: عز
+                      - generic [ref=e185]: عبدالله الزهراني
+          - complementary [ref=e186]:
+            - heading "بدء سريع" [level=2] [ref=e188]
+            - generic [ref=e189]:
+              - link "اشتراك جديد CS · 12 اليوم" [ref=e190] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e192]
+                - generic [ref=e194]:
+                  - generic [ref=e195]: اشتراك جديد
+                  - generic [ref=e196]: CS · 12 اليوم
+                - img [ref=e198]
+              - link "بلاغ انقطاع CT · 7 اليوم" [ref=e200] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e202]
+                - generic [ref=e204]:
+                  - generic [ref=e205]: بلاغ انقطاع
+                  - generic [ref=e206]: CT · 7 اليوم
+                - img [ref=e208]
+              - link "اعتراض فاتورة CB · 9 اليوم" [ref=e210] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e212]
+                - generic [ref=e214]:
+                  - generic [ref=e215]: اعتراض فاتورة
+                  - generic [ref=e216]: CB · 9 اليوم
+                - img [ref=e218]
+              - link "تسجيل شكوى CA · 6 اليوم" [ref=e220] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e222]
+                - generic [ref=e224]:
+                  - generic [ref=e225]: تسجيل شكوى
+                  - generic [ref=e226]: CA · 6 اليوم
+                - img [ref=e228]
+      - generic [ref=e230]:
+        - generic [ref=e231]:
+          - img [ref=e232]
+          - generic [ref=e234]:
+            - text: "تحديث: نظام الفوترة المُحدَّث يبدأ الأحد ٦ يوليو."
+            - link "اقرأ التفاصيل" [ref=e235] [cursor=pointer]:
+              - /url: "#"
+        - generic [ref=e236]:
+          - heading "نشاط أخير" [level=2] [ref=e237]
+          - link "السجلّ الكامل" [ref=e238] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e239]:
+          - generic [ref=e240]:
+            - generic [ref=e242]: CT-2026-0095
+            - generic [ref=e243]: أُغلق البلاغ بنجاح بعد الصيانة الميدانية
+            - generic [ref=e244]: قبل 4 د
+          - generic [ref=e245]:
+            - generic [ref=e247]: CB-2026-0231
+            - generic [ref=e248]: بانتظار ردّ العميل على طلب المستندات
+            - generic [ref=e249]: قبل 22 د
+          - generic [ref=e250]:
+            - generic [ref=e252]: CS-2026-0142
+            - generic [ref=e253]: طلب اشتراك جديد وارد عبر البوابة
+            - generic [ref=e254]: قبل 38 د
+          - generic [ref=e255]:
+            - generic [ref=e257]: CA-2026-0076
+            - generic [ref=e258]: تجاوز الطلب المهلة المحددة للمعالجة
+            - generic [ref=e259]: قبل 51 د

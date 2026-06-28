@@ -1,0 +1,489 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "تدفّق الخير RASAFA · CS HUB" [ref=e6] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e8]:
+            - strong [ref=e9]: تدفّق الخير
+            - generic [ref=e10]: RASAFA · CS HUB
+        - generic "الفرع الحالي" [ref=e12]:
+          - generic [ref=e13]: رص
+          - generic [ref=e14]: RS-014 · النضال
+        - button "search ⌘K" [ref=e15] [cursor=pointer]:
+          - generic [ref=e16]: search
+          - generic [ref=e17]: ⌘K
+        - button "article" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: article
+        - button "dark_mode ليلي" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: dark_mode
+          - generic: ليلي
+        - button "ح shield_person" [ref=e23] [cursor=pointer]:
+          - generic [ref=e24]: ح
+          - generic "مسؤول النظام" [ref=e25]:
+            - generic [ref=e26]: shield_person
+      - navigation [ref=e27]:
+        - button "نظرة عامة" [active] [ref=e28] [cursor=pointer]
+        - button "الخدمات" [ref=e29] [cursor=pointer]
+        - button "الحالات" [ref=e30] [cursor=pointer]
+        - button "الفروع" [ref=e31] [cursor=pointer]
+        - button "التقارير" [ref=e32] [cursor=pointer]
+        - button "الأجور" [ref=e33] [cursor=pointer]
+        - button "الدليل" [ref=e34] [cursor=pointer]
+        - button "الإدارة" [ref=e35] [cursor=pointer]
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - generic [ref=e41]: الأربعاء، ٢٤ حزيران · مركز الرصافة · فرع النضال
+              - heading "أهلاً أستاذ رامز — ابدأ من القسم" [level=1] [ref=e43]:
+                - text: أهلاً أستاذ رامز —
+                - emphasis [ref=e44]: ابدأ من القسم
+              - paragraph [ref=e45]: الأقسام الأربعة هي بوابتك لكل خدمة. اختر القسم أو ابدأ خدمة مباشرة من القائمة السريعة.
+            - generic [ref=e46]:
+              - button "hub نطاق التغطية" [ref=e47] [cursor=pointer]:
+                - generic [ref=e48]: hub
+                - text: نطاق التغطية
+              - button "file_download تصدير" [ref=e49] [cursor=pointer]:
+                - generic [ref=e50]: file_download
+                - text: تصدير
+              - button "bolt ابدأ سريع ⌘K" [ref=e51] [cursor=pointer]:
+                - generic [ref=e52]: bolt
+                - text: ابدأ سريع
+                - generic [ref=e53]: ⌘K
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - generic [ref=e56]:
+                - heading "hub أقسام الخدمات" [level=2] [ref=e57]:
+                  - generic [ref=e59]: hub
+                  - text: أقسام الخدمات
+                - generic [ref=e60]: 30 خدمة موزّعة وفق دليل ٢٠٢٦ — مرّر أو اضغط على القسم لفتحه
+              - button "كل الخدمات arrow_back" [ref=e61] [cursor=pointer]:
+                - text: كل الخدمات
+                - generic [ref=e62]: arrow_back
+            - generic [ref=e63]:
+              - button "CS الاشتراكات 11 خدمة الاشتراكات فتح اشتراكات جديدة، نقل ملكية، تغيير الصنف، إيقاف/تفعيل. CS0001 CS0002 CS0003 CS0004 +7 11 خدمة 28 اليوم 3ي متوسط افتح القسم تصفّح الخدمات arrow_back" [ref=e64] [cursor=pointer]:
+                - generic: CS
+                - generic [ref=e65]:
+                  - generic [ref=e66]:
+                    - img
+                    - img [ref=e68]
+                  - generic [ref=e70]: CS
+                - generic:
+                  - generic: الاشتراكات
+                  - generic: 11 خدمة
+                - generic [ref=e71]:
+                  - heading "الاشتراكات" [level=3] [ref=e72]
+                  - paragraph [ref=e73]: فتح اشتراكات جديدة، نقل ملكية، تغيير الصنف، إيقاف/تفعيل.
+                  - generic [ref=e74]:
+                    - generic [ref=e75]: CS0001
+                    - generic [ref=e76]: CS0002
+                    - generic [ref=e77]: CS0003
+                    - generic [ref=e78]: CS0004
+                    - generic [ref=e79]: "+7"
+                  - generic [ref=e80]:
+                    - generic [ref=e81]:
+                      - generic [ref=e82]:
+                        - generic [ref=e83]: "11"
+                        - generic [ref=e84]: خدمة
+                      - generic [ref=e85]:
+                        - generic [ref=e86]: "28"
+                        - generic [ref=e87]: اليوم
+                      - generic [ref=e88]:
+                        - generic [ref=e89]: 3ي
+                        - generic [ref=e90]: متوسط
+                    - button "افتح القسم تصفّح الخدمات arrow_back" [ref=e91]:
+                      - img
+                      - generic [ref=e93]:
+                        - generic [ref=e94]: افتح القسم
+                        - generic [ref=e95]: تصفّح الخدمات
+                      - generic [ref=e96]: arrow_back
+              - button "CT الفنية 9 خدمة الفنية فحص المقاييس، تغيير الكابلات، تعديل القوة والجهد، تغيير الموقع. CT0001 CT0002 CT0003 CT0004 +5 9 خدمة 19 اليوم 10ي متوسط افتح القسم تصفّح الخدمات arrow_back" [ref=e97] [cursor=pointer]:
+                - generic: CT
+                - generic [ref=e98]:
+                  - generic [ref=e99]:
+                    - img
+                    - img [ref=e101]
+                  - generic [ref=e107]: CT
+                - generic [ref=e108]:
+                  - generic [ref=e109]: الفنية
+                  - generic [ref=e110]: 9 خدمة
+                - generic:
+                  - heading "الفنية" [level=3]
+                  - paragraph: فحص المقاييس، تغيير الكابلات، تعديل القوة والجهد، تغيير الموقع.
+                  - generic:
+                    - generic: CT0001
+                    - generic: CT0002
+                    - generic: CT0003
+                    - generic: CT0004
+                    - generic: "+5"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "9"
+                        - generic: خدمة
+                      - generic:
+                        - generic: "19"
+                        - generic: اليوم
+                      - generic:
+                        - generic: 10ي
+                        - generic: متوسط
+                    - button "افتح القسم تصفّح الخدمات arrow_back":
+                      - img
+                      - generic:
+                        - generic:
+                          - generic: افتح القسم
+                          - generic: تصفّح الخدمات
+                      - generic: arrow_back
+              - button "CB الفواتير 6 خدمة الفواتير دفع القوائم، التقسيط، التسويات المالية، نسخ القوائم. CB0001 CB0002 CB0003 CB0004 +2 6 خدمة 31 اليوم 3ي متوسط افتح القسم تصفّح الخدمات arrow_back" [ref=e111] [cursor=pointer]:
+                - generic: CB
+                - generic [ref=e112]:
+                  - generic [ref=e113]:
+                    - img
+                    - img [ref=e115]
+                  - generic [ref=e120]: CB
+                - generic [ref=e121]:
+                  - generic [ref=e122]: الفواتير
+                  - generic [ref=e123]: 6 خدمة
+                - generic:
+                  - heading "الفواتير" [level=3]
+                  - paragraph: دفع القوائم، التقسيط، التسويات المالية، نسخ القوائم.
+                  - generic:
+                    - generic: CB0001
+                    - generic: CB0002
+                    - generic: CB0003
+                    - generic: CB0004
+                    - generic: "+2"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "6"
+                        - generic: خدمة
+                      - generic:
+                        - generic: "31"
+                        - generic: اليوم
+                      - generic:
+                        - generic: 3ي
+                        - generic: متوسط
+                    - button "افتح القسم تصفّح الخدمات arrow_back":
+                      - img
+                      - generic:
+                        - generic:
+                          - generic: افتح القسم
+                          - generic: تصفّح الخدمات
+                      - generic: arrow_back
+              - button "CA الشكاوى والتقارير 4 خدمة الشكاوى والتقارير إبلاغات التلاعب، الأخطار، الشكاوى الإدارية، أضرار الشبكة. CA0001 CA0002 CA0003 CA0004 4 خدمة 6 اليوم 3ي متوسط افتح القسم تصفّح الخدمات arrow_back" [ref=e124] [cursor=pointer]:
+                - generic: CA
+                - generic [ref=e125]:
+                  - generic [ref=e126]:
+                    - img
+                    - img [ref=e128]
+                  - generic [ref=e133]: CA
+                - generic [ref=e134]:
+                  - generic [ref=e135]: الشكاوى والتقارير
+                  - generic [ref=e136]: 4 خدمة
+                - generic:
+                  - heading "الشكاوى والتقارير" [level=3]
+                  - paragraph: إبلاغات التلاعب، الأخطار، الشكاوى الإدارية، أضرار الشبكة.
+                  - generic:
+                    - generic: CA0001
+                    - generic: CA0002
+                    - generic: CA0003
+                    - generic: CA0004
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "4"
+                        - generic: خدمة
+                      - generic:
+                        - generic: "6"
+                        - generic: اليوم
+                      - generic:
+                        - generic: 3ي
+                        - generic: متوسط
+                    - button "افتح القسم تصفّح الخدمات arrow_back":
+                      - img
+                      - generic:
+                        - generic:
+                          - generic: افتح القسم
+                          - generic: تصفّح الخدمات
+                      - generic: arrow_back
+            - tablist "الأقسام" [ref=e137]:
+              - button "الاشتراكات" [ref=e138] [cursor=pointer]
+              - button "الفنية" [ref=e139] [cursor=pointer]
+              - button "الفواتير" [ref=e140] [cursor=pointer]
+              - button "الشكاوى والتقارير" [ref=e141] [cursor=pointer]
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - generic [ref=e145]:
+              - heading "insights الإحصاءات والنتائج" [level=2] [ref=e146]:
+                - generic [ref=e148]: insights
+                - text: الإحصاءات والنتائج
+              - generic [ref=e149]: مؤشرات اليوم — تفاصيل أعمق في تبويب التقارير
+            - generic [ref=e150]:
+              - generic [ref=e151]:
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - generic [ref=e155]: bolt
+                    - text: طلبات اليوم
+                  - generic [ref=e156]:
+                    - generic [ref=e157]: arrow_upward
+                    - text: +12%
+                - generic [ref=e158]:
+                  - text: "84"
+                  - generic [ref=e159]: طلب
+                - generic [ref=e160]: منذ 09:00 صباحاً
+              - generic [ref=e176]:
+                - generic [ref=e177]:
+                  - generic [ref=e178]:
+                    - generic [ref=e180]: pending_actions
+                    - text: قيد المعالجة
+                  - generic [ref=e181]:
+                    - generic [ref=e182]: arrow_upward
+                    - text: +5%
+                - generic [ref=e183]:
+                  - text: "213"
+                  - generic [ref=e184]: حالة
+                - generic [ref=e185]: ٢٣ بانتظار توقيعك
+              - generic [ref=e201]:
+                - generic [ref=e202]:
+                  - generic [ref=e203]:
+                    - generic [ref=e205]: payments
+                    - text: محصّل اليوم
+                  - generic [ref=e206]:
+                    - generic [ref=e207]: arrow_upward
+                    - text: +8%
+                - generic [ref=e208]:
+                  - text: ٤٬٨١٠٬٠٠٠
+                  - generic [ref=e209]: د.ع
+                - generic [ref=e210]: من ٣٨ معاملة
+              - generic [ref=e226]:
+                - generic [ref=e227]:
+                  - generic [ref=e228]:
+                    - generic [ref=e230]: sentiment_satisfied
+                    - text: رضا المشتركين
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: arrow_upward
+                    - text: +2%
+                - generic [ref=e233]:
+                  - text: "94"
+                  - generic [ref=e234]: "%"
+                - generic [ref=e235]: على ١٢٤ تقييم
+          - generic [ref=e251]:
+            - generic [ref=e253]:
+              - generic [ref=e254]:
+                - generic [ref=e255]:
+                  - heading "bolt آخر الحركة" [level=3] [ref=e256]:
+                    - generic [ref=e257]: bolt
+                    - text: آخر الحركة
+                  - paragraph [ref=e258]: الحالات الحيّة في مركزك
+                - button "filter_alt فلترة" [ref=e259] [cursor=pointer]:
+                  - generic [ref=e260]: filter_alt
+                  - text: فلترة
+              - generic [ref=e261]:
+                - generic [ref=e262] [cursor=pointer]:
+                  - generic [ref=e264]:
+                    - generic [ref=e265]:
+                      - generic [ref=e266]: CS0001
+                      - text: علي عبدالله حسين
+                    - generic [ref=e267]: TQ-2026-08-1417 · عمل اشتراك جديد
+                  - generic [ref=e268]: فحص ميداني
+                  - generic [ref=e269]: منذ ساعتين
+                  - generic [ref=e271]: chevron_left
+                - generic [ref=e272] [cursor=pointer]:
+                  - generic [ref=e274]:
+                    - generic [ref=e275]:
+                      - generic [ref=e276]: CT0009
+                      - text: هدى محمود إبراهيم
+                    - generic [ref=e277]: TQ-2026-08-1413 · فحص مقياس / تبديل / صيانة
+                  - generic [ref=e278]: بانتظار الدفع
+                  - generic [ref=e279]: منذ 4 ساعات
+                  - generic [ref=e281]: chevron_left
+                - generic [ref=e282] [cursor=pointer]:
+                  - generic [ref=e284]:
+                    - generic [ref=e285]:
+                      - generic [ref=e286]: CB0006
+                      - text: حسن جاسم العبيدي
+                    - generic [ref=e287]: TQ-2026-08-1409 · تسوية مالية / تقسيط / ترتيبات دفع
+                  - generic [ref=e288]: موافقة مدير
+                  - generic [ref=e289]: أمس
+                  - generic [ref=e291]: chevron_left
+                - generic [ref=e292] [cursor=pointer]:
+                  - generic [ref=e294]:
+                    - generic [ref=e295]:
+                      - generic [ref=e296]: CA0002
+                      - text: سرى ناجي كاظم
+                    - generic [ref=e297]: TQ-2026-08-1407 · إبلاغ عن حالة خطر
+                  - generic [ref=e298]: فريق طوارئ
+                  - generic [ref=e299]: أمس
+                  - generic [ref=e301]: chevron_left
+                - generic [ref=e302] [cursor=pointer]:
+                  - generic [ref=e304]:
+                    - generic [ref=e305]:
+                      - generic [ref=e306]: CS0011
+                      - text: أحمد علي الجبوري
+                    - generic [ref=e307]: TQ-2026-08-1402 · نقل ملكية اشتراك (بيع/شراء/ورثة)
+                  - generic [ref=e308]: تحقق قانوني
+                  - generic [ref=e309]: منذ يومين
+                  - generic [ref=e311]: chevron_left
+                - generic [ref=e312] [cursor=pointer]:
+                  - generic [ref=e314]:
+                    - generic [ref=e315]:
+                      - generic [ref=e316]: CT0008
+                      - text: مريم رياض الزبيدي
+                    - generic [ref=e317]: TQ-2026-08-1395 · تغيير موقع المقياس داخل المبنى
+                  - generic [ref=e318]: قيد التنفيذ
+                  - generic [ref=e319]: منذ 3 أيام
+                  - generic [ref=e321]: chevron_left
+              - generic [ref=e322]:
+                - generic [ref=e323]: عرض ٦ من ٢١٣ حالة نشطة
+                - link "عرض الكل ←" [ref=e324] [cursor=pointer]:
+                  - /url: "#"
+            - generic [ref=e326]:
+              - generic [ref=e328]:
+                - heading "bolt ابدأ خدمة مباشرة" [level=2] [ref=e329]:
+                  - generic [ref=e331]: bolt
+                  - text: ابدأ خدمة مباشرة
+                - generic [ref=e332]: الأكثر استخداماً في مركزك — نقرة واحدة للفورمة
+              - generic [ref=e333]:
+                - button "payments دفع قائمة أجور كهرباء CB0001 · 1ي · الفواتير arrow_back" [ref=e334] [cursor=pointer]:
+                  - generic [ref=e336]: payments
+                  - generic [ref=e337]:
+                    - generic [ref=e338]: دفع قائمة أجور كهرباء
+                    - generic [ref=e339]: CB0001 · 1ي · الفواتير
+                  - generic [ref=e341]: arrow_back
+                - button "add_home عمل اشتراك جديد CS0001 · 7ي · الاشتراكات arrow_back" [ref=e342] [cursor=pointer]:
+                  - generic [ref=e344]: add_home
+                  - generic [ref=e345]:
+                    - generic [ref=e346]: عمل اشتراك جديد
+                    - generic [ref=e347]: CS0001 · 7ي · الاشتراكات
+                  - generic [ref=e349]: arrow_back
+                - button "fact_check فحص مقياس / تبديل / صيانة CT0009 · 3ي · الفنية arrow_back" [ref=e350] [cursor=pointer]:
+                  - generic [ref=e352]: fact_check
+                  - generic [ref=e353]:
+                    - generic [ref=e354]: فحص مقياس / تبديل / صيانة
+                    - generic [ref=e355]: CT0009 · 3ي · الفنية
+                  - generic [ref=e357]: arrow_back
+                - button "request_quote تسوية مالية / تقسيط / ترتيبات دفع CB0006 · 5ي · الفواتير arrow_back" [ref=e358] [cursor=pointer]:
+                  - generic [ref=e360]: request_quote
+                  - generic [ref=e361]:
+                    - generic [ref=e362]: تسوية مالية / تقسيط / ترتيبات دفع
+                    - generic [ref=e363]: CB0006 · 5ي · الفواتير
+                  - generic [ref=e365]: arrow_back
+                - button "warning إبلاغ عن حالة خطر CA0002 · 1ي · الشكاوى والتقارير arrow_back" [ref=e366] [cursor=pointer]:
+                  - generic [ref=e368]: warning
+                  - generic [ref=e369]:
+                    - generic [ref=e370]: إبلاغ عن حالة خطر
+                    - generic [ref=e371]: CA0002 · 1ي · الشكاوى والتقارير
+                  - generic [ref=e373]: arrow_back
+                - button "gavel الاعتراض على القوائم أو قطع التيار CS0007 · 3ي · الاشتراكات arrow_back" [ref=e374] [cursor=pointer]:
+                  - generic [ref=e376]: gavel
+                  - generic [ref=e377]:
+                    - generic [ref=e378]: الاعتراض على القوائم أو قطع التيار
+                    - generic [ref=e379]: CS0007 · 3ي · الاشتراكات
+                  - generic [ref=e381]: arrow_back
+                - button "power_off إيقاف خدمة / قطع تيار مؤقت CS0004 · 1ي · الاشتراكات arrow_back" [ref=e382] [cursor=pointer]:
+                  - generic [ref=e384]: power_off
+                  - generic [ref=e385]:
+                    - generic [ref=e386]: إيقاف خدمة / قطع تيار مؤقت
+                    - generic [ref=e387]: CS0004 · 1ي · الاشتراكات
+                  - generic [ref=e389]: arrow_back
+                - button "gpp_bad إبلاغ عن تلاعب في المقياس أو الوصلة CA0001 · 1ي · الشكاوى والتقارير arrow_back" [ref=e390] [cursor=pointer]:
+                  - generic [ref=e392]: gpp_bad
+                  - generic [ref=e393]:
+                    - generic [ref=e394]: إبلاغ عن تلاعب في المقياس أو الوصلة
+                    - generic [ref=e395]: CA0001 · 1ي · الشكاوى والتقارير
+                  - generic [ref=e397]: arrow_back
+        - generic [ref=e398]:
+          - generic [ref=e399]: معلومات إضافية
+          - generic [ref=e400]:
+            - generic [ref=e404]: warning
+            - generic [ref=e405]:
+              - generic [ref=e406]:
+                - generic [ref=e407]: تنبيه
+                - generic [ref=e408]: النظام
+              - generic [ref=e409]: حالات تجاوزت الـ SLA
+              - paragraph [ref=e410]: هناك ٣ حالات معلّقة في الدائرة الفنية تجاوزت المدة — راجعها لمنع التصعيد.
+            - generic [ref=e411]:
+              - generic [ref=e412]:
+                - button "السابق" [ref=e413] [cursor=pointer]:
+                  - generic [ref=e414]: chevron_right
+                - generic [ref=e415]: 4 / 5
+                - button "التالي" [ref=e416] [cursor=pointer]:
+                  - generic [ref=e417]: chevron_left
+              - button "add إدارة النصائح" [ref=e418]:
+                - generic [ref=e419]: add
+                - text: إدارة النصائح
+          - generic [ref=e420]:
+            - generic [ref=e421]:
+              - generic [ref=e423]:
+                - heading "donut_small الاستخدام الشهري" [level=3] [ref=e424]:
+                  - generic [ref=e425]: donut_small
+                  - text: الاستخدام الشهري
+                - paragraph [ref=e426]: ٢,٤٨١ حالة · ٩٤٪ ضمن SLA
+              - generic [ref=e427]:
+                - generic [ref=e429]:
+                  - generic [ref=e430]:
+                    - generic [ref=e431]: CS
+                    - text: الاشتراكات
+                  - generic [ref=e432]: "209"
+                - generic [ref=e436]:
+                  - generic [ref=e437]:
+                    - generic [ref=e438]: CT
+                    - text: الفنية
+                  - generic [ref=e439]: "171"
+                - generic [ref=e443]:
+                  - generic [ref=e444]:
+                    - generic [ref=e445]: CB
+                    - text: الفواتير
+                  - generic [ref=e446]: "114"
+                - generic [ref=e450]:
+                  - generic [ref=e451]:
+                    - generic [ref=e452]: CA
+                    - text: الشكاوى والتقارير
+                  - generic [ref=e453]: "76"
+            - generic [ref=e456]:
+              - generic [ref=e458]:
+                - heading "terminal أوامر سريعة" [level=3] [ref=e459]:
+                  - generic [ref=e460]: terminal
+                  - text: أوامر سريعة
+                - paragraph [ref=e461]: اضغط ⌘K للبحث الشامل
+              - generic [ref=e462]:
+                - button "فتح حالة جديدة N" [ref=e463] [cursor=pointer]:
+                  - img [ref=e465]
+                  - generic [ref=e468]: فتح حالة جديدة
+                  - generic [ref=e469]: "N"
+                - button "الانتقال للحالات G I" [ref=e470] [cursor=pointer]:
+                  - img [ref=e472]
+                  - generic [ref=e479]: الانتقال للحالات
+                  - generic [ref=e480]: G I
+                - button "الانتقال للخدمات G S" [ref=e481] [cursor=pointer]:
+                  - img [ref=e483]
+                  - generic [ref=e488]: الانتقال للخدمات
+                  - generic [ref=e489]: G S
+                - button "تبديل السمة ⌘J" [ref=e490] [cursor=pointer]:
+                  - img [ref=e492]
+                  - generic [ref=e497]: تبديل السمة
+                  - generic [ref=e498]: ⌘J
+    - link "مقارنة التصاميم compare افتح" [ref=e499] [cursor=pointer]:
+      - /url: compare.html
+      - text: مقارنة التصاميم
+      - generic [ref=e500]:
+        - generic [ref=e501]: compare
+        - text: افتح
+    - contentinfo "Designed and developed by Hussein Ali" [ref=e502]:
+      - generic [ref=e508]:
+        - generic "جهة التشغيل" [ref=e509]:
+          - generic [ref=e510]: ©
+          - generic [ref=e511]: "2026"
+          - generic [ref=e513]: تدفّق الخير
+          - generic [ref=e514]: كهرباء الرصافة · فرع النضال
+        - generic [ref=e515]:
+          - generic [ref=e516]: Designed & Developed
+          - heading "Hussein Ali" [level=6] [ref=e517]:
+            - generic [ref=e518]: Hussein Ali
+          - generic [ref=e519]:
+            - generic [ref=e520]: Software · Design
+            - generic [ref=e522]: Baghdad — Iraq
+  - region "إشعارات"

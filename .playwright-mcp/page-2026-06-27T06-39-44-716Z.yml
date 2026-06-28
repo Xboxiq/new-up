@@ -1,0 +1,855 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - strong [ref=e4]:
+        - text: مقارنة
+        - emphasis [ref=e5]: التصاميم
+      - generic [ref=e6]: CURRENT VS LEVEL-UP
+    - group "عرض الجهاز" [ref=e7]:
+      - generic [ref=e8]: العرض
+      - button "smartphone 375" [ref=e9] [cursor=pointer]:
+        - generic [ref=e10]: smartphone
+        - text: "375"
+      - button "tablet 768" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: tablet
+        - text: "768"
+      - button "desktop_windows 1280" [ref=e13] [cursor=pointer]:
+        - generic [ref=e14]: desktop_windows
+        - text: "1280"
+    - group "السمة" [ref=e15]:
+      - generic [ref=e16]: السمة
+      - button "light_mode نهاري" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: light_mode
+        - text: نهاري
+      - button "dark_mode ليلي" [ref=e19] [cursor=pointer]:
+        - generic [ref=e20]: dark_mode
+        - text: ليلي
+    - group "خيارات" [ref=e21]:
+      - button "sync تمرير متزامن" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]: sync
+        - text: تمرير متزامن
+      - button "refresh إعادة تحميل" [ref=e24] [cursor=pointer]:
+        - generic [ref=e25]: refresh
+        - text: إعادة تحميل
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]: الحالي
+        - generic [ref=e31]:
+          - text: النسخة الحالية
+          - generic [ref=e32]: التصميم التحريري القائم
+      - iframe [ref=e36]:
+        - generic [ref=f7e2]:
+          - generic [ref=f7e3]:
+            - banner [ref=f7e4]:
+              - generic [ref=f7e5]:
+                - link "تدفّق الخير RASAFA · CS HUB" [ref=f7e6] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=f7e8]:
+                    - strong [ref=f7e9]: تدفّق الخير
+                    - generic [ref=f7e10]: RASAFA · CS HUB
+                - generic "الفرع الحالي" [ref=f7e12]:
+                  - generic [ref=f7e13]: رص
+                  - generic [ref=f7e14]: RS-014 · النضال
+                - button "search ⌘K" [ref=f7e15] [cursor=pointer]:
+                  - generic [ref=f7e16]: search
+                  - generic [ref=f7e17]: ⌘K
+                - button "article" [ref=f7e18] [cursor=pointer]:
+                  - generic [ref=f7e19]: article
+                - button "dark_mode ليلي" [ref=f7e20] [cursor=pointer]:
+                  - generic [ref=f7e21]: dark_mode
+                  - generic: ليلي
+                - button "ح shield_person" [ref=f7e23] [cursor=pointer]:
+                  - generic [ref=f7e24]: ح
+                  - generic "مسؤول النظام" [ref=f7e25]:
+                    - generic [ref=f7e26]: shield_person
+              - navigation [ref=f7e27]:
+                - button "نظرة عامة" [ref=f7e28] [cursor=pointer]
+                - button "الخدمات" [ref=f7e29] [cursor=pointer]
+                - button "الحالات" [ref=f7e30] [cursor=pointer]
+                - button "الفروع" [ref=f7e31] [cursor=pointer]
+                - button "التقارير" [ref=f7e32] [cursor=pointer]
+                - button "الأجور" [ref=f7e33] [cursor=pointer]
+                - button "الدليل" [ref=f7e34] [cursor=pointer]
+                - button "الإدارة" [ref=f7e35] [cursor=pointer]
+            - main [ref=f7e36]:
+              - generic [ref=f7e37]:
+                - button "arrow_forward الرئيسية" [ref=f7e38] [cursor=pointer]:
+                  - generic [ref=f7e39]: arrow_forward
+                  - text: الرئيسية
+                - generic [ref=f7e40]:
+                  - generic [ref=f7e41]:
+                    - generic [ref=f7e42]:
+                      - generic [ref=f7e43]: hub
+                      - text: نطاق التغطية
+                    - heading "فروع كهرباء الرصافة والمحلات المشمولة" [level=1] [ref=f7e44]:
+                      - text: فروع كهرباء الرصافة
+                      - emphasis [ref=f7e45]: والمحلات المشمولة
+                    - paragraph [ref=f7e46]: 4 فرعاً موزّعاً على 1 مناطق إدارية، تخدم ٧٣٬٠٣٠ مشترك عبر 32 محلة بلدية. استعمل البحث برقم المحلة لمعرفة الفرع المختص فوراً.
+                  - generic [ref=f7e47]:
+                    - generic [ref=f7e48]:
+                      - generic [ref=f7e50]: domain
+                      - generic [ref=f7e51]: "4"
+                      - generic [ref=f7e52]: فرع
+                    - generic [ref=f7e53]:
+                      - generic [ref=f7e55]: map
+                      - generic [ref=f7e56]: "32"
+                      - generic [ref=f7e57]: محلة
+                    - generic [ref=f7e58]:
+                      - generic [ref=f7e60]: groups
+                      - generic [ref=f7e61]: ٧٣٬٠٣٠
+                      - generic [ref=f7e62]: مشترك
+                    - generic [ref=f7e63]:
+                      - generic [ref=f7e65]: location_city
+                      - generic [ref=f7e66]: "1"
+                      - generic [ref=f7e67]: منطقة إدارية
+                - generic [ref=f7e68]:
+                  - generic [ref=f7e69]:
+                    - generic [ref=f7e70]: search
+                    - textbox "ابحث برقم محلة (٩٠١) أو اسم فرع أو منطقة…" [ref=f7e71]
+                  - generic [ref=f7e72]:
+                    - generic [ref=f7e73]: info
+                    - text: أرقام المحلات في بغداد تكتب بـ ٣ خانات (مثل ٩٠١، ١٠٢) — كل فرع يخدم نطاقاً متجاوراً
+                - generic [ref=f7e74]:
+                  - article [ref=f7e75] [cursor=pointer]:
+                    - generic [ref=f7e76]:
+                      - generic [ref=f7e78]: RS-011
+                      - generic [ref=f7e79]: مستقر
+                    - heading "المركز الرئيسي" [level=3] [ref=f7e81]
+                    - paragraph [ref=f7e82]:
+                      - generic [ref=f7e83]: place
+                      - text: الرصافة
+                    - generic [ref=f7e84]:
+                      - generic [ref=f7e85]: أ
+                      - generic [ref=f7e86]:
+                        - generic [ref=f7e87]: م. أحمد كاظم الموسوي
+                        - generic [ref=f7e88]: مدير الفرع
+                    - generic [ref=f7e89]:
+                      - generic [ref=f7e90]:
+                        - generic [ref=f7e91]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f7e92]:
+                        - generic [ref=f7e93]: call
+                        - link "07901-234001" [ref=f7e94]:
+                          - /url: tel:07901-234001
+                      - generic [ref=f7e95]:
+                        - generic [ref=f7e96]: location_on
+                        - text: شارع الرشيد — قرب وزارة المالية القديمة
+                      - generic [ref=f7e97]:
+                        - generic [ref=f7e98]: my_location
+                        - code [ref=f7e99]: 33.3373, 44.4106
+                    - generic [ref=f7e100]:
+                      - generic [ref=f7e101]: الاشتراكات
+                      - generic [ref=f7e103]: الفنية
+                      - generic [ref=f7e105]: الفواتير
+                      - generic [ref=f7e107]: الشكاوى والتقارير
+                    - generic [ref=f7e109]:
+                      - generic [ref=f7e110]:
+                        - generic [ref=f7e111]:
+                          - generic [ref=f7e112]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f7e113]: "6"
+                      - generic [ref=f7e114]:
+                        - generic [ref=f7e115]: "101"
+                        - generic [ref=f7e116]: "102"
+                        - generic [ref=f7e117]: "106"
+                        - generic [ref=f7e118]: "107"
+                        - generic [ref=f7e119]: "109"
+                        - generic [ref=f7e120]: "111"
+                    - generic [ref=f7e121]:
+                      - generic [ref=f7e122]:
+                        - generic [ref=f7e123]: ١٨٬٤٢٠
+                        - generic [ref=f7e124]: مشترك
+                      - generic [ref=f7e125]:
+                        - generic [ref=f7e126]: "6"
+                        - generic [ref=f7e127]: محلة
+                      - generic [ref=f7e128]:
+                        - generic [ref=f7e129]: متوسط
+                        - generic [ref=f7e130]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f7e131]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f7e132]: arrow_back
+                  - article [ref=f7e133] [cursor=pointer]:
+                    - generic [ref=f7e134]:
+                      - generic [ref=f7e135]:
+                        - generic [ref=f7e136]: RS-014
+                        - generic [ref=f7e137]:
+                          - generic [ref=f7e138]: star
+                          - text: مركزك
+                      - generic [ref=f7e139]: تحت الضغط
+                    - heading "مركز النضال" [level=3] [ref=f7e141]
+                    - paragraph [ref=f7e142]:
+                      - generic [ref=f7e143]: place
+                      - text: الرصافة
+                    - generic [ref=f7e144]:
+                      - generic [ref=f7e145]: ك
+                      - generic [ref=f7e146]:
+                        - generic [ref=f7e147]: م. كرار جواد الكناني
+                        - generic [ref=f7e148]: مدير الفرع
+                    - generic [ref=f7e149]:
+                      - generic [ref=f7e150]:
+                        - generic [ref=f7e151]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f7e152]:
+                        - generic [ref=f7e153]: call
+                        - link "07902-014555" [ref=f7e154]:
+                          - /url: tel:07902-014555
+                      - generic [ref=f7e155]:
+                        - generic [ref=f7e156]: location_on
+                        - text: شارع النضال — قرب ساحة الفردوس
+                      - generic [ref=f7e157]:
+                        - generic [ref=f7e158]: my_location
+                        - code [ref=f7e159]: 33.3091, 44.4185
+                    - generic [ref=f7e160]:
+                      - generic [ref=f7e161]: الاشتراكات
+                      - generic [ref=f7e163]: الفنية
+                      - generic [ref=f7e165]: الفواتير
+                      - generic [ref=f7e167]: الشكاوى والتقارير
+                    - generic [ref=f7e169]:
+                      - generic [ref=f7e170]:
+                        - generic [ref=f7e171]:
+                          - generic [ref=f7e172]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f7e173]: "7"
+                      - generic [ref=f7e174]:
+                        - generic [ref=f7e175]: "103"
+                        - generic [ref=f7e176]: "101"
+                        - generic [ref=f7e177]: "121"
+                        - generic [ref=f7e178]: "133"
+                        - generic [ref=f7e179]: "123"
+                        - generic [ref=f7e180]: "135"
+                        - generic [ref=f7e181]: "143"
+                    - generic [ref=f7e182]:
+                      - generic [ref=f7e183]:
+                        - generic [ref=f7e184]: ٢٦٬٣١٠
+                        - generic [ref=f7e185]: مشترك
+                      - generic [ref=f7e186]:
+                        - generic [ref=f7e187]: "7"
+                        - generic [ref=f7e188]: محلة
+                      - generic [ref=f7e189]:
+                        - generic [ref=f7e190]: مرتفع
+                        - generic [ref=f7e191]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f7e192]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f7e193]: arrow_back
+                  - article [ref=f7e194] [cursor=pointer]:
+                    - generic [ref=f7e195]:
+                      - generic [ref=f7e197]: RS-024
+                      - generic [ref=f7e198]: مستقر
+                    - heading "مركز الفضل" [level=3] [ref=f7e200]
+                    - paragraph [ref=f7e201]:
+                      - generic [ref=f7e202]: place
+                      - text: الرصافة
+                    - generic [ref=f7e203]:
+                      - generic [ref=f7e204]: م
+                      - generic [ref=f7e205]:
+                        - generic [ref=f7e206]: م. مصطفى علي الحسيني
+                        - generic [ref=f7e207]: مدير الفرع
+                    - generic [ref=f7e208]:
+                      - generic [ref=f7e209]:
+                        - generic [ref=f7e210]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f7e211]:
+                        - generic [ref=f7e212]: call
+                        - link "07905-024777" [ref=f7e213]:
+                          - /url: tel:07905-024777
+                      - generic [ref=f7e214]:
+                        - generic [ref=f7e215]: location_on
+                        - text: الفضل — قرب جامع الفضل
+                      - generic [ref=f7e216]:
+                        - generic [ref=f7e217]: my_location
+                        - code [ref=f7e218]: 33.3334, 44.4030
+                    - generic [ref=f7e219]:
+                      - generic [ref=f7e220]: الاشتراكات
+                      - generic [ref=f7e222]: الفنية
+                      - generic [ref=f7e224]: الفواتير
+                      - generic [ref=f7e226]: الشكاوى والتقارير
+                    - generic [ref=f7e228]:
+                      - generic [ref=f7e229]:
+                        - generic [ref=f7e230]:
+                          - generic [ref=f7e231]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f7e232]: "8"
+                      - generic [ref=f7e233]:
+                        - generic [ref=f7e234]: "129"
+                        - generic [ref=f7e235]: "125"
+                        - generic [ref=f7e236]: "139"
+                        - generic [ref=f7e237]: "137"
+                        - generic [ref=f7e238]: "115"
+                        - generic [ref=f7e239]: "127"
+                        - generic [ref=f7e240]: "113"
+                        - generic [ref=f7e241]: "110"
+                    - generic [ref=f7e242]:
+                      - generic [ref=f7e243]:
+                        - generic [ref=f7e244]: ١٦٬٨٨٠
+                        - generic [ref=f7e245]: مشترك
+                      - generic [ref=f7e246]:
+                        - generic [ref=f7e247]: "8"
+                        - generic [ref=f7e248]: محلة
+                      - generic [ref=f7e249]:
+                        - generic [ref=f7e250]: متوسط
+                        - generic [ref=f7e251]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f7e252]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f7e253]: arrow_back
+                  - article [ref=f7e254] [cursor=pointer]:
+                    - generic [ref=f7e255]:
+                      - generic [ref=f7e257]: RS-118
+                      - generic [ref=f7e258]: مستقر
+                    - heading "مركز باب المعظم" [level=3] [ref=f7e260]
+                    - paragraph [ref=f7e261]:
+                      - generic [ref=f7e262]: place
+                      - text: الرصافة
+                    - generic [ref=f7e263]:
+                      - generic [ref=f7e264]: ي
+                      - generic [ref=f7e265]:
+                        - generic [ref=f7e266]: م. ياسر شاكر الطائي
+                        - generic [ref=f7e267]: مدير الفرع
+                    - generic [ref=f7e268]:
+                      - generic [ref=f7e269]:
+                        - generic [ref=f7e270]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f7e271]:
+                        - generic [ref=f7e272]: call
+                        - link "07912-118450" [ref=f7e273]:
+                          - /url: tel:07912-118450
+                      - generic [ref=f7e274]:
+                        - generic [ref=f7e275]: location_on
+                        - text: باب المعظم — قرب وزارة الدفاع القديمة
+                      - generic [ref=f7e276]:
+                        - generic [ref=f7e277]: my_location
+                        - code [ref=f7e278]: 33.3539, 44.3877
+                    - generic [ref=f7e279]:
+                      - generic [ref=f7e280]: الاشتراكات
+                      - generic [ref=f7e282]: الفنية
+                      - generic [ref=f7e284]: الفواتير
+                    - generic [ref=f7e286]:
+                      - generic [ref=f7e287]:
+                        - generic [ref=f7e288]:
+                          - generic [ref=f7e289]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f7e290]: "12"
+                      - generic [ref=f7e291]:
+                        - generic [ref=f7e292]: "108"
+                        - generic [ref=f7e293]: "141"
+                        - generic [ref=f7e294]: "117"
+                        - generic [ref=f7e295]: "147"
+                        - generic [ref=f7e296]: "114"
+                        - generic [ref=f7e297]: "149"
+                        - generic [ref=f7e298]: "112"
+                        - generic [ref=f7e299]: "120"
+                        - generic [ref=f7e300]: "131"
+                        - generic [ref=f7e301]: "116"
+                        - generic [ref=f7e302]: "119"
+                        - generic [ref=f7e303]: "118"
+                    - generic [ref=f7e304]:
+                      - generic [ref=f7e305]:
+                        - generic [ref=f7e306]: ١١٬٤٢٠
+                        - generic [ref=f7e307]: مشترك
+                      - generic [ref=f7e308]:
+                        - generic [ref=f7e309]: "12"
+                        - generic [ref=f7e310]: محلة
+                      - generic [ref=f7e311]:
+                        - generic [ref=f7e312]: منخفض
+                        - generic [ref=f7e313]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f7e314]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f7e315]: arrow_back
+                - generic [ref=f7e316]:
+                  - heading "rule ملاحظات تشغيلية للموظف" [level=3] [ref=f7e317]:
+                    - generic [ref=f7e318]: rule
+                    - text: ملاحظات تشغيلية للموظف
+                  - generic [ref=f7e319]:
+                    - generic [ref=f7e322]:
+                      - generic [ref=f7e323]: "الحالة: مستقر"
+                      - generic [ref=f7e324]: التغذية ضمن السعة الاسمية — لا قيود إضافية على الخدمات.
+                    - generic [ref=f7e327]:
+                      - generic [ref=f7e328]: "الحالة: تحت الضغط"
+                      - generic [ref=f7e329]: تجنّب اشتراكات الأحمال الكبيرة دون موافقة قسم التخطيط.
+                    - generic [ref=f7e332]:
+                      - generic [ref=f7e333]: "الحالة: ضغط شديد"
+                      - generic [ref=f7e334]: اشتراكات جديدة بموافقة مدير الفرع وحجز جدولة فصل/وصل.
+                    - generic [ref=f7e337]:
+                      - generic [ref=f7e338]: "\"مركزك\""
+                      - generic [ref=f7e339]: الفرع الذي تنتمي إليه — يُعرض أولاً ويُحفظ افتراضياً في كل نموذج.
+            - link "مقارنة التصاميم compare افتح" [ref=f7e340] [cursor=pointer]:
+              - /url: compare.html
+              - text: مقارنة التصاميم
+              - generic [ref=f7e341]:
+                - generic [ref=f7e342]: compare
+                - text: افتح
+            - contentinfo "Designed and developed by Hussein Ali" [ref=f7e343]:
+              - generic [ref=f7e349]:
+                - generic "جهة التشغيل" [ref=f7e350]:
+                  - generic [ref=f7e351]: ©
+                  - generic [ref=f7e352]: "2026"
+                  - generic [ref=f7e354]: تدفّق الخير
+                  - generic [ref=f7e355]: كهرباء الرصافة · فرع النضال
+                - generic [ref=f7e356]:
+                  - generic [ref=f7e357]: Designed & Developed
+                  - heading "Hussein Ali" [level=6] [ref=f7e358]:
+                    - generic [ref=f7e359]: Hussein Ali
+                  - generic [ref=f7e360]:
+                    - generic [ref=f7e361]: Software · Design
+                    - generic [ref=f7e363]: Baghdad — Iraq
+          - region "إشعارات"
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]: Level-Up
+        - generic [ref=e41]:
+          - text: النسخة المطوّرة
+          - generic [ref=e42]: قفزة بصرية مبنية على كل السكلز
+      - iframe [ref=e46]:
+        - generic [ref=f8e2]:
+          - generic [ref=f8e3]:
+            - banner [ref=f8e4]:
+              - generic [ref=f8e5]:
+                - link "تدفّق الخير RASAFA · CS HUB" [ref=f8e6] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=f8e8]:
+                    - strong [ref=f8e9]: تدفّق الخير
+                    - generic [ref=f8e10]: RASAFA · CS HUB
+                - generic "الفرع الحالي" [ref=f8e12]:
+                  - generic [ref=f8e13]: رص
+                  - generic [ref=f8e14]: RS-014 · النضال
+                - button "search ⌘K" [ref=f8e15] [cursor=pointer]:
+                  - generic [ref=f8e16]: search
+                  - generic [ref=f8e17]: ⌘K
+                - button "article" [ref=f8e18] [cursor=pointer]:
+                  - generic [ref=f8e19]: article
+                - button "dark_mode ليلي" [ref=f8e20] [cursor=pointer]:
+                  - generic [ref=f8e21]: dark_mode
+                  - generic: ليلي
+                - button "ح shield_person" [ref=f8e23] [cursor=pointer]:
+                  - generic [ref=f8e24]: ح
+                  - generic "مسؤول النظام" [ref=f8e25]:
+                    - generic [ref=f8e26]: shield_person
+              - navigation [ref=f8e27]:
+                - button "نظرة عامة" [ref=f8e28] [cursor=pointer]
+                - button "الخدمات" [ref=f8e29] [cursor=pointer]
+                - button "الحالات" [ref=f8e30] [cursor=pointer]
+                - button "الفروع" [ref=f8e31] [cursor=pointer]
+                - button "التقارير" [ref=f8e32] [cursor=pointer]
+                - button "الأجور" [ref=f8e33] [cursor=pointer]
+                - button "الدليل" [ref=f8e34] [cursor=pointer]
+                - button "الإدارة" [ref=f8e35] [cursor=pointer]
+            - main [ref=f8e36]:
+              - generic [ref=f8e37]:
+                - button "arrow_forward الرئيسية" [ref=f8e38] [cursor=pointer]:
+                  - generic [ref=f8e39]: arrow_forward
+                  - text: الرئيسية
+                - generic [ref=f8e40]:
+                  - generic [ref=f8e41]:
+                    - generic [ref=f8e42]:
+                      - generic [ref=f8e43]: hub
+                      - text: نطاق التغطية
+                    - heading "فروع كهرباء الرصافة والمحلات المشمولة" [level=1] [ref=f8e44]:
+                      - text: فروع كهرباء الرصافة
+                      - emphasis [ref=f8e45]: والمحلات المشمولة
+                    - paragraph [ref=f8e46]: 4 فرعاً موزّعاً على 1 مناطق إدارية، تخدم ٧٣٬٠٣٠ مشترك عبر 32 محلة بلدية. استعمل البحث برقم المحلة لمعرفة الفرع المختص فوراً.
+                  - generic [ref=f8e47]:
+                    - generic [ref=f8e48]:
+                      - generic [ref=f8e50]: domain
+                      - generic [ref=f8e51]: "4"
+                      - generic [ref=f8e52]: فرع
+                    - generic [ref=f8e53]:
+                      - generic [ref=f8e55]: map
+                      - generic [ref=f8e56]: "32"
+                      - generic [ref=f8e57]: محلة
+                    - generic [ref=f8e58]:
+                      - generic [ref=f8e60]: groups
+                      - generic [ref=f8e61]: ٧٣٬٠٣٠
+                      - generic [ref=f8e62]: مشترك
+                    - generic [ref=f8e63]:
+                      - generic [ref=f8e65]: location_city
+                      - generic [ref=f8e66]: "1"
+                      - generic [ref=f8e67]: منطقة إدارية
+                - generic [ref=f8e68]:
+                  - generic [ref=f8e69]:
+                    - generic [ref=f8e70]: search
+                    - textbox "ابحث برقم محلة (٩٠١) أو اسم فرع أو منطقة…" [ref=f8e71]
+                  - generic [ref=f8e72]:
+                    - generic [ref=f8e73]: info
+                    - text: أرقام المحلات في بغداد تكتب بـ ٣ خانات (مثل ٩٠١، ١٠٢) — كل فرع يخدم نطاقاً متجاوراً
+                - generic [ref=f8e74]:
+                  - article [ref=f8e75] [cursor=pointer]:
+                    - generic [ref=f8e76]:
+                      - generic [ref=f8e78]: RS-011
+                      - generic [ref=f8e79]: مستقر
+                    - heading "المركز الرئيسي" [level=3] [ref=f8e81]
+                    - paragraph [ref=f8e82]:
+                      - generic [ref=f8e83]: place
+                      - text: الرصافة
+                    - generic [ref=f8e84]:
+                      - generic [ref=f8e85]: أ
+                      - generic [ref=f8e86]:
+                        - generic [ref=f8e87]: م. أحمد كاظم الموسوي
+                        - generic [ref=f8e88]: مدير الفرع
+                    - generic [ref=f8e89]:
+                      - generic [ref=f8e90]:
+                        - generic [ref=f8e91]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f8e92]:
+                        - generic [ref=f8e93]: call
+                        - link "07901-234001" [ref=f8e94]:
+                          - /url: tel:07901-234001
+                      - generic [ref=f8e95]:
+                        - generic [ref=f8e96]: location_on
+                        - text: شارع الرشيد — قرب وزارة المالية القديمة
+                      - generic [ref=f8e97]:
+                        - generic [ref=f8e98]: my_location
+                        - code [ref=f8e99]: 33.3373, 44.4106
+                    - generic [ref=f8e100]:
+                      - generic [ref=f8e101]: الاشتراكات
+                      - generic [ref=f8e103]: الفنية
+                      - generic [ref=f8e105]: الفواتير
+                      - generic [ref=f8e107]: الشكاوى والتقارير
+                    - generic [ref=f8e109]:
+                      - generic [ref=f8e110]:
+                        - generic [ref=f8e111]:
+                          - generic [ref=f8e112]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f8e113]: "6"
+                      - generic [ref=f8e114]:
+                        - generic [ref=f8e115]: "101"
+                        - generic [ref=f8e116]: "102"
+                        - generic [ref=f8e117]: "106"
+                        - generic [ref=f8e118]: "107"
+                        - generic [ref=f8e119]: "109"
+                        - generic [ref=f8e120]: "111"
+                    - generic [ref=f8e121]:
+                      - generic [ref=f8e122]:
+                        - generic [ref=f8e123]: ١٨٬٤٢٠
+                        - generic [ref=f8e124]: مشترك
+                      - generic [ref=f8e125]:
+                        - generic [ref=f8e126]: "6"
+                        - generic [ref=f8e127]: محلة
+                      - generic [ref=f8e128]:
+                        - generic [ref=f8e129]: متوسط
+                        - generic [ref=f8e130]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f8e131]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f8e132]: arrow_back
+                  - article [ref=f8e133] [cursor=pointer]:
+                    - generic [ref=f8e134]:
+                      - generic [ref=f8e135]:
+                        - generic [ref=f8e136]: RS-014
+                        - generic [ref=f8e137]:
+                          - generic [ref=f8e138]: star
+                          - text: مركزك
+                      - generic [ref=f8e139]: تحت الضغط
+                    - heading "مركز النضال" [level=3] [ref=f8e141]
+                    - paragraph [ref=f8e142]:
+                      - generic [ref=f8e143]: place
+                      - text: الرصافة
+                    - generic [ref=f8e144]:
+                      - generic [ref=f8e145]: ك
+                      - generic [ref=f8e146]:
+                        - generic [ref=f8e147]: م. كرار جواد الكناني
+                        - generic [ref=f8e148]: مدير الفرع
+                    - generic [ref=f8e149]:
+                      - generic [ref=f8e150]:
+                        - generic [ref=f8e151]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f8e152]:
+                        - generic [ref=f8e153]: call
+                        - link "07902-014555" [ref=f8e154]:
+                          - /url: tel:07902-014555
+                      - generic [ref=f8e155]:
+                        - generic [ref=f8e156]: location_on
+                        - text: شارع النضال — قرب ساحة الفردوس
+                      - generic [ref=f8e157]:
+                        - generic [ref=f8e158]: my_location
+                        - code [ref=f8e159]: 33.3091, 44.4185
+                    - generic [ref=f8e160]:
+                      - generic [ref=f8e161]: الاشتراكات
+                      - generic [ref=f8e163]: الفنية
+                      - generic [ref=f8e165]: الفواتير
+                      - generic [ref=f8e167]: الشكاوى والتقارير
+                    - generic [ref=f8e169]:
+                      - generic [ref=f8e170]:
+                        - generic [ref=f8e171]:
+                          - generic [ref=f8e172]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f8e173]: "7"
+                      - generic [ref=f8e174]:
+                        - generic [ref=f8e175]: "103"
+                        - generic [ref=f8e176]: "101"
+                        - generic [ref=f8e177]: "121"
+                        - generic [ref=f8e178]: "133"
+                        - generic [ref=f8e179]: "123"
+                        - generic [ref=f8e180]: "135"
+                        - generic [ref=f8e181]: "143"
+                    - generic [ref=f8e182]:
+                      - generic [ref=f8e183]:
+                        - generic [ref=f8e184]: ٢٦٬٣١٠
+                        - generic [ref=f8e185]: مشترك
+                      - generic [ref=f8e186]:
+                        - generic [ref=f8e187]: "7"
+                        - generic [ref=f8e188]: محلة
+                      - generic [ref=f8e189]:
+                        - generic [ref=f8e190]: مرتفع
+                        - generic [ref=f8e191]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f8e192]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f8e193]: arrow_back
+                  - article [ref=f8e194] [cursor=pointer]:
+                    - generic [ref=f8e195]:
+                      - generic [ref=f8e197]: RS-024
+                      - generic [ref=f8e198]: مستقر
+                    - heading "مركز الفضل" [level=3] [ref=f8e200]
+                    - paragraph [ref=f8e201]:
+                      - generic [ref=f8e202]: place
+                      - text: الرصافة
+                    - generic [ref=f8e203]:
+                      - generic [ref=f8e204]: م
+                      - generic [ref=f8e205]:
+                        - generic [ref=f8e206]: م. مصطفى علي الحسيني
+                        - generic [ref=f8e207]: مدير الفرع
+                    - generic [ref=f8e208]:
+                      - generic [ref=f8e209]:
+                        - generic [ref=f8e210]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f8e211]:
+                        - generic [ref=f8e212]: call
+                        - link "07905-024777" [ref=f8e213]:
+                          - /url: tel:07905-024777
+                      - generic [ref=f8e214]:
+                        - generic [ref=f8e215]: location_on
+                        - text: الفضل — قرب جامع الفضل
+                      - generic [ref=f8e216]:
+                        - generic [ref=f8e217]: my_location
+                        - code [ref=f8e218]: 33.3334, 44.4030
+                    - generic [ref=f8e219]:
+                      - generic [ref=f8e220]: الاشتراكات
+                      - generic [ref=f8e222]: الفنية
+                      - generic [ref=f8e224]: الفواتير
+                      - generic [ref=f8e226]: الشكاوى والتقارير
+                    - generic [ref=f8e228]:
+                      - generic [ref=f8e229]:
+                        - generic [ref=f8e230]:
+                          - generic [ref=f8e231]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f8e232]: "8"
+                      - generic [ref=f8e233]:
+                        - generic [ref=f8e234]: "129"
+                        - generic [ref=f8e235]: "125"
+                        - generic [ref=f8e236]: "139"
+                        - generic [ref=f8e237]: "137"
+                        - generic [ref=f8e238]: "115"
+                        - generic [ref=f8e239]: "127"
+                        - generic [ref=f8e240]: "113"
+                        - generic [ref=f8e241]: "110"
+                    - generic [ref=f8e242]:
+                      - generic [ref=f8e243]:
+                        - generic [ref=f8e244]: ١٦٬٨٨٠
+                        - generic [ref=f8e245]: مشترك
+                      - generic [ref=f8e246]:
+                        - generic [ref=f8e247]: "8"
+                        - generic [ref=f8e248]: محلة
+                      - generic [ref=f8e249]:
+                        - generic [ref=f8e250]: متوسط
+                        - generic [ref=f8e251]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f8e252]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f8e253]: arrow_back
+                  - article [ref=f8e254] [cursor=pointer]:
+                    - generic [ref=f8e255]:
+                      - generic [ref=f8e257]: RS-118
+                      - generic [ref=f8e258]: مستقر
+                    - heading "مركز باب المعظم" [level=3] [ref=f8e260]
+                    - paragraph [ref=f8e261]:
+                      - generic [ref=f8e262]: place
+                      - text: الرصافة
+                    - generic [ref=f8e263]:
+                      - generic [ref=f8e264]: ي
+                      - generic [ref=f8e265]:
+                        - generic [ref=f8e266]: م. ياسر شاكر الطائي
+                        - generic [ref=f8e267]: مدير الفرع
+                    - generic [ref=f8e268]:
+                      - generic [ref=f8e269]:
+                        - generic [ref=f8e270]: schedule
+                        - text: السبت – الخميس · 08:00 – 16:00
+                      - generic [ref=f8e271]:
+                        - generic [ref=f8e272]: call
+                        - link "07912-118450" [ref=f8e273]:
+                          - /url: tel:07912-118450
+                      - generic [ref=f8e274]:
+                        - generic [ref=f8e275]: location_on
+                        - text: باب المعظم — قرب وزارة الدفاع القديمة
+                      - generic [ref=f8e276]:
+                        - generic [ref=f8e277]: my_location
+                        - code [ref=f8e278]: 33.3539, 44.3877
+                    - generic [ref=f8e279]:
+                      - generic [ref=f8e280]: الاشتراكات
+                      - generic [ref=f8e282]: الفنية
+                      - generic [ref=f8e284]: الفواتير
+                    - generic [ref=f8e286]:
+                      - generic [ref=f8e287]:
+                        - generic [ref=f8e288]:
+                          - generic [ref=f8e289]: map
+                          - text: المحلات المشمولة
+                        - generic [ref=f8e290]: "12"
+                      - generic [ref=f8e291]:
+                        - generic [ref=f8e292]: "108"
+                        - generic [ref=f8e293]: "141"
+                        - generic [ref=f8e294]: "117"
+                        - generic [ref=f8e295]: "147"
+                        - generic [ref=f8e296]: "114"
+                        - generic [ref=f8e297]: "149"
+                        - generic [ref=f8e298]: "112"
+                        - generic [ref=f8e299]: "120"
+                        - generic [ref=f8e300]: "131"
+                        - generic [ref=f8e301]: "116"
+                        - generic [ref=f8e302]: "119"
+                        - generic [ref=f8e303]: "118"
+                    - generic [ref=f8e304]:
+                      - generic [ref=f8e305]:
+                        - generic [ref=f8e306]: ١١٬٤٢٠
+                        - generic [ref=f8e307]: مشترك
+                      - generic [ref=f8e308]:
+                        - generic [ref=f8e309]: "12"
+                        - generic [ref=f8e310]: محلة
+                      - generic [ref=f8e311]:
+                        - generic [ref=f8e312]: منخفض
+                        - generic [ref=f8e313]: السعة
+                      - button "ابدأ خدمة من هذا الفرع arrow_back" [ref=f8e314]:
+                        - text: ابدأ خدمة من هذا الفرع
+                        - generic [ref=f8e315]: arrow_back
+                - generic [ref=f8e316]:
+                  - heading "rule ملاحظات تشغيلية للموظف" [level=3] [ref=f8e317]:
+                    - generic [ref=f8e318]: rule
+                    - text: ملاحظات تشغيلية للموظف
+                  - generic [ref=f8e319]:
+                    - generic [ref=f8e322]:
+                      - generic [ref=f8e323]: "الحالة: مستقر"
+                      - generic [ref=f8e324]: التغذية ضمن السعة الاسمية — لا قيود إضافية على الخدمات.
+                    - generic [ref=f8e327]:
+                      - generic [ref=f8e328]: "الحالة: تحت الضغط"
+                      - generic [ref=f8e329]: تجنّب اشتراكات الأحمال الكبيرة دون موافقة قسم التخطيط.
+                    - generic [ref=f8e332]:
+                      - generic [ref=f8e333]: "الحالة: ضغط شديد"
+                      - generic [ref=f8e334]: اشتراكات جديدة بموافقة مدير الفرع وحجز جدولة فصل/وصل.
+                    - generic [ref=f8e337]:
+                      - generic [ref=f8e338]: "\"مركزك\""
+                      - generic [ref=f8e339]: الفرع الذي تنتمي إليه — يُعرض أولاً ويُحفظ افتراضياً في كل نموذج.
+            - link "مقارنة التصاميم compare افتح" [ref=f8e340] [cursor=pointer]:
+              - /url: compare.html
+              - text: مقارنة التصاميم
+              - generic [ref=f8e341]:
+                - generic [ref=f8e342]: compare
+                - text: افتح
+            - contentinfo "Designed and developed by Hussein Ali" [ref=f8e343]:
+              - generic [ref=f8e349]:
+                - generic "جهة التشغيل" [ref=f8e350]:
+                  - generic [ref=f8e351]: ©
+                  - generic [ref=f8e352]: "2026"
+                  - generic [ref=f8e354]: تدفّق الخير
+                  - generic [ref=f8e355]: كهرباء الرصافة · فرع النضال
+                - generic [ref=f8e356]:
+                  - generic [ref=f8e357]: Designed & Developed
+                  - heading "Hussein Ali" [level=6] [ref=f8e358]:
+                    - generic [ref=f8e359]: Hussein Ali
+                  - generic [ref=f8e360]:
+                    - generic [ref=f8e361]: Software · Design
+                    - generic [ref=f8e363]: Baghdad — Iraq
+          - region "إشعارات"
+  - generic [ref=e47]:
+    - generic [ref=e48]:
+      - heading "دفتر القرارات التصميمية" [level=2] [ref=e49]
+      - generic [ref=e50]: كل تغيير ← مصدره من السكلز
+    - generic [ref=e51]:
+      - article [ref=e52]:
+        - generic [ref=e53]: "01"
+        - heading "قفزة مقياس العرض" [level=3] [ref=e54]
+        - generic [ref=e55]:
+          - generic [ref=e56]: الحالي
+          - generic [ref=e57]: ≈ 49.6px
+        - generic [ref=e58]:
+          - generic [ref=e59]: المطوّر
+          - generic [ref=e60]: 64px (Alexandria 800)
+        - generic [ref=e61]: refero-design · open-design
+      - article [ref=e62]:
+        - generic [ref=e63]: "02"
+        - heading "لوحة العنوان التحريرية" [level=3] [ref=e64]
+        - generic [ref=e65]:
+          - generic [ref=e66]: الحالي
+          - generic [ref=e67]: خط فاصل فقط
+        - generic [ref=e68]:
+          - generic [ref=e69]: المطوّر
+          - generic [ref=e70]: خلفية تونية كحلية + حدّ ذهبي + ختم قرمزي
+        - generic [ref=e71]: open-design · creative-fx
+      - article [ref=e72]:
+        - generic [ref=e73]: "03"
+        - heading "هوية الأقسام المضخّمة" [level=3] [ref=e74]
+        - generic [ref=e75]:
+          - generic [ref=e76]: الحالي
+          - generic [ref=e77]: لون خفيف
+        - generic [ref=e78]:
+          - generic [ref=e79]: المطوّر
+          - generic [ref=e80]: شريط لوني 5px + وهج + توهين عند الفتح
+        - generic [ref=e81]: design-taste-frontend
+      - article [ref=e82]:
+        - generic [ref=e83]: "04"
+        - heading "أرقام واثقة" [level=3] [ref=e84]
+        - generic [ref=e85]:
+          - generic [ref=e86]: الحالي
+          - generic [ref=e87]: ≈ 40.8px
+        - generic [ref=e88]:
+          - generic [ref=e89]: المطوّر
+          - generic [ref=e90]: ≈ 49.6px Alexandria 800
+        - generic [ref=e91]: refero-design (Ramp/Stripe)
+      - article [ref=e92]:
+        - generic [ref=e93]: "05"
+        - heading "بطاقات ورقية مرفوعة" [level=3] [ref=e94]
+        - generic [ref=e95]:
+          - generic [ref=e96]: الحالي
+          - generic [ref=e97]: ظل ناعم
+        - generic [ref=e98]:
+          - generic [ref=e99]: المطوّر
+          - generic [ref=e100]: عمق متعدد الطبقات + رفعة 4px
+        - generic [ref=e101]: open-design
+      - article [ref=e102]:
+        - generic [ref=e103]: "06"
+        - heading "كوريوغرافيا الدخول" [level=3] [ref=e104]
+        - generic [ref=e105]:
+          - generic [ref=e106]: الحالي
+          - generic [ref=e107]: ظهور بسيط
+        - generic [ref=e108]:
+          - generic [ref=e109]: المطوّر
+          - generic [ref=e110]: تصاعد متدرّج للبطاقات (آمن للحركة)
+        - generic [ref=e111]: design-motion-principles · animate
+      - article [ref=e112]:
+        - generic [ref=e113]: "07"
+        - heading "شريط إجراءات زجاجي" [level=3] [ref=e114]
+        - generic [ref=e115]:
+          - generic [ref=e116]: الحالي
+          - generic [ref=e117]: أزرار منفصلة
+        - generic [ref=e118]:
+          - generic [ref=e119]: المطوّر
+          - generic [ref=e120]: مجموعة زجاج سائل واحدة
+        - generic [ref=e121]: creative-fx (liquid glass)
+      - article [ref=e122]:
+        - generic [ref=e123]: "08"
+        - heading "تبويب نشط بنقطة دلالة" [level=3] [ref=e124]
+        - generic [ref=e125]:
+          - generic [ref=e126]: الحالي
+          - generic [ref=e127]: رقاقة ممتلئة
+        - generic [ref=e128]:
+          - generic [ref=e129]: المطوّر
+          - generic [ref=e130]: رقاقة + نقطة قرمزية «أنت هنا»
+        - generic [ref=e131]: design-taste-frontend
+      - article [ref=e132]:
+        - generic [ref=e133]: "09"
+        - heading "حبيبات اللوحة" [level=3] [ref=e134]
+        - generic [ref=e135]:
+          - generic [ref=e136]: الحالي
+          - generic [ref=e137]: خفيفة 0.035
+        - generic [ref=e138]:
+          - generic [ref=e139]: المطوّر
+          - generic [ref=e140]: مكثّفة 0.05 (إحساس الورق)
+        - generic [ref=e141]: creative-fx (backgrounds.supply)
+    - paragraph [ref=e142]:
+      - text: كل قرار أعلاه مُطبّق فعلياً في النسخة المطوّرة، مُحدَّد النطاق تحت
+      - code [ref=e143]: .lvlup
+      - text: ، نظيف من فاحص impeccable (صفر ملاحظات)، ويحترم الوضع الليلي وتقليل الحركة و RTL.

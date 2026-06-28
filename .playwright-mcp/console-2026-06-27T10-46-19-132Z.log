@@ -1,0 +1,10 @@
+[      76ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js:29904
+[     175ms] [WARNING] You are using the in-browser Babel transformer. Be sure to precompile your scripts for production - https://babeljs.io/docs/setup/ @ https://unpkg.com/@babel/standalone@7.29.0/babel.min.js:2
+[ 1800097ms] [ERROR] Warning: Cannot update a component (`%s`) while rendering a different component (`%s`). To locate the bad setState() call inside `%s`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render%s UserMenu TipsTicker TipsTicker 
+    at TipsTicker (<anonymous>:717:3)
+    at section
+    at div
+    at main
+    at div
+    at App (<anonymous>:1321:27)
+    at ToastProvider (<anonymous>:18:3) @ https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js:72

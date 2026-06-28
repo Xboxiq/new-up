@@ -1,0 +1,313 @@
+/* ===========================================================================
+   newlevel/system.css — "Tayyar / التيّار" · The Bus-Bar composition
+   Concept: the operations home is a live electrical schematic. A copper bus-bar
+   runs down the page; sections tap off it; the active path carries current.
+   Depends on tokens.css. RTL-first, logical properties only. --nl-* namespace.
+   Skills wired: creative-fx (kinetic masthead, liquid glass, grain+mesh, tonal
+   gradient CTA), neuform horizontal domain accordion, Origin "lit window"
+   showcase, neuform telemetry readout. Anti-slop: no identical card grid, no
+   hero-metric template, no side-stripe, no gradient-text, no eyebrow spam.
+   =========================================================================== */
+
+/* ---- reset ---- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--nl-font); font-size: 1rem; line-height: 1.6;
+  color: var(--nl-ink); background: var(--nl-bg);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+  transition: background var(--nl-dur-enter) var(--nl-ease), color var(--nl-dur-enter) var(--nl-ease);
+}
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: none; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: none; box-shadow: var(--nl-ring); border-radius: var(--nl-r-sm); }
+
+/* ---- canvas: grain + faint domain mesh (creative-fx/backgrounds) ---- */
+.nl-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.nl-canvas::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(50% 38% at 88% -6%, color-mix(in srgb, var(--nl-copper) 6%, transparent), transparent 70%),
+    radial-gradient(44% 36% at 4% 104%, color-mix(in srgb, var(--nl-cs) 5%, transparent), transparent 70%);
+}
+.nl-canvas::after {
+  content: ""; position: absolute; inset: 0; opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="dark"] .nl-canvas::after { opacity: 0.06; }
+
+/* ---- type helpers ---- */
+.nl-display { font-size: clamp(2.1rem, 5vw, 3.3rem); font-weight: 700; line-height: 1.06; letter-spacing: -0.022em; text-wrap: balance; }
+.nl-h1 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.012em; text-wrap: balance; }
+.nl-h2 { font-size: 1.3rem; font-weight: 600; line-height: 1.25; }
+.nl-h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+.nl-muted { color: var(--nl-ink-2); }
+.nl-faint { color: var(--nl-ink-3); }
+.nl-mono { font-family: var(--nl-mono); font-feature-settings: "tnum","zero"; }
+.nl-code-label { font-family: var(--nl-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; color: var(--nl-ink-3); }
+
+/* ---- app shell ---- */
+.nl-app { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-direction: column; }
+.nl-shell { width: 100%; max-width: var(--nl-shell); margin-inline: auto; padding-inline: clamp(16px, 4vw, 36px); }
+
+/* ===========================================================================
+   TOP BAR — liquid glass chrome (creative-fx/liquid-glass)
+   =========================================================================== */
+.nl-topbar {
+  position: sticky; inset-block-start: 0; z-index: var(--nl-z-sticky); height: var(--nl-topbar);
+  background: var(--nl-glass);
+  -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);
+  border-block-end: 1px solid var(--nl-border);
+  box-shadow: inset 0 1px 0 var(--nl-glass-edge);
+}
+.nl-topbar-in { height: 100%; display: flex; align-items: center; gap: var(--nl-5); }
+.nl-brand { display: flex; align-items: center; gap: var(--nl-3); flex-shrink: 0; }
+.nl-mark {
+  inline-size: 32px; block-size: 32px; border-radius: var(--nl-r-md); display: grid; place-items: center;
+  color: var(--nl-on-accent); background-image: var(--nl-copper-grad);
+  box-shadow: 0 0 0 1px oklch(0.45 0.13 46 / 0.5), 0 4px 12px -4px oklch(0.55 0.14 45 / 0.5);
+}
+[data-theme="dark"] .nl-mark { box-shadow: 0 0 0 1px oklch(0.8 0.14 56 / 0.4), 0 0 20px -2px oklch(0.7 0.14 54 / 0.55); }
+.nl-brand-name { font-weight: 700; font-size: 1.0625rem; letter-spacing: -0.01em; }
+.nl-brand-tag { font-family: var(--nl-mono); font-size: 0.625rem; font-weight: 600; letter-spacing: 0.12em; color: var(--nl-ink-3); }
+
+.nl-tabs { display: flex; align-items: center; gap: var(--nl-1); margin-inline: auto; padding: 3px; background: var(--nl-surface-2); border: 1px solid var(--nl-border); border-radius: var(--nl-r-pill); }
+.nl-tab { position: relative; display: inline-flex; align-items: center; gap: var(--nl-2); padding: 7px 14px; border-radius: var(--nl-r-pill); color: var(--nl-ink-2); font-size: 0.875rem; font-weight: 500; white-space: nowrap; transition: color var(--nl-dur-micro) var(--nl-ease), background var(--nl-dur-micro) var(--nl-ease); }
+.nl-tab:hover { color: var(--nl-ink); }
+.nl-tab[aria-selected="true"] { background: var(--nl-surface); color: var(--nl-ink); box-shadow: var(--nl-shadow-hairline); }
+.nl-tab-dot { inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--nl-seg, var(--nl-ink-3)); }
+.nl-tab[aria-selected="true"]::after { content: ""; position: absolute; inset-inline: 12px; inset-block-end: -3px; block-size: 2px; border-radius: 2px; background: var(--nl-copper); }
+
+.nl-actions { display: flex; align-items: center; gap: var(--nl-2); flex-shrink: 0; }
+.nl-icon-btn { inline-size: 38px; block-size: 38px; border-radius: var(--nl-r-md); display: grid; place-items: center; color: var(--nl-ink-2); position: relative; transition: background var(--nl-dur-micro) var(--nl-ease), color var(--nl-dur-micro) var(--nl-ease); }
+.nl-icon-btn:hover { background: var(--nl-surface-3); color: var(--nl-ink); }
+.nl-icon-btn .nl-pip { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--nl-copper-bright); box-shadow: 0 0 0 2px var(--nl-surface); }
+.nl-monogram { inline-size: 38px; block-size: 38px; border-radius: var(--nl-r-pill); display: grid; place-items: center; background: var(--nl-surface-3); color: var(--nl-ink); font-weight: 600; font-size: 0.8125rem; border: 1px solid var(--nl-border); }
+.nl-search { display: flex; align-items: center; gap: var(--nl-2); background: var(--nl-surface-2); border: 1px solid var(--nl-border); border-radius: var(--nl-r-md); padding: 0 var(--nl-3); block-size: 38px; color: var(--nl-ink-3); inline-size: 210px; transition: border-color var(--nl-dur-micro) var(--nl-ease); }
+.nl-search:focus-within { border-color: var(--nl-copper-bright); }
+.nl-search input { border: none; background: none; outline: none; inline-size: 100%; font-size: 0.875rem; color: var(--nl-ink); }
+.nl-search input::placeholder { color: var(--nl-ink-3); }
+.nl-search kbd { font-family: var(--nl-mono); font-size: 0.6875rem; color: var(--nl-ink-3); border: 1px solid var(--nl-border); border-radius: 4px; padding: 1px 5px; }
+
+/* ===========================================================================
+   THE BUS-BAR — copper conductor spine + feeder taps
+   =========================================================================== */
+.nl-circuit { display: grid; grid-template-columns: 46px 1fr; padding-block: var(--nl-8) var(--nl-10); }
+.nl-bus { position: relative; }
+.nl-bus::before { /* dormant conductor */
+  content: ""; position: absolute; inset-block: 22px 0; inset-inline-start: 50%; transform: translateX(-50%);
+  inline-size: 2px; border-radius: 2px;
+  background: linear-gradient(var(--nl-border-2), var(--nl-border-2));
+}
+.nl-bus::after { /* energized current traveling down the spine */
+  content: ""; position: absolute; inset-block: 22px 0; inset-inline-start: 50%; transform: translateX(-50%);
+  inline-size: 2px; border-radius: 2px; overflow: hidden;
+  background: linear-gradient(180deg, transparent 0%, var(--nl-copper-bright) 12%, var(--nl-copper) 22%, transparent 40%);
+  background-size: 100% 280%; background-repeat: no-repeat;
+  animation: nl-bus-flow 6s linear infinite; opacity: 0.9;
+}
+@keyframes nl-bus-flow { 0% { background-position: 0 -60%; } 100% { background-position: 0 220%; } }
+
+.nl-stack { min-inline-size: 0; display: flex; flex-direction: column; gap: var(--nl-10); padding-inline-start: var(--nl-6); }
+.nl-seg { position: relative; }
+/* feeder tap: a short hairline from the bus into the section, ending in a node */
+.nl-seg::before { content: ""; position: absolute; inset-block-start: 11px; inset-inline-start: calc(-1 * var(--nl-6)); inline-size: var(--nl-6); block-size: 2px; background: var(--nl-border-2); border-radius: 2px; }
+.nl-seg::after { content: ""; position: absolute; inset-block-start: 7px; inset-inline-start: calc(-1 * var(--nl-6) - 4px); inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--nl-surface); border: 2px solid var(--nl-border-2); }
+.nl-seg.is-live::before { background: linear-gradient(to var(--nl-flow,left), var(--nl-copper), var(--nl-copper-bright)); }
+.nl-seg.is-live::after { border-color: var(--nl-copper); box-shadow: 0 0 0 3px color-mix(in srgb, var(--nl-copper) 22%, transparent); }
+.nl-seg-head { display: flex; align-items: center; justify-content: space-between; gap: var(--nl-4); margin-block-end: var(--nl-4); flex-wrap: wrap; }
+.nl-seg-title { display: flex; align-items: baseline; gap: var(--nl-3); }
+
+/* ===========================================================================
+   MASTHEAD — charged operational header (kinetic entrance)
+   =========================================================================== */
+.nl-mast { padding-block: var(--nl-4) 0; }
+.nl-mast .nl-display { max-inline-size: 18ch; }
+.nl-mast-sub { color: var(--nl-ink-2); margin-block-start: var(--nl-3); max-inline-size: 56ch; font-size: 1.05rem; }
+.nl-mast-row { display: flex; align-items: center; gap: var(--nl-5); margin-block-start: var(--nl-6); flex-wrap: wrap; }
+.nl-live-chip { display: inline-flex; align-items: center; gap: var(--nl-2); font-family: var(--nl-mono); font-size: 0.8125rem; font-weight: 600; color: var(--nl-copper-ink); padding: 6px 12px; border-radius: var(--nl-r-pill); background: var(--nl-copper-soft); }
+.nl-live-chip .dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--nl-copper); box-shadow: 0 0 0 0 var(--nl-copper); animation: nl-pulse 2.4s var(--nl-ease) infinite; }
+@keyframes nl-pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--nl-copper) 55%, transparent); } 50% { box-shadow: 0 0 0 6px transparent; } }
+
+/* kinetic word stagger */
+.nl-kin > span { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .nl-kin > span { opacity: 0; transform: translateY(0.5em); animation: nl-word var(--nl-dur-enter) var(--nl-ease-out) forwards; }
+  .nl-kin > span:nth-child(1){ animation-delay: 40ms; }
+  .nl-kin > span:nth-child(2){ animation-delay: 120ms; }
+  .nl-kin > span:nth-child(3){ animation-delay: 200ms; }
+  .nl-kin > span:nth-child(n+4){ animation-delay: 280ms; }
+}
+@keyframes nl-word { to { opacity: 1; transform: none; } }
+
+/* ---- buttons ---- */
+.nl-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--nl-2); min-block-size: var(--nl-touch); padding: 0 var(--nl-5); border-radius: var(--nl-r-md); font-weight: 600; font-size: 0.9375rem; white-space: nowrap; transition: transform var(--nl-dur-micro) var(--nl-ease), background-position var(--nl-dur-enter) var(--nl-ease), box-shadow var(--nl-dur-micro) var(--nl-ease), background var(--nl-dur-micro) var(--nl-ease); }
+.nl-btn:active { transform: translateY(1px); }
+.nl-btn--primary { color: var(--nl-on-accent); background-image: var(--nl-copper-grad); background-size: 160% 160%; background-position: 0% 50%; box-shadow: 0 1px 2px oklch(0.2 0.02 40 / 0.12), 0 8px 20px -10px oklch(0.53 0.14 45 / 0.55); }
+.nl-btn--primary:hover { background-position: 100% 50%; transform: translateY(-1px); box-shadow: 0 1px 2px oklch(0.2 0.02 40 / 0.16), 0 12px 28px -10px oklch(0.53 0.14 45 / 0.7); }
+.nl-btn--ghost { background: transparent; color: var(--nl-ink); border: 1px solid var(--nl-border-2); }
+.nl-btn--ghost:hover { background: var(--nl-surface-3); }
+.nl-btn--quiet { background: transparent; color: var(--nl-ink-2); min-block-size: 36px; padding-inline: var(--nl-3); }
+.nl-btn--quiet:hover { color: var(--nl-copper-ink); }
+.nl-btn--sm { min-block-size: 36px; font-size: 0.875rem; padding-inline: var(--nl-4); }
+
+/* ---- domain seg binding ---- */
+.seg-cs { --nl-seg: var(--nl-cs); --nl-seg-tint: var(--nl-cs-tint); }
+.seg-ct { --nl-seg: var(--nl-ct); --nl-seg-tint: var(--nl-ct-tint); }
+.seg-cb { --nl-seg: var(--nl-cb); --nl-seg-tint: var(--nl-cb-tint); }
+.seg-ca { --nl-seg: var(--nl-ca); --nl-seg-tint: var(--nl-ca-tint); }
+
+/* ===========================================================================
+   INSTRUMENT PANEL — KPIs reframed as a current-meter readout (not hero-metric)
+   =========================================================================== */
+.nl-meter { background: var(--nl-surface); border-radius: var(--nl-r-lg); box-shadow: var(--nl-shadow-hairline); padding: var(--nl-5) var(--nl-6); display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: var(--nl-6); align-items: stretch; }
+.nl-meter-cell { display: flex; flex-direction: column; gap: var(--nl-2); padding-inline-start: var(--nl-6); border-inline-start: 1px solid var(--nl-border); }
+.nl-meter-cell:first-child { padding-inline-start: 0; border-inline-start: none; }
+.nl-meter-label { font-family: var(--nl-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; color: var(--nl-ink-3); text-transform: uppercase; }
+.nl-meter-val { font-family: var(--nl-mono); font-feature-settings: "tnum","zero"; font-size: 1.9rem; font-weight: 500; line-height: 1; letter-spacing: -0.01em; display: flex; align-items: baseline; gap: 6px; }
+.nl-meter-val .u { font-size: 0.8125rem; color: var(--nl-ink-3); font-weight: 400; }
+.nl-meter-delta { display: inline-flex; align-items: center; gap: 3px; font-family: var(--nl-mono); font-size: 0.75rem; font-weight: 600; }
+.nl-meter-delta.up { color: var(--nl-ok); } .nl-meter-delta.warn { color: var(--nl-warn-ink); }
+/* the live load gauge — primary cell */
+.nl-gauge { margin-block-start: var(--nl-2); height: 8px; border-radius: var(--nl-r-pill); background: var(--nl-surface-3); overflow: hidden; position: relative; }
+.nl-gauge i { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: var(--nl-r-pill); background-image: var(--nl-copper-grad); }
+.nl-gauge i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.45), transparent); background-size: 40% 100%; background-repeat: no-repeat; animation: nl-sweep 3.2s var(--nl-ease) infinite; }
+@keyframes nl-sweep { 0% { background-position: -40% 0; } 100% { background-position: 140% 0; } }
+
+/* ===========================================================================
+   DOMAIN ACCORDION — horizontal (neuform). Active panel fills its hue + line
+   illustration; others collapse to vertical-label rails. One open at a time.
+   =========================================================================== */
+.nl-acc { display: flex; gap: var(--nl-3); min-block-size: 240px; }
+.nl-acc-panel {
+  position: relative; flex: 1 1 0; min-inline-size: 64px; overflow: hidden;
+  border-radius: var(--nl-r-lg); border: 1px solid var(--nl-border); background: var(--nl-surface);
+  cursor: pointer; text-align: start; color: var(--nl-ink);
+  transition: flex-grow var(--nl-dur-enter) var(--nl-ease), background var(--nl-dur-enter) var(--nl-ease), border-color var(--nl-dur-enter) var(--nl-ease), box-shadow var(--nl-dur-enter) var(--nl-ease);
+  display: flex;
+}
+.nl-acc-panel:hover { border-color: var(--nl-border-2); }
+.nl-acc-panel[aria-expanded="true"] {
+  flex: 7 1 0;
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--nl-seg-tint), transparent 70%),
+    var(--nl-surface);
+  border-color: color-mix(in srgb, var(--nl-seg) 40%, var(--nl-border));
+  box-shadow: var(--nl-shadow-lift);
+}
+/* collapsed rail: vertical label */
+.nl-acc-rail { display: flex; flex-direction: column; align-items: center; gap: var(--nl-3); padding: var(--nl-4) 0; inline-size: 100%; }
+.nl-acc-railname { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 600; font-size: 0.95rem; color: var(--nl-ink-2); white-space: nowrap; }
+.nl-acc-panel[aria-expanded="true"] .nl-acc-rail { display: none; }
+.nl-acc-tile { inline-size: 40px; block-size: 40px; border-radius: var(--nl-r-md); display: grid; place-items: center; color: var(--nl-seg); background: var(--nl-seg-tint); flex-shrink: 0; }
+.nl-acc-count { font-family: var(--nl-mono); font-feature-settings: "tnum"; font-size: 0.8125rem; font-weight: 600; color: var(--nl-seg); }
+/* expanded body */
+.nl-acc-body { display: none; flex-direction: column; padding: var(--nl-5) var(--nl-6); inline-size: 100%; min-inline-size: 0; }
+.nl-acc-panel[aria-expanded="true"] .nl-acc-body { display: flex; }
+.nl-acc-top { display: flex; align-items: center; justify-content: space-between; gap: var(--nl-4); }
+.nl-acc-code { font-family: var(--nl-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; color: var(--nl-seg); }
+.nl-acc-name { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.01em; margin-block-start: var(--nl-4); }
+.nl-acc-blurb { color: var(--nl-ink-2); margin-block-start: var(--nl-2); max-inline-size: 46ch; }
+.nl-acc-foot { margin-block-start: auto; padding-block-start: var(--nl-5); display: flex; align-items: center; justify-content: space-between; gap: var(--nl-4); }
+.nl-acc-stats { display: flex; gap: var(--nl-6); }
+.nl-acc-stat .k { font-family: var(--nl-mono); font-feature-settings: "tnum"; font-size: 1.25rem; font-weight: 500; }
+.nl-acc-stat .l { font-size: 0.75rem; color: var(--nl-ink-3); }
+/* line-illustration: a faint domain-hued conductor glyph in the corner */
+.nl-acc-art { position: absolute; inset-block-start: -20px; inset-inline-end: -20px; color: var(--nl-seg); opacity: 0.14; pointer-events: none; }
+.nl-acc-panel[aria-expanded="false"] .nl-acc-art { display: none; }
+.nl-acc-go { display: inline-flex; align-items: center; gap: var(--nl-2); font-weight: 600; color: var(--nl-seg); font-size: 0.9375rem; }
+.nl-acc-go .nl-chev { transition: transform var(--nl-dur-micro) var(--nl-ease); }
+.nl-acc-go:hover .nl-chev { transform: translateX(var(--nl-chev-dir, -3px)); }
+
+/* ===========================================================================
+   LIT-WINDOW SHOWCASE — the emergency/live queue (the one focal moment, Origin)
+   + integrated live work-stream
+   =========================================================================== */
+.nl-live-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: var(--nl-5); align-items: stretch; }
+.nl-window { position: relative; overflow: hidden; border-radius: var(--nl-r-lg); padding: var(--nl-6); color: var(--nl-ink);
+  background: radial-gradient(120% 100% at 0% 0%, var(--nl-ca-tint), transparent 72%), var(--nl-surface);
+  border: 1px solid color-mix(in srgb, var(--nl-ca) 36%, var(--nl-border)); box-shadow: var(--nl-shadow-lift); }
+.nl-window-head { display: flex; align-items: center; gap: var(--nl-3); }
+.nl-window-tile { inline-size: 42px; block-size: 42px; border-radius: var(--nl-r-md); display: grid; place-items: center; color: var(--nl-ca); background: color-mix(in srgb, var(--nl-ca) 16%, transparent); }
+.nl-window-code { font-family: var(--nl-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; color: var(--nl-ca); }
+.nl-window h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-block-start: var(--nl-5); }
+.nl-window p { color: var(--nl-ink-2); margin-block-start: var(--nl-2); }
+.nl-window-num { font-family: var(--nl-mono); font-feature-settings: "tnum"; font-size: 3rem; font-weight: 500; line-height: 1; color: var(--nl-ca); margin-block: var(--nl-5) 0; }
+.nl-window-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--nl-4); margin-block-start: var(--nl-5); }
+
+.nl-stream { display: flex; flex-direction: column; border-radius: var(--nl-r-lg); background: var(--nl-surface); box-shadow: var(--nl-shadow-hairline); overflow: hidden; }
+.nl-stream-head { display: flex; align-items: center; justify-content: space-between; padding: var(--nl-4) var(--nl-5); border-block-end: 1px solid var(--nl-border); }
+.nl-row { display: grid; grid-template-columns: auto auto 1fr auto auto; align-items: center; gap: var(--nl-4); padding: var(--nl-3) var(--nl-5); border-block-end: 1px solid var(--nl-border); position: relative; transition: background var(--nl-dur-micro) var(--nl-ease); }
+.nl-row:last-child { border-block-end: none; }
+.nl-row:hover { background: var(--nl-surface-3); }
+.nl-row .nl-ref { font-family: var(--nl-mono); font-feature-settings: "tnum","zero"; font-size: 0.8125rem; color: var(--nl-ink-2); }
+.nl-row .who { min-inline-size: 0; }
+.nl-row .who b { font-weight: 600; font-size: 0.9375rem; }
+.nl-row .who span { display: block; font-size: 0.8125rem; color: var(--nl-ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nl-row .nl-age { font-family: var(--nl-mono); font-size: 0.8125rem; color: var(--nl-ink-3); white-space: nowrap; }
+.nl-code { display: inline-flex; align-items: center; gap: 6px; font-family: var(--nl-mono); font-size: 0.75rem; font-weight: 600; color: var(--nl-ink-2); }
+.nl-code-dot { inline-size: 8px; block-size: 8px; border-radius: 2px; background: var(--nl-seg, var(--nl-ink-3)); }
+.nl-av { inline-size: 30px; block-size: 30px; border-radius: var(--nl-r-pill); display: grid; place-items: center; background: var(--nl-surface-3); border: 1px solid var(--nl-border); font-size: 0.6875rem; font-weight: 600; color: var(--nl-ink-2); }
+/* the live conductor rail on active/urgent rows */
+.nl-row.is-live::before { content: ""; position: absolute; inset-block: 6px; inset-inline-start: 0; inline-size: 2px; border-radius: 2px; background: linear-gradient(var(--nl-copper), var(--nl-copper-bright)); }
+.nl-row.is-live::after { content: ""; position: absolute; inset-block: 6px; inset-inline-start: 0; inline-size: 2px; border-radius: 2px; background: linear-gradient(180deg, transparent, oklch(0.85 0.16 60 / 0.95), transparent); background-size: 100% 40%; background-repeat: no-repeat; animation: nl-current 4.5s linear infinite; }
+@keyframes nl-current { 0% { background-position: 0 -40%; } 100% { background-position: 0 140%; } }
+
+/* ---- status badge ---- */
+.nl-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: var(--nl-r-pill); font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+.nl-badge::before { content: ""; inline-size: 6px; block-size: 6px; border-radius: 50%; background: currentColor; }
+.nl-badge--new  { color: var(--nl-copper-ink); background: var(--nl-copper-soft); }
+.nl-badge--prog { color: var(--nl-warn-ink); background: var(--nl-warn-tint); }
+.nl-badge--wait { color: var(--nl-ink-2); background: var(--nl-surface-3); }
+.nl-badge--late { color: var(--nl-err); background: var(--nl-err-tint); }
+.nl-badge--done { color: var(--nl-ok); background: var(--nl-ok-tint); }
+.nl-flag { font-family: var(--nl-mono); font-size: 0.625rem; font-weight: 600; letter-spacing: 0.06em; padding: 1px 6px; border-radius: var(--nl-r-sm); }
+.nl-flag--vip { color: var(--nl-copper-ink); background: var(--nl-copper-soft); }
+.nl-flag--urgent { color: var(--nl-err); background: var(--nl-err-tint); }
+
+.nl-chev { color: currentColor; flex-shrink: 0; transition: transform var(--nl-dur-micro) var(--nl-ease); }
+[dir="rtl"] .nl-chev { --nl-chev-dir: -3px; }
+[dir="rtl"] .nl-chev svg { transform: scaleX(-1); }
+
+/* ---- footer ---- */
+.nl-footer { margin-block-start: var(--nl-4); padding-block: var(--nl-6); border-block-start: 1px solid var(--nl-border); display: flex; align-items: center; justify-content: space-between; gap: var(--nl-4); color: var(--nl-ink-3); font-size: 0.8125rem; flex-wrap: wrap; }
+
+/* ===========================================================================
+   RESPONSIVE
+   =========================================================================== */
+@media (max-width: 1080px) {
+  .nl-meter { grid-template-columns: 1fr 1fr; row-gap: var(--nl-5); }
+  .nl-meter-cell:nth-child(3) { padding-inline-start: 0; border-inline-start: none; }
+}
+@media (max-width: 920px) {
+  .nl-tabs { display: none; }
+  .nl-live-grid { grid-template-columns: 1fr; }
+  .nl-acc { flex-direction: column; min-block-size: 0; }
+  .nl-acc-panel, .nl-acc-panel[aria-expanded="true"] { flex: none; }
+  .nl-acc-panel[aria-expanded="false"] .nl-acc-rail { flex-direction: row; justify-content: flex-start; padding: var(--nl-4); }
+  .nl-acc-railname { writing-mode: horizontal-tb; transform: none; }
+}
+@media (max-width: 720px) {
+  .nl-circuit { grid-template-columns: 1fr; }
+  .nl-bus { display: none; }
+  .nl-stack { padding-inline-start: 0; }
+  .nl-seg::before, .nl-seg::after { display: none; }
+  .nl-meter { grid-template-columns: 1fr; }
+  .nl-meter-cell { padding-inline-start: 0; border-inline-start: none; padding-block-start: var(--nl-4); border-block-start: 1px solid var(--nl-border); }
+  .nl-meter-cell:first-child { padding-block-start: 0; border-block-start: none; }
+  .nl-row { grid-template-columns: auto 1fr auto; }
+  .nl-row .nl-ref, .nl-row .nl-code { display: none; }
+}
+@media (max-width: 480px) {
+  .nl-search, .nl-brand-tag { display: none; }
+}
+
+/* ---- reduced motion guard (authoritative) ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  .nl-kin > span { opacity: 1 !important; transform: none !important; }
+}

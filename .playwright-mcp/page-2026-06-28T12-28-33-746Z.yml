@@ -1,0 +1,196 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e7]
+        - generic [ref=e9]:
+          - generic [ref=e10]: تدفّق الخير
+          - generic [ref=e11]: TAYYAR · OPS
+      - navigation "مجالات الخدمة" [ref=e12]:
+        - button "نظرة عامة" [ref=e13] [cursor=pointer]
+        - button "الاشتراكات" [ref=e14] [cursor=pointer]: الاشتراكات
+        - button "الفنية" [ref=e16] [cursor=pointer]: الفنية
+        - button "الفواتير" [ref=e18] [cursor=pointer]: الفواتير
+        - button "الشكاوى" [ref=e20] [cursor=pointer]: الشكاوى
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - img [ref=e24]
+          - searchbox "بحث" [ref=e26]
+          - generic [ref=e27]: /
+        - button "تبديل السمة" [ref=e28] [cursor=pointer]:
+          - img [ref=e29]
+        - button "التنبيهات" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+        - button "الحساب" [ref=e35] [cursor=pointer]: ك م
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - heading "نظرة عامة على العمليات" [level=1] [ref=e39]
+        - paragraph [ref=e40]: حركة طلبات المشتركين عبر المجالات الأربعة في الوقت الحالي. المسار النشط يحمل التيّار النحاسي.
+      - button "طلب خدمة جديد" [ref=e41] [cursor=pointer]:
+        - img [ref=e42]
+        - text: طلب خدمة جديد
+    - region "مؤشرات اليوم" [ref=e44]:
+      - article [ref=e45]:
+        - generic [ref=e46]:
+          - generic [ref=e47]: طلبات اليوم
+          - generic [ref=e48]:
+            - img [ref=e49]
+            - text: "12"
+        - generic [ref=e51]: "84"
+      - article [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: قيد المعالجة
+          - generic [ref=e55]: "213"
+        - generic [ref=e56]: "213"
+      - article [ref=e57]:
+        - generic [ref=e59]: المحصّل اليوم
+        - generic [ref=e60]: 4,810,000 د.ع
+      - article [ref=e61]:
+        - generic [ref=e62]:
+          - generic [ref=e63]: رضا المشتركين
+          - generic [ref=e64]:
+            - img [ref=e65]
+            - text: "2"
+        - generic [ref=e67]: 94%
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - heading "أحدث الطلبات" [level=2] [ref=e71]
+          - button "عرض الكل" [ref=e72] [cursor=pointer]:
+            - text: عرض الكل
+            - img [ref=e73]
+        - table [ref=e76]:
+          - rowgroup [ref=e77]:
+            - row "رقم الطلب المجال الخدمة المشترك الحالة الأجور المدة الموظف" [ref=e78]:
+              - columnheader "رقم الطلب" [ref=e79]
+              - columnheader "المجال" [ref=e80]
+              - columnheader "الخدمة" [ref=e81]
+              - columnheader "المشترك" [ref=e82]
+              - columnheader "الحالة" [ref=e83]
+              - columnheader "الأجور" [ref=e84]
+              - columnheader "المدة" [ref=e85]
+              - columnheader "الموظف" [ref=e86]
+          - rowgroup [ref=e87]:
+            - row "TQ-2026-08-1417 CS عمل اشتراك جديد عح علي عبدالله حسين فحص ميداني 135,000 2 س م. كرار" [ref=e88]:
+              - cell "TQ-2026-08-1417" [ref=e89]
+              - cell "CS" [ref=e90]:
+                - generic [ref=e91]: CS
+              - cell "عمل اشتراك جديد" [ref=e93]
+              - cell "عح علي عبدالله حسين" [ref=e94]:
+                - generic [ref=e95]:
+                  - generic [ref=e96]: عح
+                  - text: علي عبدالله حسين
+              - cell "فحص ميداني" [ref=e97]:
+                - generic [ref=e98]: فحص ميداني
+              - cell "135,000" [ref=e99]
+              - cell "2 س" [ref=e100]
+              - cell "م. كرار" [ref=e101]
+            - row "TQ-2026-08-1413 CT فحص مقياس / تبديل / صيانة هم هدى محمود إبراهيم بانتظار الدفع 25,000 4 س م. زينب" [ref=e102]:
+              - cell "TQ-2026-08-1413" [ref=e103]
+              - cell "CT" [ref=e104]:
+                - generic [ref=e105]: CT
+              - cell "فحص مقياس / تبديل / صيانة" [ref=e107]
+              - cell "هم هدى محمود إبراهيم" [ref=e108]:
+                - generic [ref=e109]:
+                  - generic [ref=e110]: هم
+                  - text: هدى محمود إبراهيم
+              - cell "بانتظار الدفع" [ref=e111]:
+                - generic [ref=e112]: بانتظار الدفع
+              - cell "25,000" [ref=e113]
+              - cell "4 س" [ref=e114]
+              - cell "م. زينب" [ref=e115]
+            - row "TQ-2026-08-1409 VIP CB تسوية مالية / تقسيط حج حسن جاسم العبيدي موافقة مدير — أمس م. أحمد" [ref=e116]:
+              - cell "TQ-2026-08-1409 VIP" [ref=e117]
+              - cell "CB" [ref=e118]:
+                - generic [ref=e119]: CB
+              - cell "تسوية مالية / تقسيط" [ref=e121]
+              - cell "حج حسن جاسم العبيدي" [ref=e122]:
+                - generic [ref=e123]:
+                  - generic [ref=e124]: حج
+                  - text: حسن جاسم العبيدي
+              - cell "موافقة مدير" [ref=e125]:
+                - generic [ref=e126]: موافقة مدير
+              - cell "—" [ref=e127]
+              - cell "أمس" [ref=e128]
+              - cell "م. أحمد" [ref=e129]
+            - row "TQ-2026-08-1407 عاجل CA إبلاغ عن حالة خطر سن سرى ناجي كاظم فريق طوارئ — أمس م. مصطفى" [ref=e130]:
+              - cell "TQ-2026-08-1407 عاجل" [ref=e131]
+              - cell "CA" [ref=e132]:
+                - generic [ref=e133]: CA
+              - cell "إبلاغ عن حالة خطر" [ref=e135]
+              - cell "سن سرى ناجي كاظم" [ref=e136]:
+                - generic [ref=e137]:
+                  - generic [ref=e138]: سن
+                  - text: سرى ناجي كاظم
+              - cell "فريق طوارئ" [ref=e139]:
+                - generic [ref=e140]: فريق طوارئ
+              - cell "—" [ref=e141]
+              - cell "أمس" [ref=e142]
+              - cell "م. مصطفى" [ref=e143]
+            - row "TQ-2026-08-1402 CS نقل ملكية اشتراك أع أحمد علي الجبوري تحقق قانوني — يومان م. كرار" [ref=e144]:
+              - cell "TQ-2026-08-1402" [ref=e145]
+              - cell "CS" [ref=e146]:
+                - generic [ref=e147]: CS
+              - cell "نقل ملكية اشتراك" [ref=e149]
+              - cell "أع أحمد علي الجبوري" [ref=e150]:
+                - generic [ref=e151]:
+                  - generic [ref=e152]: أع
+                  - text: أحمد علي الجبوري
+              - cell "تحقق قانوني" [ref=e153]:
+                - generic [ref=e154]: تحقق قانوني
+              - cell "—" [ref=e155]
+              - cell "يومان" [ref=e156]
+              - cell "م. كرار" [ref=e157]
+            - row "TQ-2026-08-1395 CT تغيير موقع المقياس مر مريم رياض الزبيدي قيد التنفيذ 35,000 3 أيام م. زينب" [ref=e158]:
+              - cell "TQ-2026-08-1395" [ref=e159]
+              - cell "CT" [ref=e160]:
+                - generic [ref=e161]: CT
+              - cell "تغيير موقع المقياس" [ref=e163]
+              - cell "مر مريم رياض الزبيدي" [ref=e164]:
+                - generic [ref=e165]:
+                  - generic [ref=e166]: مر
+                  - text: مريم رياض الزبيدي
+              - cell "قيد التنفيذ" [ref=e167]:
+                - generic [ref=e168]: قيد التنفيذ
+              - cell "35,000" [ref=e169]
+              - cell "3 أيام" [ref=e170]
+              - cell "م. زينب" [ref=e171]
+      - complementary [ref=e172]:
+        - generic [ref=e173]:
+          - heading "بدء سريع" [level=2] [ref=e175]
+          - generic [ref=e176]:
+            - button "الاشتراكات 12 مفتوح · ‏~3 ي معدل" [ref=e177] [cursor=pointer]:
+              - img [ref=e179]
+              - generic [ref=e181]: الاشتراكات 12 مفتوح · ‏~3 ي معدل
+              - img [ref=e182]
+            - button "الفنية 7 مفتوح · ‏~9 ي معدل" [ref=e184] [cursor=pointer]:
+              - img [ref=e186]
+              - generic [ref=e188]: الفنية 7 مفتوح · ‏~9 ي معدل
+              - img [ref=e189]
+            - button "الفواتير 9 مفتوح · ‏~2 ي معدل" [ref=e191] [cursor=pointer]:
+              - img [ref=e193]
+              - generic [ref=e195]: الفواتير 9 مفتوح · ‏~2 ي معدل
+              - img [ref=e196]
+            - button "الشكاوى والتقارير 6 مفتوح · ‏~4 ي معدل" [ref=e198] [cursor=pointer]:
+              - img [ref=e200]
+              - generic [ref=e202]: الشكاوى والتقارير 6 مفتوح · ‏~4 ي معدل
+              - img [ref=e203]
+    - region "آخر النشاط" [ref=e205]:
+      - heading "آخر النشاط" [level=2] [ref=e206]
+      - generic [ref=e207]:
+        - generic [ref=e208]:
+          - generic [ref=e210]: TQ-2026-08-1407 · أُحيل بلاغ الخطر إلى فريق الطوارئ
+          - generic [ref=e211]: 09:42
+        - generic [ref=e212]:
+          - generic [ref=e214]: TQ-2026-08-1390 · اكتمل دفع قائمة الأجور وصدر الإيصال
+          - generic [ref=e215]: 09:18
+        - generic [ref=e216]:
+          - generic [ref=e218]: TQ-2026-08-1417 · جُدوِل كشف ميداني لاشتراك جديد
+          - generic [ref=e219]: 08:55
+        - generic [ref=e220]:
+          - generic [ref=e222]: TQ-2026-08-1409 · بانتظار موافقة مدير الفرع على التقسيط
+          - generic [ref=e223]: أمس
+    - generic [ref=e224]:
+      - generic [ref=e225]: تدفّق الخير · منصة عمليات خدمات المشتركين
+      - generic [ref=e226]: Tayyār v1 · نظام تيّار · 2026

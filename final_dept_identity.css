@@ -1,0 +1,45 @@
+/* =============================================================
+   FINAL — Department colour identity (loaded last)
+   ONE focused, collision-checked change. The four section colours
+   (--d-c per panel) already exist but are mixed at 7–22% so they
+   read grey. This raises their presence so each department feels
+   like a distinct place — WITHOUT touching the existing pointer-glare
+   (.f-deck__panel::after, owned by final_micro.css) or the SigBadge.
+   Colour edge is drawn with an inset box-shadow, not a pseudo-element.
+   Skill basis: design-taste-frontend (distinctiveness) + refero (colour).
+   ============================================================= */
+
+/* colour edge along the top of each card — inset shadow avoids the
+   ::after glare element entirely. .f3d wins the cascade. */
+.f3d .f-deck__panel {
+  box-shadow:
+    inset 0 4px 0 0 var(--d-c),
+    var(--f-shadow-xs);
+  background: color-mix(in srgb, var(--d-c) 8%, var(--f-surface));
+}
+.f3d .f-deck__panel:not(.is-open):hover {
+  box-shadow:
+    inset 0 4px 0 0 var(--d-c),
+    var(--f-shadow-sm);
+  border-color: color-mix(in srgb, var(--d-c) 40%, var(--f-border));
+  background: color-mix(in srgb, var(--d-c) 13%, var(--f-surface));
+}
+.f3d .f-deck__panel.is-open {
+  box-shadow:
+    inset 0 4px 0 0 var(--d-c),
+    var(--f-shadow);
+  border-color: color-mix(in srgb, var(--d-c) 42%, var(--f-border));
+  background:
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--d-c) 16%, var(--f-surface)) 0%,
+      color-mix(in srgb, var(--d-c) 4%, var(--f-surface)) 62%);
+}
+
+/* the collapsed card's count now speaks its department colour */
+.f-deck__mini-count {
+  color: color-mix(in srgb, var(--d-c) 72%, var(--f-ink-2));
+  font-weight: 600;
+}
+
+/* a touch more confidence on the collapsed name */
+.f-deck__mini-name { font-size: 1.08rem; }

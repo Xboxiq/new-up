@@ -1,0 +1,51 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e7]:
+        - strong [ref=e8]: تدفّق الخير
+        - generic [ref=e9]: منصة كهرباء الرصافة
+    - generic [ref=e10]:
+      - heading "أهلاً بعودتك" [level=1] [ref=e11]
+      - paragraph [ref=e12]: سجّل دخولك للمتابعة إلى لوحة العمل
+    - generic [ref=e41]:
+      - generic [ref=e42]: key
+      - generic [ref=e43]:
+        - strong [ref=e44]: تشغيل أول مرة
+        - generic [ref=e45]:
+          - text: "اسم المستخدم:"
+          - code [ref=e46]: admin
+          - text: "· كلمة المرور:"
+          - code [ref=e47]: admin@2026
+          - text: سيُطلب منك تغييرها فور الدخول.
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: اسم المستخدم أو البريد
+        - generic [ref=e16]:
+          - generic [ref=e18]: person
+          - textbox "اسم المستخدم أو البريد person" [active] [ref=e19]:
+            - /placeholder: مثلاً admin
+      - generic [ref=e20]:
+        - generic [ref=e21]: كلمة المرور
+        - generic [ref=e22]:
+          - generic [ref=e24]: lock
+          - textbox "كلمة المرور lock إظهار كلمة المرور" [ref=e25]:
+            - /placeholder: ••••••••
+          - button "إظهار كلمة المرور" [ref=e26] [cursor=pointer]:
+            - generic [ref=e27]: visibility
+      - generic [ref=e28]:
+        - generic [ref=e29] [cursor=pointer]:
+          - generic [ref=e31]: check
+          - generic [ref=e32]: تذكّرني على هذا الجهاز
+        - button "نسيت كلمة المرور؟" [ref=e33] [cursor=pointer]
+      - alert [ref=e48]:
+        - generic [ref=e49]: error
+        - generic [ref=e50]: الرجاء إدخال اسم المستخدم وكلمة المرور
+      - button "تسجيل الدخول arrow_back" [ref=e34] [cursor=pointer]:
+        - generic [ref=e35]: تسجيل الدخول
+        - generic [ref=e36]: arrow_back
+    - contentinfo [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]: shield
+        - text: الاتصال مشفّر داخل الشبكة المحلية
+      - generic [ref=e40]: © 2026 شركة تدفّق الخير
+  - region "إشعارات"

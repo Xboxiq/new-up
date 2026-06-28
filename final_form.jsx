@@ -358,6 +358,8 @@ function FormPage({ nav, code }) {
   const [confirmReset, setConfirmReset] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [docFiles, setDocFiles] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [receipt, setReceipt] = useState(null);
 
   const initial = () => ({ docs: {}, cls:'منزلي', phase:'أحادي الطور' });
   const [form, setForm] = useState(() => {
@@ -399,7 +401,8 @@ function FormPage({ nav, code }) {
     return rules;
   };
 
-  const submit = () => {
+  const submit = async () => {
+    if (submitting) return;                       // double-submit guard
     const errs = window.validateForm(form, buildRules());
     setErrors(errs);
     setShowErrors(true);
@@ -416,12 +419,57 @@ function FormPage({ nav, code }) {
       }, 50);
       return;
     }
-    toast && toast.push({
-      kind: 'success',
-      title: 'تم تجهيز الطلب',
-      body: `${svc.code} — ${svc.name}. سيُحوَّل للدائرة المختصة.`,
-      action: { label: 'عرض الأصلية', onClick: () => setTab('orig') },
-    });
+
+    setSubmitting(true);
+    try {
+      const me = (window.Auth && window.Auth.currentUser) ? window.Auth.currentUser() : null;
+      const atts = allAttachments();
+      const rec = window.DB.requests.create({
+        no: window.DB.nextRequestNo(),
+        svc: svc.code,
+        svcName: svc.name,
+        section: svc.section,
+        subscriber: form.name || form.subscriber || '—',
+        subId: form.subId || null,
+        phone: form.phone || null,
+        form: { ...form },
+        attachments: atts.map(a => ({ name: a.name, type: a.type, size: a.size })),
+        attachmentsCount: atts.length,
+        fee: feeResult.total || 0,
+        status: 'استلام الطلب',
+        priority: svc.urgent ? 'urgent' : 'standard',
+        branchId: (me && me.branchId) || 'RS-014',
+        officer: me ? me.name : null,
+        createdBy: me ? me.id : null,
+      });
+      window.DB.log && window.DB.log('request.create', rec.no, { svc: svc.code, fee: rec.fee });
+      localStorage.removeItem(storageKey);        // clear the saved draft
+      setReceipt(rec);
+      window.scrollTo(0, 0);
+      toast && toast.push({
+        kind: 'success',
+        title: 'تم تقديم الطلب',
+        body: `رقم الطلب ${rec.no} — سيُحوَّل للدائرة المختصة.`,
+      });
+    } catch (e) {
+      console.error('request.create failed', e);
+      toast && toast.push({
+        kind: 'error',
+        title: 'تعذّر حفظ الطلب',
+        body: 'حدث خطأ غير متوقع أثناء الحفظ. لم يُفقد ما أدخلته — حاول مرة أخرى.',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const startNewRequest = () => {
+    setReceipt(null);
+    setForm(initial());
+    setErrors({});
+    setShowErrors(false);
+    setAttachments([]);
+    setDocFiles({});
   };
 
   const resetForm = () => {
@@ -467,6 +515,10 @@ function FormPage({ nav, code }) {
 
   const feeResult = computeFees(schema.fees, form);
   const total = useCountUp(feeResult.total || 0);
+
+  if (receipt) {
+    return <RequestReceipt rec={receipt} svc={svc} sec={sec} nav={nav} onNew={startNewRequest} />;
+  }
 
   return (
     <div className="fp-enter" style={{ display:'flex', flexDirection:'column', gap:16 }}>
@@ -630,8 +682,9 @@ function FormPage({ nav, code }) {
               </div>
             )}
             <div className="ff-feepanel__actions">
-              <button className="f-btn f-btn--primary" onClick={submit}>
-                <Icon name="send" /> تقديم الطلب
+              <button className="f-btn f-btn--primary" onClick={submit}
+                      disabled={submitting} aria-busy={submitting}>
+                <Icon name="send" /> {submitting ? 'جارٍ التقديم…' : 'تقديم الطلب'}
               </button>
               <button className="f-btn" onClick={() => setTab('orig')}>
                 <Icon name="description" /> النسخة الأصلية
@@ -807,6 +860,97 @@ function OriginalPaper({ svc, schema, form }) {
             </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// =============================================================
+// REQUEST RECEIPT — confirmation after a request is persisted
+// =============================================================
+function RequestReceipt({ rec, svc, sec, nav, onNew }) {
+  const toast = window.useToast ? window.useToast() : null;
+  const [copied, setCopied] = useState(false);
+
+  const copyNo = async () => {
+    try {
+      await navigator.clipboard.writeText(rec.no);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+      toast && toast.push({ kind: 'success', title: 'تم نسخ رقم الطلب' });
+    } catch (e) {
+      toast && toast.push({ kind: 'warn', title: 'تعذّر النسخ', body: rec.no });
+    }
+  };
+
+  const dateStr = new Date(rec.createdAt || Date.now())
+    .toLocaleString('ar-IQ-u-ca-gregory', { dateStyle: 'long', timeStyle: 'short' });
+
+  const rows = [
+    { ico: 'apps',        l: 'الخدمة',   v: `${rec.svc} — ${rec.svcName}` },
+    { ico: 'category',    l: 'القسم',    v: (sec && sec.name) || rec.section },
+    { ico: 'person',      l: 'المشترك',  v: rec.subscriber },
+    rec.phone && { ico: 'call', l: 'الهاتف', v: rec.phone, ltr: true },
+    rec.subId && { ico: 'tag', l: 'رقم الاشتراك', v: rec.subId, ltr: true },
+    { ico: 'request_quote', l: 'الأجور المتوقعة', v: rec.fee ? fmtIQD(rec.fee) : 'بدون أجور' },
+    { ico: 'attach_file', l: 'المرفقات', v: `${rec.attachmentsCount || 0} ملف` },
+  ].filter(Boolean);
+
+  return (
+    <div className="fp-enter rcpt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <button className="fp-back" onClick={() => nav('cases')}>
+        <Icon name="arrow_forward" /> متابعة الحالات
+      </button>
+
+      <div className="rcpt__sheet" role="status" aria-live="polite">
+        <span className="rcpt__seal" aria-hidden="true">
+          <Icon name="verified" size={46} />
+        </span>
+        <div className="rcpt__eyebrow">إيصال رسمي · RECEIPT</div>
+        <h2 className="rcpt__title">تم استلام طلبك رسميًا</h2>
+        <p className="rcpt__lede">
+          سُجّل الطلب وحُوِّل إلى الدائرة المختصة. احتفظ برقم الطلب لمتابعة مساره.
+        </p>
+
+        <button className="rcpt__no" onClick={copyNo} title="انسخ رقم الطلب">
+          <span dir="ltr">{rec.no}</span>
+          <Icon name={copied ? 'check' : 'content_copy'} size={18} />
+        </button>
+
+        <div className="rcpt__rows">
+          {rows.map((r, i) => (
+            <div key={i} className="rcpt__row">
+              <span className="rcpt__row-ic"><Icon name={r.ico} size={18} /></span>
+              <span className="rcpt__row-l">{r.l}</span>
+              <span className="rcpt__row-v" dir={r.ltr ? 'ltr' : 'auto'}>{r.v}</span>
+            </div>
+          ))}
+          <div className="rcpt__row">
+            <span className="rcpt__row-ic"><Icon name="timeline" size={18} /></span>
+            <span className="rcpt__row-l">الحالة</span>
+            <span className="rcpt__status">
+              <span className="rcpt__status-dot" />
+              {rec.status}
+            </span>
+          </div>
+          <div className="rcpt__row">
+            <span className="rcpt__row-ic"><Icon name="schedule" size={18} /></span>
+            <span className="rcpt__row-l">تاريخ التقديم</span>
+            <span className="rcpt__row-v" style={{ fontWeight: 500 }}>{dateStr}</span>
+          </div>
+        </div>
+
+        <div className="rcpt__actions">
+          <button className="f-btn f-btn--primary" onClick={() => nav('cases')}>
+            <Icon name="inventory_2" /> متابعة في الحالات
+          </button>
+          <button className="f-btn" onClick={onNew}>
+            <Icon name="add" /> تقديم طلب آخر
+          </button>
+          <button className="f-btn" onClick={() => nav('overview')}>
+            <Icon name="home" /> الرئيسية
+          </button>
+        </div>
       </div>
     </div>
   );

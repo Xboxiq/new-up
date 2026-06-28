@@ -1,0 +1,392 @@
+/* ============================================================
+   States — Rasafa Service Hub
+   ----------------------------------------------------
+   The "every-state" layer: loading skeletons, spinners,
+   progress, empty states, inline alerts, and toast feedback.
+   Pairs with the interaction states already living in
+   core.css (button busy, disabled) and forms.css (invalid,
+   readonly). RTL-first, token-driven, reduced-motion aware.
+   ============================================================ */
+
+/* ============================================================
+   1. SKELETON — content placeholders while data loads
+   ============================================================ */
+.rs-skeleton {
+  --rs-sk-base: color-mix(in srgb, var(--brand-navy) 8%, var(--surface-2));
+  --rs-sk-sheen: color-mix(in srgb, var(--surface) 70%, transparent);
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1em;
+  border-radius: var(--radius-sm);
+  background: var(--rs-sk-base);
+  overflow: hidden;
+  isolation: isolate;
+}
+.rs-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--rs-sk-sheen) 50%,
+    transparent 100%
+  );
+  animation: rs-sk-shimmer 1.4s var(--ease) infinite;
+}
+[dir="rtl"] .rs-skeleton::after { animation-name: rs-sk-shimmer-rtl; }
+
+@keyframes rs-sk-shimmer     { 100% { transform: translateX(100%);  } }
+@keyframes rs-sk-shimmer-rtl { 100% { transform: translateX(-100%); }
+                               0%   { transform: translateX(100%);  } }
+
+/* Shape variants */
+.rs-skeleton--text   { height: 0.72em; margin-block: 0.28em; }
+.rs-skeleton--title  { height: 1.4em;  width: 55%; border-radius: var(--radius-sm); }
+.rs-skeleton--line   { height: 0.72em; }
+.rs-skeleton--line.is-short { width: 70%; }
+.rs-skeleton--circle { width: 44px; height: 44px; border-radius: 50%; }
+.rs-skeleton--avatar { width: 56px; height: 56px; border-radius: var(--radius); }
+.rs-skeleton--btn    { height: 40px; width: 120px; border-radius: var(--radius-sm); }
+.rs-skeleton--chip   { height: 28px; width: 84px; border-radius: var(--radius-pill); }
+.rs-skeleton--thumb  { height: 160px; border-radius: var(--radius); }
+
+/* Pre-composed card skeleton */
+.rs-skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xs);
+}
+.rs-skeleton-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+.rs-skeleton-card__head .rs-skeleton { flex: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rs-skeleton::after { animation: none; }
+  .rs-skeleton {
+    animation: rs-sk-pulse 1.6s var(--ease-elegant) infinite;
+  }
+  @keyframes rs-sk-pulse { 50% { opacity: 0.55; } }
+}
+
+/* ============================================================
+   2. SPINNER — standalone async indicator
+   ============================================================ */
+.rs-spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid color-mix(in srgb, var(--brand-navy) 20%, transparent);
+  border-inline-start-color: var(--brand-red);
+  border-radius: 50%;
+  animation: rs-spin 0.7s linear infinite;
+  flex: none;
+}
+.rs-spinner--sm { width: 16px; height: 16px; border-width: 2px; }
+.rs-spinner--lg { width: 34px; height: 34px; border-width: 3px; }
+.rs-spinner--on-brand {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-inline-start-color: #fff;
+}
+@keyframes rs-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .rs-spinner { animation-duration: 1.4s; }
+}
+
+/* ============================================================
+   3. PROGRESS — determinate + indeterminate bar
+   ============================================================ */
+.rs-progress {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.rs-progress__bar {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--rs-progress, 0%);
+  border-radius: inherit;
+  background: var(--brand-line);
+  transition: width var(--duration-base) var(--ease-out);
+}
+.rs-progress--indeterminate .rs-progress__bar {
+  width: 40%;
+  animation: rs-progress-slide 1.2s var(--ease) infinite;
+}
+@keyframes rs-progress-slide {
+  0%   { inset-inline-start: -40%; }
+  100% { inset-inline-start: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rs-progress--indeterminate .rs-progress__bar {
+    animation: rs-progress-fade 1.4s ease-in-out infinite;
+    inset-inline-start: 0;
+    width: 100%;
+  }
+  @keyframes rs-progress-fade { 50% { opacity: 0.4; } }
+}
+
+/* ============================================================
+   4. LOADING OVERLAY — blocks a card/section while busy
+   Apply aria-busy="true" on the host; toggle .is-loading.
+   ============================================================ */
+.rs-loadhost { position: relative; }
+.rs-loadhost > .rs-loading {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  gap: var(--s3);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  z-index: 2;
+}
+.rs-loadhost[aria-busy="true"] > .rs-loading,
+.rs-loadhost.is-loading > .rs-loading { display: grid; }
+.rs-loading__label {
+  font-family: var(--font-cmd);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+/* ============================================================
+   5. EMPTY STATE — no data / no results
+   ============================================================ */
+.rs-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s3);
+  padding: var(--s10) var(--s6);
+  color: var(--text-soft);
+}
+.rs-empty__art {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--brand-grad-soft);
+  color: var(--brand-navy);
+  margin-block-end: var(--s2);
+}
+.rs-empty__art .rs-icon,
+.rs-empty__art .material-symbols-outlined { font-size: 40px; }
+.rs-empty__title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-extra);
+  font-size: var(--fs-lg);
+  color: var(--text);
+  letter-spacing: var(--tracking-snug);
+}
+.rs-empty__text {
+  max-width: 42ch;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+}
+.rs-empty__actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s2);
+  margin-block-start: var(--s2);
+}
+/* Tone variants reuse the empty art chip */
+.rs-empty--error   .rs-empty__art { background: color-mix(in srgb, var(--err)  14%, transparent); color: var(--err); }
+.rs-empty--search  .rs-empty__art { background: color-mix(in srgb, var(--info) 14%, transparent); color: var(--info); }
+.rs-empty--compact { padding: var(--s6) var(--s5); }
+.rs-empty--compact .rs-empty__art { width: 60px; height: 60px; }
+.rs-empty--compact .rs-empty__art .rs-icon,
+.rs-empty--compact .rs-empty__art .material-symbols-outlined { font-size: 30px; }
+
+/* ============================================================
+   6. ALERT — inline banner (success / warn / err / info)
+   Host should carry role="alert" (errors) or role="status".
+   ============================================================ */
+.rs-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  padding: var(--s4);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-xs);
+}
+.rs-alert__ico {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: var(--info);
+}
+.rs-alert__ico .material-symbols-outlined { font-size: 22px; }
+.rs-alert__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.rs-alert__title {
+  font-family: var(--font-cmd);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+.rs-alert__text {
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+  line-height: var(--lh-snug);
+}
+.rs-alert__close {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-elegant),
+              color var(--duration-fast) var(--ease-elegant);
+}
+.rs-alert__close:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
+.rs-alert__close:focus-visible { outline: none; box-shadow: var(--ring-navy); }
+
+.rs-alert--success { border-color: color-mix(in srgb, var(--ok)  35%, transparent); background: color-mix(in srgb, var(--ok)  8%, var(--surface)); }
+.rs-alert--success .rs-alert__ico   { color: var(--ok); }
+.rs-alert--warn    { border-color: color-mix(in srgb, var(--warn) 38%, transparent); background: color-mix(in srgb, var(--warn) 9%, var(--surface)); }
+.rs-alert--warn    .rs-alert__ico   { color: var(--warn); }
+.rs-alert--err     { border-color: color-mix(in srgb, var(--err)  38%, transparent); background: color-mix(in srgb, var(--err)  8%, var(--surface)); }
+.rs-alert--err     .rs-alert__ico   { color: var(--err); }
+.rs-alert--info    { border-color: color-mix(in srgb, var(--info) 35%, transparent); background: color-mix(in srgb, var(--info) 8%, var(--surface)); }
+.rs-alert--info    .rs-alert__ico   { color: var(--info); }
+
+/* Accent rim on the inline-start edge */
+.rs-alert--rim { position: relative; overflow: hidden; padding-inline-start: calc(var(--s4) + 4px); }
+.rs-alert--rim::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 4px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.rs-alert--success.rs-alert--rim::before { background: var(--ok); }
+.rs-alert--warn.rs-alert--rim::before    { background: var(--warn); }
+.rs-alert--err.rs-alert--rim::before     { background: var(--err); }
+.rs-alert--info.rs-alert--rim::before    { background: var(--info); }
+
+/* ============================================================
+   7. TOAST — transient feedback on key actions
+   Stack carries aria-live="polite" (or assertive for errors).
+   ============================================================ */
+.rs-toast-stack {
+  position: fixed;
+  inset-block-end: calc(var(--cmd-dock-h) + var(--s5));
+  inset-inline-end: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  width: min(380px, calc(100vw - var(--s8)));
+  z-index: 1000;
+  pointer-events: none;
+}
+.rs-toast-stack--top { inset-block: var(--s5) auto; }
+.rs-toast-stack--start { inset-inline: var(--s5) auto; }
+
+.rs-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  padding: var(--s4);
+  border-radius: var(--radius);
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-edge);
+  color: var(--text);
+  animation: rs-toast-in var(--duration-slow) var(--ease-spring) both;
+}
+.rs-toast.is-leaving { animation: rs-toast-out var(--duration-base) var(--ease) forwards; }
+
+.rs-toast__ico {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px; height: 24px;
+  color: var(--info);
+}
+.rs-toast__ico .material-symbols-outlined { font-size: 22px; }
+.rs-toast__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rs-toast__title { font-family: var(--font-cmd); font-weight: var(--fw-bold); font-size: var(--fs-sm); }
+.rs-toast__text  { font-size: var(--fs-xs); color: var(--text-soft); line-height: var(--lh-snug); }
+.rs-toast__close {
+  display: inline-grid; place-items: center; flex: none;
+  width: 26px; height: 26px;
+  border: 0; border-radius: 7px;
+  background: transparent; color: var(--text-soft); cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-elegant);
+}
+.rs-toast__close:hover { background: color-mix(in srgb, var(--text) 8%, transparent); }
+.rs-toast__close:focus-visible { outline: none; box-shadow: var(--ring-navy); }
+
+/* Auto-dismiss progress sliver */
+.rs-toast__timer {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  height: 3px;
+  border-end-start-radius: var(--radius);
+  border-end-end-radius: var(--radius);
+  background: currentColor;
+  opacity: 0.5;
+  transform-origin: inline-end;
+  animation: rs-toast-timer var(--rs-toast-duration, 4000ms) linear forwards;
+}
+.rs-toast { position: relative; overflow: hidden; }
+
+.rs-toast--success .rs-toast__ico,
+.rs-toast--success .rs-toast__timer { color: var(--ok); }
+.rs-toast--warn    .rs-toast__ico,
+.rs-toast--warn    .rs-toast__timer { color: var(--warn); }
+.rs-toast--err     .rs-toast__ico,
+.rs-toast--err     .rs-toast__timer { color: var(--err); }
+.rs-toast--info    .rs-toast__ico,
+.rs-toast--info    .rs-toast__timer { color: var(--info); }
+
+@keyframes rs-toast-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes rs-toast-out {
+  to { opacity: 0; transform: translateY(8px) scale(0.97); }
+}
+@keyframes rs-toast-timer { to { transform: scaleX(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .rs-toast { animation: rs-toast-fade var(--duration-base) ease both; }
+  .rs-toast.is-leaving { animation: rs-toast-out var(--duration-fast) ease forwards; }
+  .rs-toast__timer { animation: none; }
+  @keyframes rs-toast-fade { from { opacity: 0; } to { opacity: 1; } }
+}

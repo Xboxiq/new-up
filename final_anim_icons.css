@@ -1,0 +1,166 @@
+/* =============================================================
+   FINAL — Animated icons (itshover-style, native · loaded last)
+   Motion-on-hover for the icons ALREADY used across the app
+   (Material Symbols via window.Icon, now carrying data-ico="name").
+   No libraries, no build — pure CSS keyframes on the --f-* tokens.
+   Each icon animates when its interactive ancestor is hovered.
+   Fully disabled under prefers-reduced-motion.
+   Original keyframes — not copied from any third-party library.
+   ============================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* base: every icon eases its transform, anchored at its centre */
+  [data-ico] {
+    transition: transform var(--f-dur-micro) var(--f-ease-standard);
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  /* ---- DEFAULT: a confident lift on any interactive hover ---- */
+  :is(button, a, label, [role="button"],
+      .f-tab, .f-btn, .f-iconbtn, .f-quick, .qik, .f-exp,
+      .fs-card, .fg-card, .fc-row__head, .f-feed__row, .f-deck__panel,
+      .hub-stack, .adm-side__btn, .f-umenu__item, .lg-submit,
+      .f-deck__cta, .f-spot__cta):hover [data-ico] {
+    transform: scale(1.14);
+  }
+
+  /* ===== per-icon signature motions ============================ */
+
+  /* spin — refresh / sync / restart / loops */
+  :is(button,a,.f-btn,.f-iconbtn,.f-tab,.f-deck__cta):hover [data-ico="refresh"],
+  :is(button,a,.f-btn,.f-iconbtn,.f-tab,.f-deck__cta):hover [data-ico="sync"],
+  :is(button,a,.f-btn,.f-iconbtn,.f-tab,.f-deck__cta):hover [data-ico="restart_alt"],
+  :is(button,a,.f-btn,.f-iconbtn,.f-tab,.f-deck__cta):hover [data-ico="autorenew"],
+  [data-ico="refresh"]:hover, [data-ico="sync"]:hover {
+    animation: ai-spin 600ms var(--f-ease-standard);
+  }
+
+  /* slow gear spin — settings / tune */
+  :is(button,a,.f-btn,.f-iconbtn,.f-umenu__item):hover [data-ico="settings"],
+  :is(button,a,.f-btn,.f-iconbtn):hover [data-ico="tune"] {
+    animation: ai-spin 900ms var(--f-ease-standard);
+  }
+
+  /* send / arrows — fly along the inline axis (RTL-aware nudge) */
+  :is(button,a,.f-btn,.lg-submit,.f-deck__cta,.f-spot__cta):hover [data-ico="send"] {
+    transform: translate(-4px, -4px) rotate(-8deg);
+  }
+  :is(button,a,.f-btn,.f-tab,.f-deck__cta):hover [data-ico="arrow_back"] {
+    transform: translateX(-4px);
+  }
+  :is(button,a,.f-btn,.f-tab):hover [data-ico="arrow_forward"] {
+    transform: translateX(4px);
+  }
+  :is(button,a,.f-btn):hover [data-ico="open_in_new"],
+  :is(button,a,.f-btn):hover [data-ico="north_east"] {
+    transform: translate(3px, -3px);
+  }
+
+  /* search — eager nudge + zoom */
+  :is(button,a,.f-btn,.f-iconbtn,label):hover [data-ico="search"] {
+    transform: scale(1.16) rotate(-12deg);
+  }
+
+  /* add — quarter-turn bloom */
+  :is(button,a,.f-btn,.f-deck__cta,.adm-roles__add):hover [data-ico="add"],
+  :is(button,a,.f-btn):hover [data-ico="add_home"],
+  :is(button,a,.f-btn):hover [data-ico="person_add"],
+  :is(button,a,.f-btn):hover [data-ico="add_circle"] {
+    transform: rotate(90deg) scale(1.1);
+  }
+
+  /* close — quarter-turn */
+  :is(button,a,.f-iconbtn,.lg-modal__close,.adm-modal__close):hover [data-ico="close"] {
+    transform: rotate(90deg);
+  }
+
+  /* edit — playful tilt */
+  :is(button,a,.f-btn,.fc-row__head,.adm-iconbtn):hover [data-ico="edit"],
+  :is(button,a,.f-btn):hover [data-ico="edit_document"],
+  :is(button,a,.f-btn):hover [data-ico="edit_location"] {
+    transform: rotate(-14deg) translateY(-1px);
+  }
+
+  /* bell / announcements — swing */
+  :is(button,a,.f-iconbtn,.f-feed__row,.f-ticker):hover [data-ico="notifications"],
+  :is(button,a,.f-iconbtn):hover [data-ico="campaign"],
+  :is(button,a,.f-iconbtn):hover [data-ico="warning"],
+  [data-ico="notifications"]:hover {
+    transform-origin: top center;
+    animation: ai-swing 700ms var(--f-ease-standard);
+  }
+
+  /* download / upload — slide on the block axis */
+  :is(button,a,.f-btn):hover [data-ico="download"],
+  :is(button,a,.f-btn):hover [data-ico="file_download"],
+  :is(button,a,.f-btn):hover [data-ico="picture_as_pdf"] {
+    transform: translateY(3px);
+  }
+  :is(button,a,.f-btn):hover [data-ico="upload_file"],
+  :is(button,a,.f-btn):hover [data-ico="cloud_upload"],
+  :is(button,a,.f-btn):hover [data-ico="ios_share"] {
+    transform: translateY(-3px);
+  }
+
+  /* attach — paperclip rotate */
+  :is(button,a,.f-btn):hover [data-ico="attach_file"] {
+    transform: rotate(-30deg);
+  }
+
+  /* check — confident pop */
+  :is(button,a,.f-btn,label,.f-deck__cta):hover [data-ico="check"],
+  :is(button,a,.f-btn):hover [data-ico="check_circle"],
+  :is(button,a,.f-btn):hover [data-ico="task_alt"] {
+    animation: ai-pop 360ms var(--f-ease-entrance);
+  }
+
+  /* delete — wary shake */
+  :is(button,a,.f-btn,.adm-iconbtn):hover [data-ico="delete"],
+  :is(button,a,.f-btn):hover [data-ico="delete_outline"] {
+    animation: ai-shake 420ms var(--f-ease-standard);
+  }
+
+  /* bolt — electric flicker (on brand) */
+  :is(button,a,.f-btn,.f-card,.fs-card):hover [data-ico="bolt"],
+  :is(button,a,.f-btn):hover [data-ico="electrical_services"] {
+    animation: ai-flicker 520ms var(--f-ease-standard);
+  }
+
+  /* hub / domain — pulse */
+  :is(button,a,.f-btn,.f-deck__panel):hover [data-ico="hub"],
+  :is(button,a,.f-btn):hover [data-ico="domain"] {
+    transform: scale(1.18);
+  }
+
+  /* payments / money — gentle bob */
+  :is(button,a,.f-btn,.fs-card,.f-deck__panel):hover [data-ico="payments"],
+  :is(button,a,.f-btn):hover [data-ico="request_quote"],
+  :is(button,a,.f-btn):hover [data-ico="account_balance_wallet"] {
+    animation: ai-bob 480ms var(--f-ease-standard);
+  }
+
+  /* visibility — quick zoom */
+  :is(button,a,.f-field__action,.lg-field__action):hover [data-ico="visibility"],
+  :is(button,a):hover [data-ico="visibility_off"] {
+    transform: scale(1.18);
+  }
+
+  /* folder — lid lift */
+  :is(button,a,.f-btn,.fs-card):hover [data-ico="folder_open"],
+  :is(button,a,.f-btn):hover [data-ico="folder"] {
+    transform: translateY(-2px) scale(1.08);
+  }
+}
+
+/* ===== keyframes (transform/opacity only) ===================== */
+@keyframes ai-spin   { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+@keyframes ai-pop    { 0%{transform:scale(.7)} 55%{transform:scale(1.2)} 100%{transform:scale(1.14)} }
+@keyframes ai-bob    { 0%,100%{transform:translateY(0)} 45%{transform:translateY(-4px)} }
+@keyframes ai-flicker{ 0%,100%{opacity:1;transform:scale(1.14)} 20%{opacity:.55} 40%{opacity:1} 60%{opacity:.7} }
+@keyframes ai-shake  { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-9deg)} 50%{transform:rotate(7deg)} 75%{transform:rotate(-4deg)} }
+@keyframes ai-swing  {
+  0%{transform:rotate(0)} 20%{transform:rotate(13deg)} 40%{transform:rotate(-10deg)}
+  60%{transform:rotate(7deg)} 80%{transform:rotate(-4deg)} 100%{transform:rotate(0)}
+}

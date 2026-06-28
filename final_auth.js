@@ -24,25 +24,40 @@
   const listeners = new Set();
 
   // ----- session read/write -----
+  // "Remember me" → persistent localStorage. Unchecked → sessionStorage
+  // (cleared when the browser/tab closes). Reads check both.
   function readSession() {
-    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
-    catch { return null; }
+    try {
+      const raw = localStorage.getItem(SESSION_KEY)
+                || sessionStorage.getItem(SESSION_KEY) || 'null';
+      return JSON.parse(raw);
+    } catch { return null; }
   }
-  function writeSession(s) {
+  function activeStore() {
+    try { if (sessionStorage.getItem(SESSION_KEY)) return sessionStorage; } catch (e) {}
+    return localStorage;
+  }
+  function writeSession(s, persist) {
     if (s == null) {
-      localStorage.removeItem(SESSION_KEY);
-      localStorage.removeItem(ACTIVITY_KEY);
+      [localStorage, sessionStorage].forEach((st) => {
+        try { st.removeItem(SESSION_KEY); st.removeItem(ACTIVITY_KEY); } catch (e) {}
+      });
     } else {
-      localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+      const keep  = persist !== false;            // default: remember
+      const store = keep ? localStorage : sessionStorage;
+      const other = keep ? sessionStorage : localStorage;
+      try { other.removeItem(SESSION_KEY); other.removeItem(ACTIVITY_KEY); } catch (e) {}
+      store.setItem(SESSION_KEY, JSON.stringify(s));
       bumpActivity();
     }
     listeners.forEach((fn) => { try { fn(); } catch (e) {} });
   }
   function bumpActivity() {
-    localStorage.setItem(ACTIVITY_KEY, String(Date.now()));
+    try { activeStore().setItem(ACTIVITY_KEY, String(Date.now())); } catch (e) {}
   }
   function lastActivity() {
-    const v = Number(localStorage.getItem(ACTIVITY_KEY) || '0');
+    const v = Number((localStorage.getItem(ACTIVITY_KEY)
+                    || sessionStorage.getItem(ACTIVITY_KEY)) || '0');
     return v || 0;
   }
 
@@ -159,7 +174,7 @@
     // Track in sessions table (for "view active sessions" + force-logout)
     try { window.DB.sessions.create({ ...session, revoked: false }); } catch (e) {}
 
-    writeSession(session);
+    writeSession(session, opts.remember !== false);
     window.DB.log('auth.login.success', u.username, { sessionId: session.id });
     return { ok: true, user: u, mustChangePassword: !!u.mustChangePassword };
   }

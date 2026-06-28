@@ -324,7 +324,7 @@
   overflow: auto;
   padding: 22px;
   box-shadow: var(--f-shadow-md);
-  animation: admSlide 220ms var(--f-spring);
+  animation: admSlide 220ms var(--f-ease-entrance);
   font-family: var(--f-arab);
 }
 @keyframes admSlide {
@@ -588,7 +588,7 @@
   font-family: var(--f-arab);
   font-size: 0.9rem;
   color: var(--f-ink);
-  animation: adm-bulk-in 200ms var(--f-spring);
+  animation: adm-bulk-in 200ms var(--f-ease-entrance);
 }
 @keyframes adm-bulk-in { from { transform: translateY(-4px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 .adm-bulk b { color: var(--f-navy); font-weight: 700; }
@@ -661,7 +661,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: var(--f-shadow-md);
-  animation: adm-slide 280ms var(--f-spring);
+  animation: adm-slide 280ms var(--f-ease-entrance);
   overflow: hidden;
 }
 @keyframes adm-slide {
@@ -822,14 +822,14 @@ html[dir="ltr"] .adm-drawer__sheet,
 .adm-permcat { margin-bottom: 18px; }
 .adm-permcat__lbl {
   font-family: var(--f-disp);
-  font-size: 0.92rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: var(--f-ink);
+  text-transform: uppercase;
+  letter-spacing: var(--f-track-caps, 0.08em);
+  color: var(--f-ink-2);
   margin: 0 0 8px;
-  padding-inline-start: 8px;
-  border-inline-start: 3px solid var(--f-navy);
 }
-.f-body.dark .adm-permcat__lbl { border-inline-start-color: var(--f-cs); }
+.f-body.dark .adm-permcat__lbl { color: var(--f-ink-2); }
 .adm-permcat__list {
   display: flex; flex-wrap: wrap; gap: 6px;
 }

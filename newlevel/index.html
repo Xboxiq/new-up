@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تدفّق الخير · منصة العمليات — Tayyār</title>
+  <meta name="description" content="منصة عمليات خدمات المشتركين لتوزيع الكهرباء — نظام تيّار" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="system.css" />
+</head>
+<body>
+  <!-- icon sprite (monoline, currentColor, 1.6px) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5Z"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+      <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-apartment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16"/><path d="M15 9h4a1 1 0 0 1 1 1v11"/><path d="M8 8h0M11 8h0M8 12h0M11 12h0M8 16h0M11 16h0"/><path d="M2 21h20"/></symbol>
+      <symbol id="i-elec" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v6M17 3v6M5 9h14l-1 5a6 6 0 0 1-12 0L5 9Z"/><path d="M12 19v3"/></symbol>
+      <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2.5-1.5L10 21l2-1.5L14 21l2.5-1.5L19 21V3l-2.5 1.5L14 3l-2 1.5L10 3 7.5 4.5 5 3Z"/><path d="M9 8h6M9 12h6"/></symbol>
+      <symbol id="i-report" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3Z"/><path d="M12 10v4M12 17h0"/></symbol>
+      <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 5-5 4 3 6-7"/><path d="M18 7h3v3"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="nl-app">
+    <!-- ── top bar ── -->
+    <header class="nl-topbar">
+      <div class="nl-shell nl-topbar-in">
+        <div class="nl-brand">
+          <span class="nl-mark"><svg width="17" height="17"><use href="#i-bolt"/></svg></span>
+          <div>
+            <div class="nl-brand-name">تدفّق الخير</div>
+            <div class="nl-brand-tag">TAYYAR · OPS</div>
+          </div>
+        </div>
+
+        <nav class="nl-tabs" aria-label="مجالات الخدمة">
+          <button class="nl-tab" aria-selected="true">نظرة عامة</button>
+          <button class="nl-tab seg-cs"><span class="nl-tab-dot"></span>الاشتراكات</button>
+          <button class="nl-tab seg-ct"><span class="nl-tab-dot"></span>الفنية</button>
+          <button class="nl-tab seg-cb"><span class="nl-tab-dot"></span>الفواتير</button>
+          <button class="nl-tab seg-ca"><span class="nl-tab-dot"></span>الشكاوى</button>
+        </nav>
+
+        <div class="nl-actions">
+          <label class="nl-search">
+            <svg width="16" height="16" aria-hidden="true"><use href="#i-search"/></svg>
+            <input type="search" placeholder="بحث برقم الطلب أو المشترك" aria-label="بحث" />
+            <kbd>/</kbd>
+          </label>
+          <button class="nl-icon-btn" id="themeToggle" aria-label="تبديل السمة">
+            <svg width="19" height="19" class="ic-sun" aria-hidden="true"><use href="#i-moon"/></svg>
+          </button>
+          <button class="nl-icon-btn" aria-label="التنبيهات">
+            <svg width="19" height="19" aria-hidden="true"><use href="#i-bell"/></svg>
+            <span class="nl-pip"></span>
+          </button>
+          <button class="nl-monogram" aria-label="الحساب">ك م</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="nl-shell" style="flex:1">
+      <!-- ── page head (Tier 1) ── -->
+      <div class="nl-page-head">
+        <div>
+          <h1 class="nl-h1">نظرة عامة على العمليات</h1>
+          <p class="nl-sub">حركة طلبات المشتركين عبر المجالات الأربعة في الوقت الحالي. المسار النشط يحمل التيّار النحاسي.</p>
+        </div>
+        <button class="nl-btn nl-btn--primary">
+          <svg width="18" height="18" aria-hidden="true"><use href="#i-plus"/></svg>
+          طلب خدمة جديد
+        </button>
+      </div>
+
+      <!-- ── KPI strip (Tier 2) ── -->
+      <section class="nl-kpis" aria-label="مؤشرات اليوم">
+        <article class="nl-kpi nl-rise">
+          <div class="nl-kpi-top">
+            <span class="nl-kpi-label">طلبات اليوم</span>
+            <span class="nl-delta nl-delta--up"><svg width="12" height="12" aria-hidden="true"><use href="#i-trend"/></svg> 12</span>
+          </div>
+          <div class="nl-kpi-num">84</div>
+        </article>
+        <article class="nl-kpi nl-rise">
+          <div class="nl-kpi-top">
+            <span class="nl-kpi-label">قيد المعالجة</span>
+            <span class="nl-delta nl-delta--warn">213</span>
+          </div>
+          <div class="nl-kpi-num">213</div>
+        </article>
+        <article class="nl-kpi nl-rise">
+          <div class="nl-kpi-top"><span class="nl-kpi-label">المحصّل اليوم</span></div>
+          <div class="nl-kpi-num">4,810,000 <span class="nl-kpi-unit">د.ع</span></div>
+        </article>
+        <article class="nl-kpi nl-rise">
+          <div class="nl-kpi-top">
+            <span class="nl-kpi-label">رضا المشتركين</span>
+            <span class="nl-delta nl-delta--up"><svg width="12" height="12" aria-hidden="true"><use href="#i-trend"/></svg> 2</span>
+          </div>
+          <div class="nl-kpi-num">94<span class="nl-kpi-unit">%</span></div>
+        </article>
+      </section>
+
+      <!-- ── work area (Tier 2) ── -->
+      <div class="nl-work">
+        <!-- work table -->
+        <section class="nl-panel">
+          <div class="nl-panel-head">
+            <h2 class="nl-h3">أحدث الطلبات</h2>
+            <button class="nl-btn nl-btn--quiet">عرض الكل
+              <svg width="16" height="16" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
+            </button>
+          </div>
+          <div class="nl-table-wrap">
+            <table class="nl-table">
+              <thead>
+                <tr>
+                  <th>رقم الطلب</th><th>المجال</th><th>الخدمة</th><th>المشترك</th>
+                  <th>الحالة</th><th>الأجور</th><th>المدة</th><th>الموظف</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="is-live">
+                  <td><span class="nl-ref">TQ-2026-08-1417</span></td>
+                  <td class="seg-cs"><span class="nl-code"><span class="nl-code-dot"></span>CS</span></td>
+                  <td>عمل اشتراك جديد</td>
+                  <td><span class="nl-person"><span class="nl-av">عح</span>علي عبدالله حسين</span></td>
+                  <td><span class="nl-badge nl-badge--prog">فحص ميداني</span></td>
+                  <td class="nl-fee">135,000</td>
+                  <td class="nl-age">2 س</td>
+                  <td>م. كرار</td>
+                </tr>
+                <tr>
+                  <td><span class="nl-ref">TQ-2026-08-1413</span></td>
+                  <td class="seg-ct"><span class="nl-code"><span class="nl-code-dot"></span>CT</span></td>
+                  <td>فحص مقياس / تبديل / صيانة</td>
+                  <td><span class="nl-person"><span class="nl-av">هم</span>هدى محمود إبراهيم</span></td>
+                  <td><span class="nl-badge nl-badge--wait">بانتظار الدفع</span></td>
+                  <td class="nl-fee">25,000</td>
+                  <td class="nl-age">4 س</td>
+                  <td>م. زينب</td>
+                </tr>
+                <tr>
+                  <td><span class="nl-ref">TQ-2026-08-1409</span> <span class="nl-flag nl-flag--vip">VIP</span></td>
+                  <td class="seg-cb"><span class="nl-code"><span class="nl-code-dot"></span>CB</span></td>
+                  <td>تسوية مالية / تقسيط</td>
+                  <td><span class="nl-person"><span class="nl-av">حج</span>حسن جاسم العبيدي</span></td>
+                  <td><span class="nl-badge nl-badge--wait">موافقة مدير</span></td>
+                  <td class="nl-fee nl-faint">—</td>
+                  <td class="nl-age">أمس</td>
+                  <td>م. أحمد</td>
+                </tr>
+                <tr class="is-live">
+                  <td><span class="nl-ref">TQ-2026-08-1407</span> <span class="nl-flag nl-flag--urgent">عاجل</span></td>
+                  <td class="seg-ca"><span class="nl-code"><span class="nl-code-dot"></span>CA</span></td>
+                  <td>إبلاغ عن حالة خطر</td>
+                  <td><span class="nl-person"><span class="nl-av">سن</span>سرى ناجي كاظم</span></td>
+                  <td><span class="nl-badge nl-badge--late">فريق طوارئ</span></td>
+                  <td class="nl-fee nl-faint">—</td>
+                  <td class="nl-age">أمس</td>
+                  <td>م. مصطفى</td>
+                </tr>
+                <tr>
+                  <td><span class="nl-ref">TQ-2026-08-1402</span></td>
+                  <td class="seg-cs"><span class="nl-code"><span class="nl-code-dot"></span>CS</span></td>
+                  <td>نقل ملكية اشتراك</td>
+                  <td><span class="nl-person"><span class="nl-av">أع</span>أحمد علي الجبوري</span></td>
+                  <td><span class="nl-badge nl-badge--wait">تحقق قانوني</span></td>
+                  <td class="nl-fee nl-faint">—</td>
+                  <td class="nl-age">يومان</td>
+                  <td>م. كرار</td>
+                </tr>
+                <tr class="is-live">
+                  <td><span class="nl-ref">TQ-2026-08-1395</span></td>
+                  <td class="seg-ct"><span class="nl-code"><span class="nl-code-dot"></span>CT</span></td>
+                  <td>تغيير موقع المقياس</td>
+                  <td><span class="nl-person"><span class="nl-av">مر</span>مريم رياض الزبيدي</span></td>
+                  <td><span class="nl-badge nl-badge--prog">قيد التنفيذ</span></td>
+                  <td class="nl-fee">35,000</td>
+                  <td class="nl-age">3 أيام</td>
+                  <td>م. زينب</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- quick-start aside -->
+        <aside class="nl-aside">
+          <section class="nl-panel">
+            <div class="nl-panel-head"><h2 class="nl-h3">بدء سريع</h2></div>
+            <div class="nl-quick">
+              <button class="nl-quick-item seg-cs">
+                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-apartment"/></svg></span>
+                <span class="nl-quick-body">
+                  <span class="nl-quick-name">الاشتراكات</span>
+                  <span class="nl-quick-meta">12 مفتوح · ‏~3 ي معدل</span>
+                </span>
+                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
+              </button>
+              <button class="nl-quick-item seg-ct">
+                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-elec"/></svg></span>
+                <span class="nl-quick-body">
+                  <span class="nl-quick-name">الفنية</span>
+                  <span class="nl-quick-meta">7 مفتوح · ‏~9 ي معدل</span>
+                </span>
+                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
+              </button>
+              <button class="nl-quick-item seg-cb">
+                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-receipt"/></svg></span>
+                <span class="nl-quick-body">
+                  <span class="nl-quick-name">الفواتير</span>
+                  <span class="nl-quick-meta">9 مفتوح · ‏~2 ي معدل</span>
+                </span>
+                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
+              </button>
+              <button class="nl-quick-item seg-ca">
+                <span class="nl-tile"><svg width="22" height="22" aria-hidden="true"><use href="#i-report"/></svg></span>
+                <span class="nl-quick-body">
+                  <span class="nl-quick-name">الشكاوى والتقارير</span>
+                  <span class="nl-quick-meta">6 مفتوح · ‏~4 ي معدل</span>
+                </span>
+                <svg width="18" height="18" class="nl-chev" aria-hidden="true"><use href="#i-chev"/></svg>
+              </button>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <!-- ── activity feed (Tier 3, ambient) ── -->
+      <section class="nl-feed-wrap" aria-label="آخر النشاط">
+        <h2 class="nl-h3" style="margin-block-end:var(--nl-3)">آخر النشاط</h2>
+        <div class="nl-feed">
+          <div class="nl-feed-item">
+            <span class="nl-feed-dot" style="background:var(--nl-err)"></span>
+            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1407</span> · أُحيل بلاغ الخطر إلى <b>فريق الطوارئ</b></span>
+            <span class="nl-feed-time">09:42</span>
+          </div>
+          <div class="nl-feed-item">
+            <span class="nl-feed-dot" style="background:var(--nl-ok)"></span>
+            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1390</span> · اكتمل <b>دفع قائمة الأجور</b> وصدر الإيصال</span>
+            <span class="nl-feed-time">09:18</span>
+          </div>
+          <div class="nl-feed-item">
+            <span class="nl-feed-dot" style="background:var(--nl-cs)"></span>
+            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1417</span> · جُدوِل <b>كشف ميداني</b> لاشتراك جديد</span>
+            <span class="nl-feed-time">08:55</span>
+          </div>
+          <div class="nl-feed-item">
+            <span class="nl-feed-dot" style="background:var(--nl-warn)"></span>
+            <span class="nl-feed-line"><span class="nl-ref">TQ-2026-08-1409</span> · بانتظار <b>موافقة مدير الفرع</b> على التقسيط</span>
+            <span class="nl-feed-time">أمس</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="nl-footer">
+        <span>تدفّق الخير · منصة عمليات خدمات المشتركين</span>
+        <span class="nl-mono">Tayyār v1 · نظام تيّار · 2026</span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      var icon = btn.querySelector('use');
+      function set(theme) {
+        root.setAttribute('data-theme', theme);
+        icon.setAttribute('href', theme === 'dark' ? '#i-sun' : '#i-moon');
+        try { localStorage.setItem('nl-theme', theme); } catch (e) {}
+      }
+      try {
+        var saved = localStorage.getItem('nl-theme');
+        if (saved) set(saved);
+        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) set('dark');
+      } catch (e) {}
+      btn.addEventListener('click', function () {
+        set(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      });
+      // "/" focuses search (keyboard-initiated, never animated)
+      document.addEventListener('keydown', function (e) {
+        if (e.key === '/' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
+          e.preventDefault();
+          var s = document.querySelector('.nl-search input');
+          if (s) s.focus();
+        }
+      });
+      // domain tabs: move the active rail
+      document.querySelectorAll('.nl-tab').forEach(function (t) {
+        t.addEventListener('click', function () {
+          document.querySelectorAll('.nl-tab').forEach(function (x) { x.setAttribute('aria-selected', 'false'); });
+          t.setAttribute('aria-selected', 'true');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

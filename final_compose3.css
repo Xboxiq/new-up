@@ -1,0 +1,61 @@
+/* =============================================================
+   FINAL — Composition layer III : Roles · Audit · Services
+   Brings the master-detail (Roles) and the audit list/stats into
+   the same surface / rhythm / state language as dashboard + tables.
+   Services already inherits the .adm-tbl composition. Override-only.
+   No decoration · no gradients · no noise.
+   ============================================================= */
+
+/* ---- Primary panels: lifted-paper surface + softer hairline ---- */
+.adm-section,
+.adm-audit,
+.adm-roles__list,
+.adm-roles__editor,
+.adm-audit-stats__card {
+  border-color: color-mix(in srgb, var(--f-border) 72%, transparent);
+  box-shadow:
+    0 1px 2px rgba(22, 21, 19, 0.04),
+    0 6px 16px -8px rgba(22, 21, 19, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+.f-body.dark .adm-section,
+.f-body.dark .adm-audit,
+.f-body.dark .adm-roles__list,
+.f-body.dark .adm-roles__editor,
+.f-body.dark .adm-audit-stats__card {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.30),
+    0 10px 28px -12px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ---- Row hierarchy: soft hairline, identity hover, tabular data ---- */
+.adm-audit__row { border-color: color-mix(in srgb, var(--f-border) 65%, transparent); }
+.adm-rolerow:hover { background: color-mix(in srgb, var(--f-navy) 4%, var(--f-surface-2)); }
+.adm-audit__ts, .adm-rolerow__meta, .adm-rolerow__meta code {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Focus rings (token-consistent across interactive rows) ---- */
+.adm-rolerow:focus-visible,
+.adm-audit__head:focus-visible,
+.adm-audit__range-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--f-ring);
+}
+
+/* ---- Empty state · unified composition (all admin tabs) ---- */
+.adm-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--f-s2);
+  padding-block: var(--f-s12);
+  color: var(--f-ink-3);
+}
+.adm-empty .material-symbols-outlined {
+  font-size: 40px;
+  opacity: 0.45;
+  margin: 0;
+}
+.adm-empty > div { max-width: 44ch; font-size: var(--f-fs-sm); line-height: 1.5; }

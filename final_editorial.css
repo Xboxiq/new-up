@@ -1,0 +1,282 @@
+/* =============================================================
+   FINAL — Editorial Elevation (loaded last)
+   A visible, system-wide level-up built entirely on the --f-*
+   tokens. No rebuild, no new palette, no AI-slop.
+
+   Creative vision — "Civic Editorial":
+   every screen opens like an editorial spread. One recognizable
+   signature repeated everywhere: a colored kicker eyebrow, an
+   oversized display headline, and a full-bleed masthead rule.
+   Department colors finally earn their place as identity accents.
+   Figures read large and confident. Active states are unmistakable.
+
+   Rules honored: transform/opacity/shadow/color motion only,
+   --f-ease-* timing, no gradient-text, no bounce, no side-tabs,
+   no layout-property transitions, reduced-motion safe.
+   ============================================================= */
+
+/* -------------------------------------------------------------
+   1 · MASTHEAD — the editorial page header (every section)
+   Bigger display headline + a full-bleed hairline rule that
+   closes the header band. This is the single most visible move:
+   each page now opens with a deliberate, composed masthead.
+   ------------------------------------------------------------- */
+.f-pagehead {
+  position: relative;
+  align-items: end;
+  padding-block-end: var(--f-s6);
+  margin-block-end: var(--f-s2);
+  border-block-end: 1px solid var(--f-border-2);
+}
+/* a short, weighted accent that overlaps the hairline — the seam mark */
+.f-pagehead::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -1px;
+  inset-inline-start: 0;
+  width: 72px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--f-crimson);
+}
+
+.f-pagehead h1 {
+  font-family: var(--f-disp);
+  font-size: clamp(2rem, 1.5rem + 2.6vw, 2.95rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+.f-pagehead h1 em { color: var(--f-crimson); font-weight: 800; }
+
+/* the date/eyebrow becomes a true editorial kicker */
+.f-pagehead__date {
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--f-ink-2);
+}
+
+/* keep the overview greeting in step with the new scale */
+.ov-t1 .f-pagehead h1 { font-size: clamp(2.1rem, 1.5rem + 3vw, 3.1rem); }
+
+/* -------------------------------------------------------------
+   2 · SECTION HEADINGS — confident, with a colored lead bar
+   .f-h2__title jumps from ~17px to a real section-heading scale.
+   A 4px accent bar leads each heading: the repeated motif.
+   (Tier-2 subordinate sizing in final_tokens.css keeps its
+   higher-specificity override — hierarchy preserved.)
+   ------------------------------------------------------------- */
+.f-h2 { position: relative; }
+.f-h2__title {
+  font-family: var(--f-disp);
+  font-size: var(--f-fs-md);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--f-ink);
+}
+.f-h2__sub { color: var(--f-ink-2); }
+
+/* replace the centered after-rule from the signature layer with a
+   leading vertical accent — more present, still quiet */
+.f-h2__main::after,
+.fb-hero__main::after { display: none; }
+.f-h2__main {
+  position: relative;
+  padding-inline-start: 14px;
+}
+.f-h2__main::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 2px;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--f-crimson);
+}
+/* preserve Tier-2 hierarchy: subordinate sub-labels keep no lead bar */
+.ov-t2 section .f-h2__main { padding-inline-start: 0; }
+.ov-t2 section .f-h2__main::before { display: none; }
+
+/* -------------------------------------------------------------
+   3 · ACTIVE NAV TAB — unmistakable (was white-on-white)
+   Beats final_apple.css (same specificity, loaded later): a
+   filled navy chip with a weighted label. You can see where
+   you are at a glance.
+   ------------------------------------------------------------- */
+.f3d .f-tab,
+.f-tab {
+  border-radius: 999px;
+  font-weight: 600;
+  transition: color var(--f-dur-micro) var(--f-ease-standard),
+              background var(--f-dur-micro) var(--f-ease-standard);
+}
+.f3d .f-tab.is-on,
+.f-tab.is-on {
+  color: var(--f-navy);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--f-navy) 11%, transparent);
+  box-shadow: none;
+}
+.f-body.dark .f3d .f-tab.is-on,
+.f-body.dark .f-tab.is-on {
+  color: var(--f-cs);
+  background: color-mix(in srgb, var(--f-cs) 16%, transparent);
+}
+.f3d .f-tab.is-on::after,
+.f-tab.is-on::after { display: none; }
+.f3d .f-tab:not(.is-on):hover,
+.f-tab:not(.is-on):hover {
+  background: color-mix(in srgb, var(--f-ink) 5%, transparent);
+}
+
+/* -------------------------------------------------------------
+   4 · FIGURES — large, confident, tabular (KPIs read as data)
+   ------------------------------------------------------------- */
+.f-stat__val {
+  font-family: var(--f-disp);
+  font-size: clamp(2.1rem, 1.7rem + 1.4vw, 2.55rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+/* a single hairline accent across the top of the metrics band */
+.f-stats {
+  position: relative;
+  border-radius: var(--f-r-md);
+}
+.f-stats::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--f-navy);
+  opacity: 0.85;
+  border-start-start-radius: var(--f-r-md);
+  border-start-end-radius: var(--f-r-md);
+}
+.f-body.dark .f-stats::before { background: var(--f-cs); }
+
+/* -------------------------------------------------------------
+   5 · TACTILE CARDS — confident rest depth + a real hover lift
+   transform + shadow only (no layout shift), fast and premium.
+   ------------------------------------------------------------- */
+.f3d .f-card,
+.f3d .fs-card,
+.f3d .fg-card,
+.f3d .f-exp,
+.f3d .fd-hero,
+.f3d .f-ticker,
+.f3d .f-deck__panel {
+  transition: transform var(--f-dur-micro) var(--f-ease-standard),
+              box-shadow var(--f-dur-enter) var(--f-ease-standard),
+              border-color var(--f-dur-micro) var(--f-ease-standard);
+}
+.f3d .f-card:hover,
+.f3d .fs-card:hover,
+.f3d .fg-card:hover,
+.f3d .f-exp:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--f-shadow-md);
+  border-color: var(--f-border-2);
+}
+
+/* -------------------------------------------------------------
+   6 · DEPARTMENT IDENTITY — colors finally express themselves
+   The open department panel wears its own color as a top accent
+   and a tinted wash, so each department reads as a distinct place.
+   (--d-c is set per-panel by the existing markup.)
+   ------------------------------------------------------------- */
+.f-deck__panel.is-open {
+  border-color: color-mix(in srgb, var(--d-c) 38%, var(--f-border)) !important;
+}
+.f-deck__panel.is-open::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--d-c);
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+  z-index: 2;
+}
+.f-deck__name { font-family: var(--f-disp); font-weight: 800; letter-spacing: -0.02em; }
+.f-deck__ico {
+  background: color-mix(in srgb, var(--d-c) 14%, var(--f-surface)) !important;
+  border: 1px solid color-mix(in srgb, var(--d-c) 30%, var(--f-border)) !important;
+}
+.f-deck__ico .material-symbols-outlined { color: var(--d-c) !important; }
+
+/* -------------------------------------------------------------
+   7 · PRIMARY BUTTON — a touch more brand presence on hover
+   ------------------------------------------------------------- */
+.f-btn--primary { background: var(--f-navy); border-color: var(--f-navy); }
+.f-btn--primary:hover { background: var(--f-navy-soft); border-color: var(--f-navy-soft); }
+
+/* -------------------------------------------------------------
+   8 · RESPONSIVE — keep the masthead breathing on small screens
+   ------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .f-pagehead { padding-block-end: var(--f-s5); }
+  .f-pagehead h1,
+  .ov-t1 .f-pagehead h1 { font-size: clamp(1.6rem, 1.25rem + 3.4vw, 2rem); }
+  .fp-enter > .f-h2 { padding-block-end: var(--f-s4); }
+}
+
+/* =============================================================
+   9 · SYSTEM-WIDE MASTHEAD — the same opening gesture everywhere
+   Each section's page title now reads as a deliberate masthead:
+   bigger display headline, a crimson lead bar, and a full hairline
+   rule closing the header band. Applied to every header variant
+   the app uses, so the elevation is consistent across ALL sections.
+   ============================================================= */
+
+/* ---- List pages: Services · Cases · Pricing · Guide ----
+   (.fp-enter > .f-h2 is their page title; overview's nested
+   .ov .f-h2 sub-headings are untouched — verified.) */
+.fp-enter > .f-h2 {
+  align-items: end;
+  padding-block-end: var(--f-s5);
+  margin-block-end: var(--f-s2);
+  border-block-end: 1px solid var(--f-border-2);
+}
+.fp-enter > .f-h2 .f-h2__title {
+  font-size: var(--f-fs-lg);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.fp-enter > .f-h2 .f-h2__sub { font-size: var(--f-fs-sm); }
+
+/* ---- Branches hero ---- */
+.fb-hero__title { font-weight: 800; letter-spacing: -0.03em; }
+.fb-hero__main { position: relative; padding-inline-start: 14px; }
+.fb-hero__main::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 4px;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--f-crimson);
+}
+.fb-hero__eyebrow { letter-spacing: 0.12em; font-weight: 600; }
+.fb-kpi__val {
+  font-family: var(--f-disp);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Service detail hero ---- */
+.fd-hero__name { font-family: var(--f-disp); font-weight: 800; letter-spacing: -0.025em; }
+
+/* ---- Admin head ---- */
+.adm-head {
+  padding-block-end: var(--f-s5);
+  margin-block-end: var(--f-s2);
+  border-block-end: 1px solid var(--f-border-2);
+}
+.adm-head::after { inset-block-end: -1px; }   /* align crimson seam to the new rule */
+.adm-head__title { font-size: var(--f-fs-lg); font-weight: 800; letter-spacing: -0.025em; }

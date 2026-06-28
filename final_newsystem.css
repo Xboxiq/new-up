@@ -1,0 +1,211 @@
+/* ============================================================================
+   final_newsystem.css — BOLD ELEVATION  (loaded LAST · additive · revertible)
+   ----------------------------------------------------------------------------
+   Goal: make design.md's "civic atelier at golden hour" actually READ as a new,
+   premium system — not a quiet retune. Same token family (Walnut Ivory + Royal
+   Indigo + section hues), but a decisive visual jump:
+
+     • A distinctive ARABIC display face (Reem Kufi — geometric, monumental,
+       civic-archive authority) so every masthead/heading looks genuinely new.
+       (The prior --f-disp resolved Arabic to Alexandria, ~identical to before —
+        THIS is why nothing looked different. Fixed here.)
+     • Editorial mastheads: mono eyebrow + a crimson lead rule + oversized display.
+     • Confident section headings with a section-hued lead bar.
+     • A crafted canvas: layered section-hued mesh (≤6%) — paper, not flat fill.
+     • Re-skinned cards: larger radius, section-hued inline-start edge, elevation
+       by light (hairline inset + soft indigo-tinted shadow), a real hover lift.
+
+   Discipline (design.md §5/§8): animate transform/opacity/box-shadow/color only;
+   NO negative tracking on Arabic; no gradient-on-text; no bounce; reduced-motion
+   handled by the authoritative guard in final_tokens.css. Scoped .f3d to win.
+   To revert: remove the <link> to this file. impeccable-clean.
+   ============================================================================ */
+
+/* ───────────────────────────────────────────────────────────────────────────
+   1 · DISPLAY TYPE — the single most visible move
+   Arabic headings now ride Reem Kufi; Latin rides Clash Display. Body stays
+   Readex Pro (calm, readable). This re-letters the whole product.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --f-disp:    "Clash Display", "Reem Kufi", "Alexandria", "Readex Pro", sans-serif;
+  --f-disp-ar: "Reem Kufi", "Alexandria", "Readex Pro", sans-serif;       /* Arabic display */
+  --f-disp-warm: "El Messiri", "Reem Kufi", "Readex Pro", sans-serif;     /* humanist accent */
+}
+
+/* every display surface re-letters + (Arabic-safe) zero tracking */
+.f3d .f-pagehead h1,
+.f3d .f-h2__title,
+.f3d .fd-hero__title,
+.f3d .fb-hero__title,
+.f3d .f-deck__name,
+.f3d .fs-card__name,
+.f3d .f-dept__name,
+.f3d .f-card__title,
+.f3d .lg-card h1 {
+  font-family: var(--f-disp);
+  letter-spacing: normal;   /* design.md §2: never negative-track Arabic */
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   2 · MASTHEAD — every page opens like a composed civic broadsheet
+   ─────────────────────────────────────────────────────────────────────────── */
+.f3d .f-pagehead {
+  position: relative;
+  align-items: end;
+  padding-block-end: var(--f-s6);
+  margin-block-end: var(--f-s4);
+  border-block-end: 1px solid var(--f-border-2);
+}
+/* the crimson lead rule — short, weighted, overlapping the hairline (the seam) */
+.f3d .f-pagehead::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -1.5px;
+  inset-inline-start: 0;
+  width: 80px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--f-crimson);
+}
+.f3d .f-pagehead h1 {
+  font-weight: 700;
+  font-size: clamp(2.1rem, 1.5rem + 3vw, 3.25rem);
+  line-height: 1.12;
+}
+.f3d .f-pagehead h1 em {
+  font-style: normal;
+  color: var(--f-crimson);
+  font-weight: 700;
+}
+/* the date becomes a real mono kicker (eyebrow) */
+.f3d .f-pagehead__date {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--f-ink-3);
+  text-transform: uppercase;
+}
+.f3d .f-pagehead__lede {
+  font-size: var(--f-fs-md);
+  color: var(--f-ink-2);
+  max-width: 62ch;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   3 · SECTION HEADINGS — confident, with a section-hued lead bar
+   ─────────────────────────────────────────────────────────────────────────── */
+.f3d .f-h2 { position: relative; }
+.f3d .f-h2__main {
+  position: relative;
+  padding-inline-start: 14px;
+}
+.f3d .f-h2__main::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 2px;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--sec-lead, var(--f-navy));
+}
+.f3d .f-h2__title {
+  font-weight: 700;
+  font-size: var(--f-fs-lg);
+  letter-spacing: normal;
+  color: var(--f-ink);
+}
+.f3d .f-h2__sub { color: var(--f-ink-2); }
+
+/* ───────────────────────────────────────────────────────────────────────────
+   4 · CANVAS — crafted "paper": layered section-hued mesh (≤6%), not flat fill.
+   Overrides the chroma single-wash with a richer, still-quiet two-pool mesh.
+   ─────────────────────────────────────────────────────────────────────────── */
+.f3d.f-body {
+  background:
+    radial-gradient(60% 42% at 100% -4%, color-mix(in srgb, var(--f-cs) 6%, transparent), transparent 60%),
+    radial-gradient(52% 38% at -6% 8%,   color-mix(in srgb, var(--f-ca) 5%, transparent), transparent 58%),
+    radial-gradient(70% 50% at 50% 120%, color-mix(in srgb, var(--f-ct) 4%, transparent), transparent 62%),
+    var(--f-bg);
+  background-attachment: fixed;
+}
+.f3d.f-body.dark {
+  background:
+    radial-gradient(60% 42% at 100% -4%, color-mix(in srgb, var(--f-cs) 12%, transparent), transparent 60%),
+    radial-gradient(52% 38% at -6% 8%,   color-mix(in srgb, var(--f-ca) 9%, transparent), transparent 58%),
+    radial-gradient(70% 50% at 50% 120%, color-mix(in srgb, var(--f-cb) 8%, transparent), transparent 62%),
+    var(--f-bg);
+  background-attachment: fixed;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   5 · CARDS — elevation by light + section-hued edge + a real hover lift
+   ─────────────────────────────────────────────────────────────────────────── */
+.f3d .f-card,
+.f3d .f-stat,
+.f3d .fg-card {
+  border-radius: var(--f-r-xl);
+  border: 1px solid var(--f-border);
+  box-shadow:
+    var(--ch-spec-top, inset 0 1px 0 rgba(255,255,255,0.5)),
+    0 1px 2px rgba(26,23,20,0.04),
+    0 10px 28px -16px rgba(43,49,128,0.16);
+  transition: transform var(--f-dur-md) var(--f-ease-entrance),
+              box-shadow var(--f-dur) var(--f-ease);
+}
+
+/* service cards: 2xl radius, full section-tinted hairline (NOT a side-tab —
+   impeccable-safe), lift on hover. Identity also lives in the icon + code chip. */
+.f3d .fs-card {
+  position: relative;
+  border-radius: var(--f-r-xl);
+  border: 1px solid color-mix(in srgb, var(--c-c, var(--f-navy)) 26%, var(--f-border));
+  transition: transform var(--f-dur-md) var(--f-ease-entrance),
+              box-shadow var(--f-dur) var(--f-ease),
+              border-color var(--f-dur) var(--f-ease);
+}
+.f3d .fs-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--c-c, var(--f-navy)) 42%, var(--f-border));
+  box-shadow:
+    0 1px 2px rgba(26,23,20,0.05),
+    0 18px 40px -18px color-mix(in srgb, var(--c-c, var(--f-navy)) 45%, transparent);
+}
+.f3d .f-card:hover,
+.f3d .f-stat:hover {
+  box-shadow:
+    var(--ch-spec-top, inset 0 1px 0 rgba(255,255,255,0.5)),
+    0 1px 2px rgba(26,23,20,0.05),
+    0 16px 36px -16px rgba(43,49,128,0.22);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   6 · LOGIN — the showcase entry surface gets the full new identity
+   (oversized Reem Kufi welcome + crimson kicker rule + indigo CTA presence)
+   ─────────────────────────────────────────────────────────────────────────── */
+.f3d .lg-card h1 {
+  font-family: var(--f-disp-ar);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 1.3rem + 1.8vw, 2.3rem);
+  letter-spacing: normal;
+  line-height: 1.18;
+}
+.f3d .lg-card {
+  border-radius: var(--f-r-xl);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   7 · TABS — segmented control gets a quiet section/indigo active underline feel
+   (kept subtle; the apple segmented pill already styles the container)
+   ─────────────────────────────────────────────────────────────────────────── */
+.f3d .f-tab.is-on {
+  color: var(--f-navy);
+  font-weight: 600;
+}
+.f3d.f-body.dark .f-tab.is-on { color: var(--f-indigo-bright, var(--f-navy-soft)); }
+
+/* KPI / big numbers ride the display face for confident figures */
+.f3d .f-stat__val,
+.f3d .fb-kpi__val {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+}

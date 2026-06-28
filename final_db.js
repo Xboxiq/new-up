@@ -54,6 +54,23 @@
   }
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
 
+  // Sequential, human-readable request number scoped to the current year+month.
+  // Format: TQ-YYYY-MM-#### — continues from the highest existing number that
+  // month, starting at 1001 so it reads naturally alongside seeded demo cases.
+  function nextRequestNo() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    let max = 1000;
+    adapter.read('requests').forEach((r) => {
+      const mm = /^TQ-(\d{4})-(\d{2})-(\d+)$/.exec(r.no || '');
+      if (mm && mm[1] === String(y) && mm[2] === m) {
+        max = Math.max(max, parseInt(mm[3], 10));
+      }
+    });
+    return `TQ-${y}-${m}-${max + 1}`;
+  }
+
   // ---------- Collection API ----------
   function collection(col, { idPrefix } = {}) {
     return {
@@ -552,6 +569,10 @@
     departments: collection('departments', { idPrefix: 'dept' }),
     sessions:    collection('sessions',    { idPrefix: 'sess' }),
     passwordResets: collection('password_resets', { idPrefix: 'pwr' }),
+    requests:    collection('requests',    { idPrefix: 'req'  }),
+
+    // Human-readable request number — TQ-YYYY-MM-#### (mirrors legacy case IDs)
+    nextRequestNo,
 
     settings: scalar('settings', DEFAULT_SETTINGS),
 

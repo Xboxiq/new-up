@@ -1,0 +1,31 @@
+- generic [ref=e2]:
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - generic [ref=e55]:
+        - strong [ref=e56]: تغيير كلمة المرور
+        - generic [ref=e57]: مطلوب قبل المتابعة
+    - generic [ref=e58]:
+      - heading "أنشئ كلمة مرور جديدة" [level=1] [ref=e59]
+      - paragraph [ref=e60]: اختر كلمة مرور قوية لا تُشاركها مع أحد
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - generic [ref=e63]: كلمة المرور الحالية
+        - generic [ref=e64]:
+          - generic [ref=e66]: lock_open
+          - textbox "كلمة المرور الحالية lock_open" [active] [ref=e67]
+      - generic [ref=e68]:
+        - generic [ref=e69]: كلمة المرور الجديدة
+        - generic [ref=e70]:
+          - generic [ref=e72]: lock
+          - textbox "كلمة المرور الجديدة lock visibility" [ref=e73]
+          - button "visibility" [ref=e74] [cursor=pointer]:
+            - generic [ref=e75]: visibility
+      - generic [ref=e76]:
+        - generic [ref=e77]: تأكيد كلمة المرور
+        - generic [ref=e78]:
+          - generic [ref=e80]: check
+          - textbox "تأكيد كلمة المرور check" [ref=e81]
+      - button "حفظ والمتابعة arrow_back" [ref=e82] [cursor=pointer]:
+        - generic [ref=e83]: حفظ والمتابعة
+        - generic [ref=e84]: arrow_back
+  - region "إشعارات"

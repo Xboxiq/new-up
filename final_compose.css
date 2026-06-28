@@ -1,0 +1,57 @@
+/* =============================================================
+   FINAL — Editorial composition layer (loaded last)
+   Beyond polish: visual sophistication through COMPOSITION only —
+   spatial rhythm, surface hierarchy, typographic emphasis, measure.
+   No decoration · no gradients · no noise.
+   Principles from Linear, Stripe Dashboard, Ramp, Vercel, Notion.
+   Override-only; structure / IA / RTL / a11y preserved.
+   ============================================================= */
+
+/* ---- 1 · Spatial rhythm ----
+   A deliberate vertical scale: hero breathes most, then tiers, then a
+   measured gap between each section heading and its body. */
+.ov-t1 { gap: var(--f-s10); }   /* greeting breathes above the department grid */
+.ov-t2 { gap: var(--f-s8); }
+.ov .f-h2 { padding-inline: 0; }                       /* headings align to content edge */
+.ov-t2 section > .f-h2 { margin-block-end: var(--f-s4); }
+
+/* ---- 2 · Surface hierarchy (the primary editorial lever) ----
+   Tier 3 is reference, not action — so it drops its card chrome and
+   sits flat on the canvas. Removing weight from secondary content
+   makes the primary work surfaces dominant without any added ink. */
+.ov-t3 .f-card {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--f-border) 55%, transparent);
+  box-shadow: none;
+}
+.ov-t3 .f-card__head {
+  border-block-end-color: color-mix(in srgb, var(--f-border) 42%, transparent);
+}
+
+/* ---- 3 · Stat cells: editorial vertical rhythm ----
+   More breathing, a clear label → number → trend → spark cadence so each
+   metric reads as a composed unit rather than a packed cell. */
+.f-stat        { padding-block: var(--f-s6) var(--f-s5); padding-inline: var(--f-s5); }
+.f-stat__top   { margin-block-end: var(--f-s3); }
+.f-stat__sub   { margin-block-start: var(--f-s2); }
+.f-spark       { margin-block-start: var(--f-s4); }
+
+/* ---- 4 · Activity feed: editorial list rhythm ----
+   The primary work surface earns a calmer, taller row cadence. */
+.ov-t2__primary .f-feed__row { padding-block: var(--f-s3); }
+
+/* ---- 5 · Measure & ink discipline ----
+   Cap secondary text width and keep metadata in the quiet ink tier so
+   the eye is never asked to read a long, flat line. */
+.f-card__sub, .f-h2__sub { max-width: 52ch; }
+.ov-t3 { color: var(--f-ink-2); }
+
+/* ---- 6 · Hero anchor ----
+   A touch more display scale gives the greeting clear primacy as the
+   page's opening line of the story. */
+.ov-t1 .f-pagehead h1 { font-size: clamp(1.85rem, 2.9vw, 2.45rem); line-height: 1.12; }
+
+@media (max-width: 640px) {
+  .ov-t1 { gap: var(--f-s8); }
+  .f-stat { padding-block: var(--f-s5) var(--f-s4); }
+}

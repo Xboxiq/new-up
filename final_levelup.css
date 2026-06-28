@@ -1,0 +1,205 @@
+/* =============================================================
+   FINAL — LEVEL-UP design variant (opt-in: body.f-body.lvlup)
+   A deliberate visual LEAP, synthesized from every installed skill:
+   · refero-design / open-design  → dramatic type contrast, editorial grid
+   · design-taste-frontend        → distinctive, anti-template identity
+   · creative-fx                  → liquid glass, grain, tonal gradient, kinetic
+   · design-motion-principles      → motivated entrance choreography
+   · impeccable                   → zero anti-patterns
+
+   100% scoped under .lvlup so the CURRENT design is untouched and the
+   two can be compared side-by-side in compare.html. Built on --f-*.
+   No purple, no gradient-text, no bounce, no layout-property motion.
+   ============================================================= */
+
+/* -------------------------------------------------------------
+   DECISION 1 · DISPLAY-SCALE LEAP  (refero-design / open-design)
+   The single biggest perceptual change: a true display headline.
+   Scale contrast headline:body jumps from ~2.4x to ~3.6x.
+   ------------------------------------------------------------- */
+.lvlup .f-pagehead h1 {
+  font-family: var(--f-disp);
+  font-size: clamp(2.6rem, 1.9rem + 3.8vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+}
+.lvlup .ov-t1 .f-pagehead h1 { font-size: clamp(2.7rem, 1.9rem + 4.2vw, 4rem); }
+.lvlup .fb-hero__title { font-size: clamp(2.3rem, 1.7rem + 3.4vw, 3.4rem); letter-spacing: -0.035em; }
+
+/* -------------------------------------------------------------
+   DECISION 2 · EDITORIAL MASTHEAD BAND  (open-design composition
+   + creative-fx tonal background — brand navy, never purple)
+   The page title sits on a faint tonal wash closed by a gold rule:
+   the broadsheet "nameplate".
+   ------------------------------------------------------------- */
+.lvlup .f-pagehead {
+  position: relative;
+  padding-block: var(--f-s6) var(--f-s7);
+  padding-inline: var(--f-s6);
+  margin-inline: calc(-1 * var(--f-s6));
+  margin-block-end: var(--f-s6);
+  border-radius: var(--f-r-lg);
+  background:
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--f-navy) 7%, transparent), transparent 60%),
+    linear-gradient(180deg, color-mix(in srgb, var(--f-navy) 5%, transparent), transparent 70%);
+  border-block-end: 2px solid color-mix(in srgb, var(--f-gold) 45%, var(--f-border));
+}
+.lvlup .f-pagehead::after {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--f-crimson), transparent 60%);
+}
+
+/* -------------------------------------------------------------
+   DECISION 3 · DEPARTMENT IDENTITY, AMPLIFIED  (design-taste-frontend)
+   Each department panel becomes a place: a bold color top-band, a
+   color wash when open, a soft color glow. --d-c is set per panel.
+   ------------------------------------------------------------- */
+.lvlup .f-deck__panel {
+  border-radius: var(--f-r-lg);
+  overflow: hidden;
+}
+.lvlup .f-deck__panel::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0; inset-inline: 0;
+  height: 5px;
+  background: var(--d-c);
+  z-index: 3;
+}
+.lvlup .f-deck__panel.is-open {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--d-c) 10%, var(--f-surface)), var(--f-surface) 40%) !important;
+  border-color: color-mix(in srgb, var(--d-c) 45%, var(--f-border)) !important;
+  box-shadow:
+    0 1px 2px rgba(22,21,19,0.05),
+    0 24px 60px -22px color-mix(in srgb, var(--d-c) 50%, transparent) !important;
+}
+.lvlup .f-deck__name { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.025em; }
+
+/* -------------------------------------------------------------
+   DECISION 4 · CONFIDENT FIGURES  (refero-design data density —
+   Ramp / Stripe). KPI numbers become the loudest data on the page.
+   ------------------------------------------------------------- */
+.lvlup .f-stat__val {
+  font-family: var(--f-disp);
+  font-size: clamp(2.5rem, 2rem + 1.8vw, 3.1rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.lvlup .f-stats {
+  border-radius: var(--f-r-lg);
+  box-shadow: var(--f-shadow);
+}
+.lvlup .f-stats::before { height: 4px; }
+
+/* -------------------------------------------------------------
+   DECISION 5 · LIFTED-PAPER CARDS  (open-design surface hierarchy)
+   Deeper, more tactile rest depth + a crisper hover lift.
+   ------------------------------------------------------------- */
+.lvlup .f-card,
+.lvlup .fs-card,
+.lvlup .fg-card,
+.lvlup .f-ticker,
+.lvlup .fd-hero {
+  border-radius: var(--f-r-lg);
+  box-shadow:
+    0 1px 2px rgba(22,21,19,0.05),
+    0 2px 6px -2px rgba(22,21,19,0.06),
+    0 18px 44px -22px rgba(22,21,19,0.18);
+}
+.lvlup .f3d .f-card:hover,
+.lvlup .f3d .fs-card:hover,
+.lvlup .f3d .fg-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 1px 2px rgba(22,21,19,0.06),
+    0 30px 64px -24px rgba(22,21,19,0.26);
+}
+
+/* -------------------------------------------------------------
+   DECISION 6 · ENTRANCE CHOREOGRAPHY  (design-motion-principles /
+   animate). Tier-2 cards rise in a short stagger — one motivated
+   gesture, fast, reduced-motion safe.
+   ------------------------------------------------------------- */
+@keyframes lvl-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.lvlup .ov-t2 .f-stat,
+.lvlup .ov-t2__primary > *,
+.lvlup .ov-t2__aside > * {
+  opacity: 0;
+  animation: lvl-rise var(--f-dur-enter) var(--f-ease-entrance) forwards;
+}
+.lvlup .ov-t2 .f-stat:nth-child(1){ animation-delay: 60ms; }
+.lvlup .ov-t2 .f-stat:nth-child(2){ animation-delay: 120ms; }
+.lvlup .ov-t2 .f-stat:nth-child(3){ animation-delay: 180ms; }
+.lvlup .ov-t2 .f-stat:nth-child(4){ animation-delay: 240ms; }
+.lvlup .ov-t2__primary > * { animation-delay: 160ms; }
+.lvlup .ov-t2__aside   > * { animation-delay: 220ms; }
+@media (prefers-reduced-motion: reduce) {
+  .lvlup .ov-t2 .f-stat,
+  .lvlup .ov-t2__primary > *,
+  .lvlup .ov-t2__aside > * { opacity: 1; animation: none; }
+}
+
+/* -------------------------------------------------------------
+   DECISION 7 · LIQUID-GLASS ACTION BAR  (creative-fx liquid-glass)
+   The page-head actions read as a single frosted control cluster.
+   ------------------------------------------------------------- */
+.lvlup .f-pagehead__actions {
+  padding: var(--f-s2);
+  border-radius: var(--f-r-pill);
+  background: color-mix(in srgb, var(--f-surface) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--f-border-2) 70%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), var(--f-shadow-sm);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .lvlup .f-pagehead__actions {
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+}
+
+/* -------------------------------------------------------------
+   DECISION 8 · ACTIVE TAB WITH ACCENT DOT  (design-taste-frontend)
+   Beyond the filled chip: a crimson presence dot marks "you are here".
+   ------------------------------------------------------------- */
+.lvlup .f3d .f-tab.is-on,
+.lvlup .f-tab.is-on {
+  background: color-mix(in srgb, var(--f-navy) 13%, transparent);
+}
+.lvlup .f-tab.is-on::after {
+  display: block !important;
+  content: "";
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-start: 50%;
+  transform: translateX(50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--f-crimson);
+}
+
+/* -------------------------------------------------------------
+   DECISION 9 · INTENSIFIED CANVAS GRAIN  (creative-fx backgrounds)
+   Slightly more texture so the level-up canvas feels like paper.
+   ------------------------------------------------------------- */
+.lvlup.f-body::after { opacity: 0.05; }
+.lvlup.f-body.dark::after { opacity: 0.08; }
+
+/* -------------------------------------------------------------
+   RESPONSIVE — keep the leap graceful on small screens
+   ------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .lvlup .f-pagehead {
+    margin-inline: calc(-1 * var(--f-s4));
+    padding-inline: var(--f-s4);
+  }
+  .lvlup .f-pagehead h1,
+  .lvlup .ov-t1 .f-pagehead h1 { font-size: clamp(2rem, 1.4rem + 5vw, 2.7rem); }
+  .lvlup .f-stat__val { font-size: clamp(2rem, 1.6rem + 3vw, 2.5rem); }
+}

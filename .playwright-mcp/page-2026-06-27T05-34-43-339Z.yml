@@ -1,0 +1,320 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "تدفّق الخير RASAFA · CS HUB" [ref=e6] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e8]:
+            - strong [ref=e9]: تدفّق الخير
+            - generic [ref=e10]: RASAFA · CS HUB
+        - generic "الفرع الحالي" [ref=e12]:
+          - generic [ref=e13]: رص
+          - generic [ref=e14]: RS-014 · النضال
+        - button "search ⌘K" [ref=e15] [cursor=pointer]:
+          - generic [ref=e16]: search
+          - generic [ref=e17]: ⌘K
+        - button "article" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: article
+        - button "dark_mode ليلي" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: dark_mode
+          - generic: ليلي
+        - button "ح shield_person" [ref=e23] [cursor=pointer]:
+          - generic [ref=e24]: ح
+          - generic "مسؤول النظام" [ref=e25]:
+            - generic [ref=e26]: shield_person
+      - navigation [ref=e27]:
+        - button "نظرة عامة" [ref=e28] [cursor=pointer]
+        - button "الخدمات" [ref=e29] [cursor=pointer]
+        - button "الحالات" [ref=e30] [cursor=pointer]
+        - button "الفروع" [ref=e31] [cursor=pointer]
+        - button "التقارير" [ref=e32] [cursor=pointer]
+        - button "الأجور" [ref=e33] [cursor=pointer]
+        - button "الدليل" [ref=e34] [cursor=pointer]
+        - button "الإدارة" [ref=e35] [cursor=pointer]
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - complementary [ref=e38]:
+          - generic [ref=e39]: الإدارة
+          - button "space_dashboard نظرة عامة" [ref=e40] [cursor=pointer]:
+            - generic [ref=e41]: space_dashboard
+            - text: نظرة عامة
+          - button "apps الخدمات 30" [ref=e42] [cursor=pointer]:
+            - generic [ref=e43]: apps
+            - text: الخدمات
+            - generic [ref=e44]: "30"
+          - button "tips_and_updates النصائح 5" [ref=e45] [cursor=pointer]:
+            - generic [ref=e46]: tips_and_updates
+            - text: النصائح
+            - generic [ref=e47]: "5"
+          - button "group المستخدمون 6" [ref=e48] [cursor=pointer]:
+            - generic [ref=e49]: group
+            - text: المستخدمون
+            - generic [ref=e50]: "6"
+          - button "badge الأدوار والصلاحيات 7" [ref=e51] [cursor=pointer]:
+            - generic [ref=e52]: badge
+            - text: الأدوار والصلاحيات
+            - generic [ref=e53]: "7"
+          - button "tune إعدادات المركز" [ref=e54] [cursor=pointer]:
+            - generic [ref=e55]: tune
+            - text: إعدادات المركز
+          - button "history سجل التدقيق 14" [ref=e56] [cursor=pointer]:
+            - generic [ref=e57]: history
+            - text: سجل التدقيق
+            - generic [ref=e58]: "14"
+          - generic [ref=e60]:
+            - generic [ref=e61]: ح
+            - generic [ref=e62]:
+              - generic [ref=e63]: حسين علي
+              - generic [ref=e64]: مدير النظام
+        - generic [ref=e65]:
+          - generic [ref=e67]:
+            - heading "history سجل التدقيق" [level=1] [ref=e68]:
+              - generic [ref=e69]: history
+              - text: سجل التدقيق
+            - generic [ref=e70]: كل ما تم في النظام مع وقت ومنفّذ
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - generic [ref=e74]: history
+              - generic [ref=e75]:
+                - generic [ref=e76]: ١٤
+                - generic [ref=e77]: إجمالي العمليات
+            - generic [ref=e78]:
+              - generic [ref=e80]: today
+              - generic [ref=e81]:
+                - generic [ref=e82]: ١
+                - generic [ref=e83]: اليوم
+            - generic [ref=e84]:
+              - generic [ref=e86]: calendar_view_week
+              - generic [ref=e87]:
+                - generic [ref=e88]: ١٤
+                - generic [ref=e89]: آخر ٧ أيام
+            - generic [ref=e90]:
+              - generic [ref=e92]: group
+              - generic [ref=e93]:
+                - generic [ref=e94]: ١
+                - generic [ref=e95]: مستخدمون نشطون
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e98]: search
+              - textbox "ابحث في الفعل أو الهدف أو التفاصيل…" [ref=e99]
+            - combobox [ref=e100] [cursor=pointer]:
+              - option "جميع الفئات" [selected]
+              - option "الطلبات"
+              - option "الدفعات"
+              - option "المستخدمون"
+              - option "الأدوار"
+              - option "النظام"
+              - option "التقارير"
+              - option "سجل التدقيق"
+              - option "المحتوى"
+            - combobox [ref=e101] [cursor=pointer]:
+              - option "جميع المستخدمين" [selected]
+              - option "حسين علي (@admin)"
+              - option "رامز كاظم (@ramez)"
+              - option "زينب أحمد (@zainab)"
+              - option "مصطفى علي (@mostafa)"
+              - option "هدى محمود (@huda)"
+              - option "سرى ناجي (@sara)"
+            - generic [ref=e102]:
+              - button "الكل" [ref=e103] [cursor=pointer]
+              - button "اليوم" [ref=e104] [cursor=pointer]
+              - button "آخر ٧ أيام" [ref=e105] [cursor=pointer]
+              - button "آخر ٣٠ يوم" [ref=e106] [cursor=pointer]
+            - generic [ref=e107]:
+              - button "file_download تصدير CSV" [ref=e108] [cursor=pointer]:
+                - generic [ref=e109]: file_download
+                - text: تصدير CSV
+              - button "delete_sweep مسح السجل" [ref=e110] [cursor=pointer]:
+                - generic [ref=e111]: delete_sweep
+                - text: مسح السجل
+          - generic [ref=e112]: ١٤ عملية في السجل
+          - generic [ref=e113]:
+            - button "قبل 3 د group المستخدمون auth.login.success admin ح حسين علي expand_more" [ref=e115] [cursor=pointer]:
+              - generic "٢٧‏/٦‏/٢٠٢٦، ٨:٣٠:٥٥ ص" [ref=e116]: قبل 3 د
+              - generic [ref=e117]:
+                - generic [ref=e118]: group
+                - text: المستخدمون
+              - generic [ref=e119]:
+                - code [ref=e120]: auth.login.success
+                - generic [ref=e121]: admin
+              - generic [ref=e122]:
+                - generic [ref=e123]: ح
+                - generic [ref=e124]: حسين علي
+              - generic [ref=e125]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.session.expired admin م مجهول expand_more" [ref=e127] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١١:٢٨:٣٠ م" [ref=e128]: قبل 2 يوم
+              - generic [ref=e129]:
+                - generic [ref=e130]: group
+                - text: المستخدمون
+              - generic [ref=e131]:
+                - code [ref=e132]: auth.session.expired
+                - generic [ref=e133]: admin
+              - generic [ref=e134]:
+                - generic [ref=e135]: م
+                - generic [ref=e136]: مجهول
+              - generic [ref=e137]: expand_more
+            - button "قبل 2 يوم description الطلبات request.create TQ-2026-06-1003 ح حسين علي expand_more" [ref=e139] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ٣:٥٩:٢٤ م" [ref=e140]: قبل 2 يوم
+              - generic [ref=e141]:
+                - generic [ref=e142]: description
+                - text: الطلبات
+              - generic [ref=e143]:
+                - code [ref=e144]: request.create
+                - generic [ref=e145]: TQ-2026-06-1003
+              - generic [ref=e146]:
+                - generic [ref=e147]: ح
+                - generic [ref=e148]: حسين علي
+              - generic [ref=e149]: expand_more
+            - button "قبل 2 يوم description الطلبات request.create TQ-2026-06-1002 ح حسين علي expand_more" [ref=e151] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ٣:٥٧:٠٤ م" [ref=e152]: قبل 2 يوم
+              - generic [ref=e153]:
+                - generic [ref=e154]: description
+                - text: الطلبات
+              - generic [ref=e155]:
+                - code [ref=e156]: request.create
+                - generic [ref=e157]: TQ-2026-06-1002
+              - generic [ref=e158]:
+                - generic [ref=e159]: ح
+                - generic [ref=e160]: حسين علي
+              - generic [ref=e161]: expand_more
+            - button "قبل 2 يوم description الطلبات request.create TQ-2026-06-1001 ح حسين علي expand_more" [ref=e163] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ٣:٥٥:٢٠ م" [ref=e164]: قبل 2 يوم
+              - generic [ref=e165]:
+                - generic [ref=e166]: description
+                - text: الطلبات
+              - generic [ref=e167]:
+                - code [ref=e168]: request.create
+                - generic [ref=e169]: TQ-2026-06-1001
+              - generic [ref=e170]:
+                - generic [ref=e171]: ح
+                - generic [ref=e172]: حسين علي
+              - generic [ref=e173]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.login.success admin ح حسين علي expand_more" [ref=e175] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ٣:٣٠:٤٠ م" [ref=e176]: قبل 2 يوم
+              - generic [ref=e177]:
+                - generic [ref=e178]: group
+                - text: المستخدمون
+              - generic [ref=e179]:
+                - code [ref=e180]: auth.login.success
+                - generic [ref=e181]: admin
+              - generic [ref=e182]:
+                - generic [ref=e183]: ح
+                - generic [ref=e184]: حسين علي
+              - generic [ref=e185]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.login.success admin ح حسين علي expand_more" [ref=e187] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١:٢٨:٢٠ م" [ref=e188]: قبل 2 يوم
+              - generic [ref=e189]:
+                - generic [ref=e190]: group
+                - text: المستخدمون
+              - generic [ref=e191]:
+                - code [ref=e192]: auth.login.success
+                - generic [ref=e193]: admin
+              - generic [ref=e194]:
+                - generic [ref=e195]: ح
+                - generic [ref=e196]: حسين علي
+              - generic [ref=e197]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.login.success admin ح حسين علي expand_more" [ref=e199] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١٢:٠١:٥٢ م" [ref=e200]: قبل 2 يوم
+              - generic [ref=e201]:
+                - generic [ref=e202]: group
+                - text: المستخدمون
+              - generic [ref=e203]:
+                - code [ref=e204]: auth.login.success
+                - generic [ref=e205]: admin
+              - generic [ref=e206]:
+                - generic [ref=e207]: ح
+                - generic [ref=e208]: حسين علي
+              - generic [ref=e209]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.session.expired admin م مجهول expand_more" [ref=e211] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١٢:٠١:٤٩ م" [ref=e212]: قبل 2 يوم
+              - generic [ref=e213]:
+                - generic [ref=e214]: group
+                - text: المستخدمون
+              - generic [ref=e215]:
+                - code [ref=e216]: auth.session.expired
+                - generic [ref=e217]: admin
+              - generic [ref=e218]:
+                - generic [ref=e219]: م
+                - generic [ref=e220]: مجهول
+              - generic [ref=e221]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.login.success admin ح حسين علي expand_more" [ref=e223] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١١:١٦:٣٨ ص" [ref=e224]: قبل 2 يوم
+              - generic [ref=e225]:
+                - generic [ref=e226]: group
+                - text: المستخدمون
+              - generic [ref=e227]:
+                - code [ref=e228]: auth.login.success
+                - generic [ref=e229]: admin
+              - generic [ref=e230]:
+                - generic [ref=e231]: ح
+                - generic [ref=e232]: حسين علي
+              - generic [ref=e233]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.login.success admin ح حسين علي expand_more" [ref=e235] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١٠:٢٩:٢٤ ص" [ref=e236]: قبل 2 يوم
+              - generic [ref=e237]:
+                - generic [ref=e238]: group
+                - text: المستخدمون
+              - generic [ref=e239]:
+                - code [ref=e240]: auth.login.success
+                - generic [ref=e241]: admin
+              - generic [ref=e242]:
+                - generic [ref=e243]: ح
+                - generic [ref=e244]: حسين علي
+              - generic [ref=e245]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.password.change admin ح حسين علي expand_more" [ref=e247] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١٠:٢٨:٥٨ ص" [ref=e248]: قبل 2 يوم
+              - generic [ref=e249]:
+                - generic [ref=e250]: group
+                - text: المستخدمون
+              - generic [ref=e251]:
+                - code [ref=e252]: auth.password.change
+                - generic [ref=e253]: admin
+              - generic [ref=e254]:
+                - generic [ref=e255]: ح
+                - generic [ref=e256]: حسين علي
+              - generic [ref=e257]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.password.change.fail admin ح حسين علي expand_more" [ref=e259] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١٠:٢٨:٥٣ ص" [ref=e260]: قبل 2 يوم
+              - generic [ref=e261]:
+                - generic [ref=e262]: group
+                - text: المستخدمون
+              - generic [ref=e263]:
+                - code [ref=e264]: auth.password.change.fail
+                - generic [ref=e265]: admin
+              - generic [ref=e266]:
+                - generic [ref=e267]: ح
+                - generic [ref=e268]: حسين علي
+              - generic [ref=e269]: expand_more
+            - button "قبل 2 يوم group المستخدمون auth.login.success admin ح حسين علي expand_more" [ref=e271] [cursor=pointer]:
+              - generic "٢٤‏/٦‏/٢٠٢٦، ١٠:٢٨:٥٢ ص" [ref=e272]: قبل 2 يوم
+              - generic [ref=e273]:
+                - generic [ref=e274]: group
+                - text: المستخدمون
+              - generic [ref=e275]:
+                - code [ref=e276]: auth.login.success
+                - generic [ref=e277]: admin
+              - generic [ref=e278]:
+                - generic [ref=e279]: ح
+                - generic [ref=e280]: حسين علي
+              - generic [ref=e281]: expand_more
+    - link "مقارنة التصاميم compare افتح" [ref=e282] [cursor=pointer]:
+      - /url: compare.html
+      - text: مقارنة التصاميم
+      - generic [ref=e283]:
+        - generic [ref=e284]: compare
+        - text: افتح
+    - contentinfo "Designed and developed by Hussein Ali" [ref=e285]:
+      - generic [ref=e291]:
+        - generic "جهة التشغيل" [ref=e292]:
+          - generic [ref=e293]: ©
+          - generic [ref=e294]: "2026"
+          - generic [ref=e296]: تدفّق الخير
+          - generic [ref=e297]: كهرباء الرصافة · فرع النضال
+        - generic [ref=e298]:
+          - generic [ref=e299]: Designed & Developed
+          - heading "Hussein Ali" [level=6] [ref=e300]:
+            - generic [ref=e301]: Hussein Ali
+          - generic [ref=e302]:
+            - generic [ref=e303]: Software · Design
+            - generic [ref=e305]: Baghdad — Iraq
+  - region "إشعارات"

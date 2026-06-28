@@ -1,0 +1,47 @@
+/* =============================================================
+   FINAL — Signature elevation layer (loaded last)
+   Additive, system-wide distinction on the existing --f-* system.
+   A crimson editorial "kicker" under every section/page title,
+   brand-voiced active states, tabular figures, unified focus.
+   No rebuild · no new palette · no decoration spam.
+   ============================================================= */
+
+/* 1 · Signature kicker — a short crimson rule closing each heading block.
+   The single recognizable motif repeated across every section. */
+.f-h2__main,
+.fb-hero__main { position: relative; }
+.f-h2__main::after,
+.fb-hero__main::after {
+  content: "";
+  display: block;
+  width: 38px;
+  height: 3px;
+  margin-block-start: 12px;
+  border-radius: 999px;
+  background: var(--f-crimson);
+}
+.adm-head { position: relative; }
+.adm-head::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -8px;
+  inset-inline-start: 0;
+  width: 38px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--f-crimson);
+}
+
+/* 2 · Brand voice — the active tab indicator speaks crimson, not ink. */
+.f-tab.is-on::after { background: var(--f-crimson); }
+
+/* 3 · Figures everywhere read as tabular data. */
+.fb-kpi__val, .fr-row__amount, .fd-fee__amount,
+.fc-row__fee, .fc-row__age, .fc-chip__n { font-variant-numeric: tabular-nums; }
+
+/* 4 · Unified token focus ring across all remaining interactive surfaces. */
+:where(.fs-card, .fc-chip, .hub-stack, .fb-card, .fr-cats .fc-chip,
+       .fg-card__head, .fd-hero__side .f-btn):focus-visible {
+  outline: none;
+  box-shadow: var(--f-ring);
+}

@@ -1,0 +1,79 @@
+/* =============================================================
+   FINAL — Creative FX (loaded last)
+   The tasteful, brand-adapted subset of the creative-fx skill.
+   Sources distilled: kinetics.colorion (kinetic type),
+   gradientbuttons.colorion (tonal CTA), liquidglass-oss (glass),
+   backgrounds.supply (grain + mesh). All re-expressed on --f-*.
+   Restraint first: one signature per surface. impeccable-clean,
+   RTL-first, reduced-motion safe. No purple, no gradient-text.
+   ============================================================= */
+
+/* -------------------------------------------------------------
+   1 · GRAIN — film noise over the whole canvas (backgrounds.supply)
+   Invisible-but-felt; kills flatness and gradient banding.
+   ------------------------------------------------------------- */
+.f-body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.f-body.dark::after { opacity: 0.06; mix-blend-mode: screen; }
+
+/* -------------------------------------------------------------
+   2 · LIQUID GLASS — the sticky top bar (liquidglass-oss / WWDC25)
+   Refraction via the inline #fx-glass SVG filter + specular edge.
+   Stays legible on the warm canvas in both themes.
+   ------------------------------------------------------------- */
+.f-top {
+  background: color-mix(in srgb, var(--f-bg) 72%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55),
+              0 1px 0 color-mix(in srgb, var(--f-ink) 6%, transparent);
+}
+.f-body.dark .f-top {
+  background: color-mix(in srgb, var(--f-bg) 66%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06),
+              0 1px 0 rgba(0,0,0,0.4);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .f-top {
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(150%);
+  }
+}
+
+/* -------------------------------------------------------------
+   3 · TONAL CTA — already realized in the codebase
+   The primary CTA (.f3d .f-btn--primary in final_apple.css) already
+   ships an Apple-grade tonal gradient + specular + sheen-sweep hover.
+   The gradient-button source is therefore satisfied; we do NOT add a
+   competing rule here. See references/gradient-buttons.md for the
+   brand-tonal pattern if a NEW gradient surface is ever needed.
+   ------------------------------------------------------------- */
+
+/* -------------------------------------------------------------
+   4 · KINETIC MASTHEAD — sequential line reveal (kinetics.colorion)
+   CSS-only, RTL- and <em>-safe (animates whole lines, not letters).
+   Runs once on mount; fully disabled under reduced-motion.
+   ------------------------------------------------------------- */
+@keyframes fx-line-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.f-pagehead__intro > *,
+.fb-hero__main > * {
+  opacity: 0;
+  animation: fx-line-in var(--f-dur-enter) var(--f-ease-entrance) forwards;
+}
+.f-pagehead__date,  .fb-hero__eyebrow { animation-delay: 30ms; }
+.f-pagehead h1,     .fb-hero__title   { animation-delay: 110ms; }
+.f-pagehead__lede,  .fb-hero__lede    { animation-delay: 190ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .f-pagehead__intro > *,
+  .fb-hero__main > * { opacity: 1; animation: none; }
+}

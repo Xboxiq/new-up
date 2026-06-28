@@ -22,7 +22,7 @@ function LoginPage({ onSuccess }) {
   const [firstRunHint, setFirstRunHint] = React.useState(null);
   React.useEffect(() => {
     if (!window.DB) return;
-    const admin = window.DB.users.find ? window.DB.users.find(u => u.username === 'admin' && u.mustChangePassword) : null;
+    const admin = window.DB.users.find ? window.DB.users.find(u => u.username === 'admin' && u.mustChangePassword && !u.lastLoginAt) : null;
     if (admin) {
       setFirstRunHint({
         username: 'admin',
@@ -39,7 +39,7 @@ function LoginPage({ onSuccess }) {
       return;
     }
     setBusy(true);
-    const res = await window.Auth.signIn(identifier, password);
+    const res = await window.Auth.signIn(identifier, password, { remember });
     setBusy(false);
     if (res.ok) {
       onSuccess && onSuccess(res);

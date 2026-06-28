@@ -1,0 +1,177 @@
+/* =============================================================
+   FINAL — Semantic Token Layer (design-system foundation)
+   Extends the live --f-* system with the scales the audit found
+   missing: spacing, fluid type, semantic motion, z-index,
+   elevation aliases, breakpoints, touch target. Additive only —
+   no existing token is redefined. OKLCH + clamp() + logical-RTL.
+   ============================================================= */
+
+:root {
+  /* ---------- Spacing scale (4px base — no arbitrary values) ---------- */
+  --f-s1:  0.25rem;  /*  4 */
+  --f-s2:  0.5rem;   /*  8 */
+  --f-s3:  0.75rem;  /* 12 */
+  --f-s4:  1rem;     /* 16 */
+  --f-s5:  1.25rem;  /* 20 */
+  --f-s6:  1.5rem;   /* 24 */
+  --f-s7:  1.75rem;  /* 28 */
+  --f-s8:  2rem;     /* 32 */
+  --f-s10: 2.5rem;   /* 40 */
+  --f-s12: 3rem;     /* 48 */
+  --f-s16: 4rem;     /* 64 */
+  --f-s20: 5rem;     /* 80 */
+  --f-s24: 6rem;     /* 96 */
+
+  /* ---------- Fluid type scale (clamp — min / preferred / max) ---------- */
+  --f-fs-xs:   clamp(0.72rem, 0.70rem + 0.10vw, 0.78rem);
+  --f-fs-sm:   clamp(0.82rem, 0.79rem + 0.15vw, 0.90rem);
+  --f-fs-base: clamp(0.95rem, 0.92rem + 0.20vw, 1.02rem);
+  --f-fs-md:   clamp(1.05rem, 1.00rem + 0.30vw, 1.18rem);
+  --f-fs-lg:   clamp(1.20rem, 1.10rem + 0.60vw, 1.45rem);
+  --f-fs-xl:   clamp(1.45rem, 1.25rem + 1.00vw, 1.90rem);
+  --f-fs-2xl:  clamp(1.80rem, 1.50rem + 1.60vw, 2.50rem);
+  --f-fs-3xl:  clamp(2.20rem, 1.80rem + 2.40vw, 3.20rem);
+  --f-fs-4xl:  clamp(2.80rem, 2.20rem + 3.20vw, 4.20rem);
+
+  /* line-heights + tracking */
+  --f-lh-tight: 1.15;
+  --f-lh-snug:  1.35;
+  --f-lh-body:  1.6;
+  --f-track-tight: -0.02em;
+  --f-track-caps:   0.08em;
+
+  /* ---------- Radius (adds pill to the existing --f-r-*) ---------- */
+  --f-r-pill: 999px;
+
+  /* ---------- Elevation (semantic aliases over existing shadows) ---------- */
+  --f-elev-0: none;
+  --f-elev-1: var(--f-shadow-xs);
+  --f-elev-2: var(--f-shadow-sm);
+  --f-elev-3: var(--f-shadow);
+  --f-elev-4: var(--f-shadow-md);
+
+  /* ---------- Motion (semantic; faster exits than entrances) ---------- */
+  --f-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --f-ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);   /* smooth ease-out, no overshoot */
+  --f-ease-exit:     cubic-bezier(0.4, 0, 1, 1);       /* quick ease-in */
+  --f-dur-micro: 180ms;   /* micro-interactions  150–250ms */
+  --f-dur-enter: 280ms;   /* standard entrances  200–350ms */
+  --f-dur-exit:  200ms;   /* exits faster than entrances   */
+
+  /* ---------- Z-index scale ---------- */
+  --f-z-base:     1;
+  --f-z-sticky:   100;
+  --f-z-dropdown: 1000;
+  --f-z-drawer:   1200;
+  --f-z-overlay:  2000;
+  --f-z-modal:    3000;
+  --f-z-toast:    4000;
+
+  /* ---------- Touch target (WCAG 2.5.5) ---------- */
+  --f-touch: 44px;
+
+  /* ---------- Breakpoints (reference for JS / documentation) ---------- */
+  --f-bp-sm: 375px;
+  --f-bp-md: 768px;
+  --f-bp-lg: 1024px;
+  --f-bp-xl: 1440px;
+
+  /* ---------- Semantic color roles (map to existing brand tokens) ---------- */
+  --f-accent:        var(--f-navy);      /* primary action / brand          */
+  --f-accent-strong: var(--f-navy-soft);
+  --f-ceremony:      var(--f-gold);      /* VIP / ceremonial only           */
+  --f-danger:        var(--f-crimson);   /* destructive only                */
+  --f-on-accent:     #ffffff;
+
+  /* Focus ring — single source of truth (WCAG 2.4.7) */
+  --f-ring: 0 0 0 3px color-mix(in srgb, var(--f-navy) 38%, transparent);
+}
+
+.f-body.dark {
+  --f-ring: 0 0 0 3px color-mix(in srgb, var(--f-cs) 45%, transparent);
+}
+
+/* ---------- Global reduced-motion guard (authoritative) ----------
+   !important beats normal animation/transition declarations in every
+   later-loaded stylesheet regardless of source order. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =============================================================
+   OVERVIEW DASHBOARD — 3-tier information architecture
+   Weight is expressed through STRUCTURE only (spacing, grouping,
+   scale, separators) — not color. Tier 1 heaviest → Tier 3 lightest.
+   ============================================================= */
+
+.ov {
+  display: flex;
+  flex-direction: column;
+  gap: var(--f-s12);            /* strong separation BETWEEN tiers (48px) */
+}
+
+/* ---- Tier 1: orient + primary action (heaviest) ---- */
+.ov-t1 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--f-s6);
+}
+
+/* ---- Tier 2: act & monitor ---- */
+.ov-t2 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--f-s6);
+}
+/* metrics strip sits above a weighted work grid */
+.ov-t2__work {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);  /* open requests dominate */
+  gap: var(--f-s5);
+  align-items: start;
+}
+.ov-t2__primary { min-width: 0; }
+.ov-t2__aside   { min-width: 0; }
+
+/* ---- Tier 3: ambient / secondary (deliberately lightest) ---- */
+.ov-t3 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--f-s5);
+  margin-block-start: var(--f-s2);
+  padding-block-start: var(--f-s8);
+  border-block-start: 1px solid var(--f-border);   /* structural demotion line */
+  font-size: 0.94em;                                /* scaled-down weight, not color */
+}
+.ov-t3__head {
+  font-family: var(--f-disp);
+  font-size: var(--f-fs-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--f-track-caps);
+  color: var(--f-ink-3);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .ov-t2__work { grid-template-columns: 1fr; }   /* stack: requests first, then quick start */
+}
+@media (max-width: 640px) {
+  .ov     { gap: var(--f-s10); }
+  .ov-t3  { padding-block-start: var(--f-s6); }
+}
+
+/* ---- Tier 2: single dominant heading, demoted sub-section labels ----
+   The tier lead keeps the full .f-h2 size (dominant). The component
+   section headings nested inside Tier 2 (Stats, ServicesExpress) drop a
+   step so they read as subordinate — reusing existing type tokens only,
+   scoped to .ov-t2 so the Reports page Stats heading is unaffected. */
+.ov-t2__lead { margin-block-end: var(--f-s1); }
+.ov-t2__lead .f-h2__title   { font-size: var(--f-fs-lg); }   /* dominant section heading */
+.ov-t2 section .f-h2__title { font-size: var(--f-fs-sm); }   /* subordinate sub-labels   */
+.ov-t2 section .f-h2__sub   { font-size: var(--f-fs-xs); }

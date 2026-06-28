@@ -1,0 +1,252 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "تدفّق الخير RASAFA · CS HUB" [ref=e6] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e8]:
+            - strong [ref=e9]: تدفّق الخير
+            - generic [ref=e10]: RASAFA · CS HUB
+        - generic "الفرع الحالي" [ref=e12]:
+          - generic [ref=e13]: رص
+          - generic [ref=e14]: RS-014 · النضال
+        - button "search ⌘K" [ref=e15] [cursor=pointer]:
+          - generic [ref=e16]: search
+          - generic [ref=e17]: ⌘K
+        - button "article" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: article
+        - button "dark_mode ليلي" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: dark_mode
+          - generic: ليلي
+        - button "ح shield_person" [ref=e23] [cursor=pointer]:
+          - generic [ref=e24]: ح
+          - generic "مسؤول النظام" [ref=e25]:
+            - generic [ref=e26]: shield_person
+      - navigation [ref=e27]:
+        - button "نظرة عامة" [ref=e28] [cursor=pointer]
+        - button "الخدمات" [ref=e29] [cursor=pointer]
+        - button "الحالات" [ref=e30] [cursor=pointer]
+        - button "الفروع" [ref=e31] [cursor=pointer]
+        - button "التقارير" [ref=e32] [cursor=pointer]
+        - button "الأجور" [ref=e33] [cursor=pointer]
+        - button "الدليل" [ref=e34] [cursor=pointer]
+        - button "الإدارة" [ref=e35] [cursor=pointer]
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - button "arrow_forward عمل اشتراك جديد" [ref=e38] [cursor=pointer]:
+          - generic [ref=e39]: arrow_forward
+          - text: عمل اشتراك جديد
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - heading "edit_document نموذج CS0001 — عمل اشتراك جديد" [level=2] [ref=e42]:
+              - generic [ref=e44]: edit_document
+              - text: نموذج CS0001 — عمل اشتراك جديد
+            - generic [ref=e45]: النسختان متطابقتان بالمعلومات — الاحترافية للتعبئة والأصلية للطباعة الرسمية
+          - generic [ref=e46]:
+            - generic [ref=e47]: جاهز
+            - generic [ref=e49]:
+              - button "auto_awesome الاحترافية" [ref=e50] [cursor=pointer]:
+                - generic [ref=e51]: auto_awesome
+                - text: الاحترافية
+              - button "description الأصلية" [ref=e52] [cursor=pointer]:
+                - generic [ref=e53]: description
+                - text: الأصلية
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - heading "person بيانات مقدم الطلب" [level=3] [ref=e58]:
+                - generic [ref=e59]: person
+                - text: بيانات مقدم الطلب
+              - generic [ref=e60]:
+                - generic [ref=e61]:
+                  - generic [ref=e62]:
+                    - generic [ref=e63]: الاسم الرباعي واللقب
+                    - 'textbox "مثال: علي عبدالله حسين الكرخي" [ref=e64]'
+                  - generic [ref=e65]:
+                    - generic [ref=e66]: رقم البطاقة الموحدة / الهوية
+                    - textbox "199801012345" [ref=e67]
+                - generic [ref=e68]:
+                  - generic [ref=e69]:
+                    - generic [ref=e70]: رقم بطاقة السكن
+                    - textbox [ref=e71]
+                  - generic [ref=e72]:
+                    - generic [ref=e73]: رقم هاتف / موبايل
+                    - textbox "07xxxxxxxxx" [ref=e74]
+            - generic [ref=e75]:
+              - heading "category صنف الاشتراك المطلوب" [level=3] [ref=e77]:
+                - generic [ref=e78]: category
+                - text: صنف الاشتراك المطلوب
+              - generic [ref=e79]:
+                - generic [ref=e80]:
+                  - button "منزلي" [ref=e81] [cursor=pointer]
+                  - button "تجاري" [ref=e82] [cursor=pointer]
+                  - button "صناعي" [ref=e83] [cursor=pointer]
+                  - button "حكومي" [ref=e84] [cursor=pointer]
+                  - button "زراعي" [ref=e85] [cursor=pointer]
+                  - button "مجمع سكني" [ref=e86] [cursor=pointer]
+                  - button "مشروع استثماري" [ref=e87] [cursor=pointer]
+                - generic [ref=e88]:
+                  - generic [ref=e89]: قوة التغذية المطلوبة (نوع الربط)
+                  - generic [ref=e90]:
+                    - button "أحادي الطور" [ref=e91] [cursor=pointer]
+                    - button "ثلاثي الطور" [ref=e92] [cursor=pointer]
+            - generic [ref=e93]:
+              - heading "home_pin عنوان العقار" [level=3] [ref=e95]:
+                - generic [ref=e96]: home_pin
+                - text: عنوان العقار
+              - generic [ref=e97]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]:
+                    - generic [ref=e100]: حي
+                    - textbox [ref=e101]
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: محلة
+                    - textbox [ref=e104]
+                  - generic [ref=e105]:
+                    - generic [ref=e106]: زقاق
+                    - textbox [ref=e107]
+                  - generic [ref=e108]:
+                    - generic [ref=e109]: دار
+                    - textbox [ref=e110]
+                - generic [ref=e111]:
+                  - generic [ref=e112]:
+                    - generic [ref=e113]: الترميز الجديد
+                    - textbox [ref=e114]
+                  - generic [ref=e115]:
+                    - generic [ref=e116]: القطعة والمقاطعة
+                    - textbox [ref=e117]
+                  - generic [ref=e118]:
+                    - generic [ref=e119]: الطابق
+                    - textbox [ref=e120]
+                  - generic [ref=e121]:
+                    - generic [ref=e122]: رقم الشقة
+                    - textbox [ref=e123]
+                - generic [ref=e124]:
+                  - generic [ref=e125]:
+                    - generic [ref=e126]: GPS / نقطة دالة
+                    - textbox "33.3152, 44.3661" [ref=e127]
+                  - generic [ref=e128]:
+                    - generic [ref=e129]: علامة مميزة
+                    - textbox "قرب جامع/مدرسة…" [ref=e130]
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - heading "folder_open الوثائق / المستمسكات" [level=3] [ref=e133]:
+                  - generic [ref=e134]: folder_open
+                  - text: الوثائق / المستمسكات
+                - paragraph [ref=e135]: حدّد المستندات المرفقة — تكتمل عند تسليم الملف
+              - generic [ref=e137]:
+                - generic [ref=e138]:
+                  - generic [ref=e142] [cursor=pointer]: نسخة من هوية الأحوال المدنية
+                  - button "upload_file إرفاق" [ref=e143] [cursor=pointer]:
+                    - generic [ref=e144]: upload_file
+                    - generic [ref=e145]: إرفاق
+                - generic [ref=e146]:
+                  - generic [ref=e150] [cursor=pointer]: نسخة من بطاقة السكن
+                  - button "upload_file إرفاق" [ref=e151] [cursor=pointer]:
+                    - generic [ref=e152]: upload_file
+                    - generic [ref=e153]: إرفاق
+                - generic [ref=e154]:
+                  - generic [ref=e158] [cursor=pointer]: كتاب تأييد سكن مصدّق
+                  - button "upload_file إرفاق" [ref=e159] [cursor=pointer]:
+                    - generic [ref=e160]: upload_file
+                    - generic [ref=e161]: إرفاق
+                - generic [ref=e162]:
+                  - generic [ref=e165] [cursor=pointer]:
+                    - generic [ref=e166]: صورة موثّقة للقسام الشرعي
+                    - generic [ref=e167]: عند اللزوم
+                  - button "upload_file إرفاق" [ref=e168] [cursor=pointer]:
+                    - generic [ref=e169]: upload_file
+                    - generic [ref=e170]: إرفاق
+                - generic [ref=e171]:
+                  - generic [ref=e175] [cursor=pointer]: كتاب ضريبة العقار
+                  - button "upload_file إرفاق" [ref=e176] [cursor=pointer]:
+                    - generic [ref=e177]: upload_file
+                    - generic [ref=e178]: إرفاق
+                - generic [ref=e179]:
+                  - generic [ref=e182] [cursor=pointer]:
+                    - generic [ref=e183]: إجازة البناء مصدّقة
+                    - generic [ref=e184]: بدل ضريبة العقار
+                  - button "upload_file إرفاق" [ref=e185] [cursor=pointer]:
+                    - generic [ref=e186]: upload_file
+                    - generic [ref=e187]: إرفاق
+                - generic [ref=e188]:
+                  - generic [ref=e192] [cursor=pointer]: سند قيد التسجيل للعقار (الطابو)
+                  - button "upload_file إرفاق" [ref=e193] [cursor=pointer]:
+                    - generic [ref=e194]: upload_file
+                    - generic [ref=e195]: إرفاق
+                - generic [ref=e196]:
+                  - generic [ref=e200] [cursor=pointer]: صورة من قائمة حساب المجاور
+                  - button "upload_file إرفاق" [ref=e201] [cursor=pointer]:
+                    - generic [ref=e202]: upload_file
+                    - generic [ref=e203]: إرفاق
+                - paragraph [ref=e204]:
+                  - generic [ref=e205]: info
+                  - text: ارفع صورة أو PDF لكل مستند — يُضاف تلقائياً للـ PDF الموحّد عند التصدير.
+            - generic [ref=e206]:
+              - generic [ref=e207]:
+                - heading "gavel الإقرار والتعهد" [level=3] [ref=e208]:
+                  - generic [ref=e209]: gavel
+                  - text: الإقرار والتعهد
+                - paragraph [ref=e210]: يُطبع كاملاً مع النموذج الأصلي
+              - generic [ref=e211]:
+                - paragraph [ref=e212]: "أقر أنا الموقع أدناه وأتعهد والتزم لشركة توزيع الكهرباء بما يلي: أولاً: أقر بعلمي وموافقتي وأنا بكامل أهليتي القانونية أن الأساس القانوني الذي ينظم علاقتي بشركة تدفّق الخير والشركة العامة لتوزيع كهرباء بغداد — كهرباء الرصافة هي الأنظمة الصادرة عن هذه الشركة في كل ما يتعلق بشؤون الكهرباء. ثانياً: ألتزم وأتعهّد بعدم التعرّض للتجهيزات الكهربائية الخاصة بالشركة وعدم السماح لأي شخص بالتزود بالتيار من اشتراكي. ثالثاً: أقر بأنني أُخلي مسؤولية الشركة عن أية أضرار ناجمة عن مخالفة الالتزامات أو عن انقطاع التيار لأعمال الصيانة."
+                - generic [ref=e213] [cursor=pointer]: قرأت الإقرار وأوافق على ما ورد فيه
+            - generic [ref=e215]:
+              - generic [ref=e216]:
+                - heading "attach_file المرفقات" [level=3] [ref=e217]:
+                  - generic [ref=e218]: attach_file
+                  - text: المرفقات
+                - paragraph [ref=e219]: صور أو PDFs للمستمسكات — تُدمج في PDF موحّد عند التصدير
+              - generic [ref=e221] [cursor=pointer]:
+                - generic [ref=e222]: cloud_upload
+                - generic [ref=e223]:
+                  - strong [ref=e224]: اسحب وأفلت الملفات هنا
+                  - generic [ref=e225]: أو اضغط للاختيار — JPG · PNG · PDF (حتى 8MB لكل ملف)
+          - complementary [ref=e226]:
+            - generic [ref=e227]:
+              - generic [ref=e228]: request_quote
+              - text: الأجور المتوقعة
+            - generic [ref=e229]:
+              - generic [ref=e230]:
+                - generic [ref=e231]: أجور الكشف (منزلي)
+                - generic [ref=e232]: ١٥٬٠٠٠ د.ع
+              - generic [ref=e233] [cursor=pointer]:
+                - generic [ref=e234]: مقياس المستهلك
+                - generic [ref=e236]: ٦٢٬٥٠٠ د.ع
+              - generic [ref=e237] [cursor=pointer]:
+                - generic [ref=e238]: الغطاء السفلي للمقياس
+                - generic [ref=e240]: ١٢٬٥٠٠ د.ع
+            - generic [ref=e241]:
+              - generic [ref=e242]: المجموع
+              - generic [ref=e243]: ١٥٬٠٠٠د.ع
+            - generic [ref=e244]:
+              - button "send تقديم الطلب" [ref=e245] [cursor=pointer]:
+                - generic [ref=e246]: send
+                - text: تقديم الطلب
+              - button "description النسخة الأصلية" [ref=e247] [cursor=pointer]:
+                - generic [ref=e248]: description
+                - text: النسخة الأصلية
+              - button "refresh إعادة تهيئة" [ref=e249] [cursor=pointer]:
+                - generic [ref=e250]: refresh
+                - text: إعادة تهيئة
+    - link "مقارنة التصاميم compare افتح" [ref=e251] [cursor=pointer]:
+      - /url: compare.html
+      - text: مقارنة التصاميم
+      - generic [ref=e252]:
+        - generic [ref=e253]: compare
+        - text: افتح
+    - contentinfo "Designed and developed by Hussein Ali" [ref=e254]:
+      - generic [ref=e260]:
+        - generic "جهة التشغيل" [ref=e261]:
+          - generic [ref=e262]: ©
+          - generic [ref=e263]: "2026"
+          - generic [ref=e265]: تدفّق الخير
+          - generic [ref=e266]: كهرباء الرصافة · فرع النضال
+        - generic [ref=e267]:
+          - generic [ref=e268]: Designed & Developed
+          - heading "Hussein Ali" [level=6] [ref=e269]:
+            - generic [ref=e270]: Hussein Ali
+          - generic [ref=e271]:
+            - generic [ref=e272]: Software · Design
+            - generic [ref=e274]: Baghdad — Iraq
+  - region "إشعارات"

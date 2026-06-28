@@ -168,7 +168,7 @@
    PAGE ENTER — deeper 3D variant
    ============================================================= */
 .f3d .fp-enter {
-  animation: f3d-page-in 640ms var(--f-spring) both;
+  animation: f3d-page-in 640ms var(--f-ease-entrance) both;
 }
 @keyframes f3d-page-in {
   from { opacity: 0; transform: perspective(1000px) rotateX(5deg) translateY(22px); }
@@ -179,7 +179,7 @@
    PAPER FORM — unfolds in 3D
    ============================================================= */
 .f3d .ff-paper {
-  animation: f3d-paper-unfold 720ms var(--f-spring) both;
+  animation: f3d-paper-unfold 720ms var(--f-ease-entrance) both;
   transform-origin: 50% 0%;
 }
 @keyframes f3d-paper-unfold {

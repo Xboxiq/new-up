@@ -17,8 +17,130 @@ function bars(seed, n = 14) {
 // =============================================================
 // USER MENU — avatar dropdown (profile + admin entry)
 // =============================================================
+function ChangePasswordModal({ open, onClose }) {
+  const toast = window.useToast ? window.useToast() : null;
+  const [current, setCurrent] = useState('');
+  const [next, setNext] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [show, setShow] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+  const firstRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    setCurrent(''); setNext(''); setConfirm(''); setShow(false); setError(null); setBusy(false);
+    setTimeout(() => firstRef.current && firstRef.current.focus(), 30);
+    const onKey = (e) => { if (e.key === 'Escape' && !busy) onClose && onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  // Live strength (mirrors the login meter).
+  const score = React.useMemo(() => {
+    if (!next) return 0;
+    let s = 0;
+    if (next.length >= 8) s++;
+    if (next.length >= 12) s++;
+    if (/[a-z]/.test(next) && /[A-Z]/.test(next)) s++;
+    if (/\d/.test(next)) s++;
+    if (/[^A-Za-z0-9]/.test(next)) s++;
+    return Math.min(s, 4);
+  }, [next]);
+  const strengthLabels = ['ضعيفة جداً', 'ضعيفة', 'متوسطة', 'جيدة', 'قوية'];
+
+  if (!open) return null;
+
+  const submit = async (e) => {
+    e && e.preventDefault();
+    setError(null);
+    if (!current || !next) { setError('أدخل كلمة المرور الحالية والجديدة'); return; }
+    if (next !== confirm)  { setError('كلمتا المرور الجديدتان غير متطابقتين'); return; }
+    if (next === current)  { setError('اختر كلمة مرور مختلفة عن الحالية'); return; }
+    setBusy(true);
+    const res = await window.Auth.changePassword(current, next);
+    setBusy(false);
+    if (res.ok) {
+      toast && toast.push({ kind: 'success', title: 'تم تغيير كلمة المرور', body: 'استخدم الكلمة الجديدة في الدخول القادم.' });
+      onClose && onClose();
+      return;
+    }
+    setError(
+      res.code === 'BAD_CURRENT' ? 'كلمة المرور الحالية غير صحيحة' :
+      res.code === 'POLICY'      ? (res.message || 'كلمة المرور لا تحقق سياسة الأمان') :
+      'تعذّر تغيير كلمة المرور، حاول مرة أخرى'
+    );
+  };
+
+  const inputStyle = {
+    width: '100%', padding: '11px 13px', borderRadius: 12,
+    border: '1.5px solid var(--f-border)', background: 'var(--f-surface)',
+    color: 'var(--f-text)', font: 'inherit',
+  };
+  const field = (label, val, setter, refEl) => (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <span style={{ fontWeight: 700, fontSize: '.85rem' }}>{label}</span>
+      <input ref={refEl} type={show ? 'text' : 'password'} value={val}
+             onChange={(e) => { setter(e.target.value); setError(null); }}
+             style={inputStyle} disabled={busy} autoComplete="new-password" />
+    </label>
+  );
+
+  return (
+    <div className="fui-modal" role="dialog" aria-modal="true" aria-labelledby="cpw-title">
+      <div className="fui-modal__veil" onClick={() => !busy && onClose && onClose()} />
+      <div className="fui-modal__sheet" dir="rtl">
+        <div className="fui-modal__head">
+          <span className="fui-modal__ico"><Icon name="key" /></span>
+          <h3 id="cpw-title" className="fui-modal__title">تغيير كلمة المرور</h3>
+        </div>
+        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '4px 0' }}>
+          {field('كلمة المرور الحالية', current, setCurrent, firstRef)}
+          {field('كلمة المرور الجديدة', next, setNext, null)}
+          {next && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ display: 'flex', gap: 4, flex: 1 }}>
+                {[0,1,2,3].map(i => (
+                  <span key={i} style={{ height: 5, flex: 1, borderRadius: 3,
+                    background: i < score
+                      ? (score <= 1 ? 'var(--f-err)' : score === 2 ? 'var(--f-warn)' : 'var(--f-ok)')
+                      : 'var(--f-border)' }} />
+                ))}
+              </span>
+              <small style={{ color: 'var(--f-text-soft)', whiteSpace: 'nowrap' }}>{strengthLabels[score]}</small>
+            </div>
+          )}
+          {field('تأكيد كلمة المرور الجديدة', confirm, setConfirm, null)}
+
+          <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: '.85rem' }}>
+            <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} />
+            إظهار كلمات المرور
+          </label>
+
+          {error && (
+            <div role="alert" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px',
+                 borderRadius: 12, color: 'var(--f-err)', fontWeight: 700, fontSize: '.85rem',
+                 background: 'color-mix(in srgb, var(--f-err) 8%, transparent)',
+                 border: '1px solid color-mix(in srgb, var(--f-err) 35%, transparent)' }}>
+              <Icon name="error" size={18} /> <span>{error}</span>
+            </div>
+          )}
+
+          <div className="fui-modal__foot">
+            <button type="button" className="f-btn" onClick={() => onClose && onClose()} disabled={busy}>إلغاء</button>
+            <button type="submit" className="f-btn f-btn--primary" disabled={busy} aria-busy={busy}>
+              <Icon name="save" /> {busy ? 'جارٍ الحفظ…' : 'حفظ كلمة المرور'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function UserMenu({ nav }) {
   const [open, setOpen] = useState(false);
+  const [pwOpen, setPwOpen] = useState(false);
   const [, force] = useState(0);
   useEffect(() => window.Auth && window.Auth.subscribe(() => force(n => n + 1)), []);
   const me = window.Auth && window.Auth.currentUser();
@@ -116,8 +238,7 @@ function UserMenu({ nav }) {
 
           <div className="f-umenu__sep" />
           <button className="f-umenu__item"
-                  onClick={() => { setOpen(false); /* TODO: open change-password modal */
-                                   alert('غيّر كلمة المرور من قائمة "المستخدمون" بإعادة تعيين ذاتي قريباً.'); }}>
+                  onClick={() => { setOpen(false); setPwOpen(true); }}>
             <Icon name="key" /><span>تغيير كلمة المرور</span>
           </button>
           <button className="f-umenu__item f-umenu__item--danger"
@@ -126,6 +247,7 @@ function UserMenu({ nav }) {
           </button>
         </div>
       )}
+      <ChangePasswordModal open={pwOpen} onClose={() => setPwOpen(false)} />
     </div>
   );
 }
@@ -134,6 +256,21 @@ function UserMenu({ nav }) {
 // TOP CHROME
 // =============================================================
 function TopChrome({ tab, setTab, dark, setDark, onCmdK, nav }) {
+  const can = window.Auth ? window.Auth.can : () => false;
+  const me = window.Auth && window.Auth.currentUser ? window.Auth.currentUser() : null;
+  const myBranch = me && me.branchId && window.DB ? window.DB.branches.get(me.branchId) : null;
+  const branchLabel = myBranch ? `${myBranch.id} · ${myBranch.name}` : 'RS-014 · النضال';
+  const showAdminTab = can('user.read') || can('role.read') || can('settings.read') || can('audit.read');
+  const tabs = [
+    { k: 'overview', l: 'نظرة عامة' },
+    { k: 'services', l: 'الخدمات' },
+    { k: 'cases',    l: 'الحالات' },
+    { k: 'branches', l: 'الفروع' },
+    { k: 'reports',  l: 'التقارير' },
+    { k: 'pricing',  l: 'الأجور' },
+    { k: 'guide',    l: 'الدليل' },
+    ...(showAdminTab ? [{ k: 'admin', l: 'الإدارة' }] : []),
+  ];
   return (
     <header className="f-top">
       <div className="f-top__row">
@@ -145,19 +282,21 @@ function TopChrome({ tab, setTab, dark, setDark, onCmdK, nav }) {
           </span>
         </a>
         <span className="f-top__sep" />
-        <button className="f-team">
+        <div className="f-team" title="الفرع الحالي" style={{ cursor: 'default' }}>
           <span className="f-team__avatar">رص</span>
-          <span>RS-014 · النضال</span>
-          <Icon name="unfold_more" />
-        </button>
+          <span>{branchLabel}</span>
+        </div>
         <span className="f-top__push" />
         <button className="f-search" onClick={onCmdK}>
           <Icon name="search" />
           <span className="f-search__input">ابحث برقم اشتراك، اسم، أو رقم خدمة…</span>
           <span className="f-kbd">⌘K</span>
         </button>
-        <button className="f-iconbtn" title="السجل"><Icon name="article" /></button>
-        <button className="f-iconbtn" title="الإشعارات"><Icon name="notifications" /></button>
+        {can('audit.read') && (
+          <button className="f-iconbtn" title="سجل التدقيق" onClick={() => nav('admin', { tab: 'audit' })}>
+            <Icon name="article" />
+          </button>
+        )}
         <button className="f-iconbtn f-morph" onClick={() => setDark(!dark)} title="السمة">
           <Icon name={dark ? 'light_mode' : 'dark_mode'} />
           <span className="f-morph__lbl">{dark ? 'نهاري' : 'ليلي'}</span>
@@ -165,15 +304,7 @@ function TopChrome({ tab, setTab, dark, setDark, onCmdK, nav }) {
         <UserMenu nav={nav} />
       </div>
       <nav className="f-tabs">
-        {[
-          { k: 'overview', l: 'نظرة عامة' },
-          { k: 'services', l: 'الخدمات' },
-          { k: 'cases',    l: 'الحالات' },
-          { k: 'branches', l: 'الفروع' },
-          { k: 'reports',  l: 'التقارير' },
-          { k: 'pricing',  l: 'الأجور' },
-          { k: 'guide',    l: 'الدليل' },
-        ].map(t => (
+        {tabs.map(t => (
           <button key={t.k} className={`f-tab ${tab === t.k ? 'is-on' : ''}`} onClick={() => setTab(t.k)}>
             {t.l}
           </button>
@@ -748,18 +879,39 @@ function App() {
     </div>
   );
   else page = (
-    <>
-      <PageHead onCmdK={noop} nav={nav} />
-      <Departments nav={nav} />
-      <ServicesExpress nav={nav} />
-      <TipsTicker nav={nav} />
-      <Spotlight nav={nav} />
-      <Stats />
-      <div className="f-two">
-        <Activity />
+    <div className="ov">
+      {/* Tier 1 — orient & choose: greeting + department selection (primary journey) */}
+      <section className="ov-t1">
+        <PageHead onCmdK={noop} nav={nav} />
+        <Departments nav={nav} />
+      </section>
+
+      {/* Tier 2 — act & monitor: one dominant heading; metrics + work read as subordinate */}
+      <section className="ov-t2">
+        <div className="f-h2 ov-t2__lead">
+          <div className="f-h2__main">
+            <h2 className="f-h2__title">
+              <span className="f-h2__icon"><Icon name="dashboard" /></span>
+              العمل والمؤشرات
+            </h2>
+            <span className="f-h2__sub">كل ما يحتاج انتباهك الآن — المؤشرات، الطلبات المفتوحة، وبدء خدمة</span>
+          </div>
+        </div>
+        <Stats />
+        <div className="ov-t2__work">
+          <div className="ov-t2__primary"><Activity /></div>
+          <div className="ov-t2__aside"><ServicesExpress nav={nav} /></div>
+        </div>
+      </section>
+
+      {/* Tier 3 — ambient / secondary information (deliberately demoted)
+          Spotlight removed: redundant with ServicesExpress (same popularity data). */}
+      <section className="ov-t3">
+        <div className="ov-t3__head">معلومات إضافية</div>
+        <TipsTicker nav={nav} />
         <Sidebar />
-      </div>
-    </>
+      </section>
+    </div>
   );
 
   return (

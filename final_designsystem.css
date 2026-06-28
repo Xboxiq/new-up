@@ -1,0 +1,213 @@
+/* ============================================================================
+   final_designsystem.css — THE ELEVATION LAYER  (loaded LAST · additive only)
+   ----------------------------------------------------------------------------
+   Implements design.md §12 migration: retunes the live --f-* token system from
+   the prior "quiet institutional" palette (DESIGN0001) up to the new
+   "civic atelier at golden hour" identity — Walnut Ivory canvas, Royal Indigo
+   action, Heritage Crimson lead, Warm Gilt ceremony, Indigo Dusk night.
+
+   Strategy (per design.md §12): we DO NOT edit the core. Because every surface
+   already references --f-bg / --f-surface / --f-ink / --f-navy / --f-gold /
+   --f-crimson and the four section hues --f-cs|ct|cb|ca, retuning those tokens
+   here — at equal specificity but LATER source order — lifts the entire
+   platform to the new system in one disciplined move.
+
+   Also exports the canonical --ds-* token names (design.md §17) aliased onto
+   the live values, plus the new signature devices: mono eyebrow, serif-italic
+   emphasis word, damped-spring settle, tabular+slashed-zero numerals.
+
+   Verify after load: impeccable detect → [] · design.md lint · Playwright
+   375/768/1440 · toggle dark · confirm prefers-reduced-motion · AA contrast.
+   ============================================================================ */
+
+/* ───────────────────────────────────────────────────────────────────────────
+   1 · LIGHT — Walnut Ivory  (design.md §1.1 + §12 migration table)
+   Retune in place. Surfaces keep their roles; only the values are elevated.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* canvas + surfaces — warm toasted "paper", never pure white */
+  --f-bg:        #F6F2E9;   /* was #fafaf7 → Walnut Ivory (warmer, nuttier) */
+  --f-bg-2:      #EFEADC;   /* Ivory Shade — recessed bands / sticky backdrop */
+  --f-surface:   #FFFFFF;   /* Snow — one clean step above canvas            */
+  --f-surface-2: #FBF8F1;   /* Linen — inputs, nested, table headers         */
+  --f-surface-3: #F2ECDD;   /* Parchment — pressed / selected / hover fill    */
+  --f-border:    #E4DDCB;   /* Hairline — default 1px borders / dividers      */
+  --f-border-2:  #D4C9AF;   /* Hairline Strong — emphasis dividers, focus     */
+
+  /* ink ramp — warm near-black, never #000 */
+  --f-ink:       #1A1714;   /* primary text            */
+  --f-ink-2:     #4A453C;   /* secondary / body copy   */
+  --f-ink-3:     #897F6B;   /* captions / metadata     */
+
+  /* identity accents — indigo gravitas, gilded moments, heritage crimson */
+  --f-navy:         #2B3180;  /* Royal Indigo — the ONLY first-class action  */
+  --f-navy-soft:    #3A41A6;  /* brighter indigo for hover / position shift  */
+  --f-gold:         #B0851F;  /* Warm Gilt — ceremonial only                 */
+  --f-gold-soft:    #D8B255;
+  --f-crimson:      #9B1C2E;  /* Heritage Crimson — urgent/destructive/lead  */
+  --f-crimson-soft: #C24151;
+
+  /* semantic */
+  --f-ok:   #2F7D55;
+  --f-warn: #B0791A;
+  --f-err:  #A83232;
+
+  /* section hues — the four service domains, OKLCH, used 1:1 (design.md §1.5) */
+  --f-cs: oklch(0.52 0.13 262);  /* Subscriptions · Cobalt   */
+  --f-ct: oklch(0.58 0.10 70);   /* Technical · Bronze        */
+  --f-cb: oklch(0.56 0.09 195);  /* Billing · Teal            */
+  --f-ca: oklch(0.53 0.11 15);   /* Complaints · Rosewood     */
+
+  /* a brighter indigo reserved for dark-mode accents; in light it tracks navy */
+  --f-indigo-bright: var(--f-navy-soft);
+
+  /* focus ring — Royal Indigo at 38%, +2px offset feel (design.md §3) */
+  --f-ring: 0 0 0 2px color-mix(in srgb, var(--f-navy) 38%, transparent);
+
+  /* ── canonical --ds-* export (design.md §17) — aliased onto the live layer ── */
+  --ds-bg: var(--f-bg);            --ds-bg-2: var(--f-bg-2);
+  --ds-surface: var(--f-surface);  --ds-surface-2: var(--f-surface-2);  --ds-surface-3: var(--f-surface-3);
+  --ds-border: var(--f-border);    --ds-border-2: var(--f-border-2);
+  --ds-ink: var(--f-ink);          --ds-ink-2: var(--f-ink-2);          --ds-ink-3: var(--f-ink-3);
+  --ds-indigo: var(--f-navy);      --ds-indigo-soft: var(--f-navy-soft);
+  --ds-crimson: var(--f-crimson);  --ds-gold: var(--f-gold);
+  --ds-ok: var(--f-ok); --ds-warn: var(--f-warn); --ds-err: var(--f-err); --ds-info: var(--f-navy);
+  --ds-cs: var(--f-cs); --ds-ct: var(--f-ct); --ds-cb: var(--f-cb); --ds-ca: var(--f-ca);
+
+  /* damped "spring with weight" — design.md §5 (its --spring-soft). The overshoot
+     lives in the KEYFRAME (ds-settle, 5% ≤ 6%), NOT in the easing, so the curve is
+     a clean exponential ease-out (no dated bounce easing). Real objects decelerate. */
+  --f-ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   2 · DARK — Indigo Dusk  (design.md §1.2 — lifted navy-indigo, never OLED)
+   NOTE on action color: design.md §1.3 lists #8E94FF as the dark identity
+   indigo for links/focus/active. We keep the primary-BUTTON fill (--f-navy) at
+   a readable mid-indigo so white button text stays AA-compliant, and route the
+   bright #8E94FF to --f-navy-soft / --f-indigo-bright for hover, links, focus,
+   and accent text. This honors the doc's intent without breaking contrast.
+   ─────────────────────────────────────────────────────────────────────────── */
+.f-body.dark {
+  --f-bg:        #161B36;   /* Indigo Dusk — lifted deep navy, calm not black */
+  --f-bg-2:      #1B2142;   /* Dusk Shade                                     */
+  --f-surface:   #222A4F;   /* Slate Panel                                    */
+  --f-surface-2: #2A3358;   /* Slate Raised                                   */
+  --f-surface-3: #313B63;   /* next step on the ladder                        */
+  --f-border:    #353F6B;   /* Indigo Line                                    */
+  --f-border-2:  #45517F;
+
+  --f-ink:       #EAE7DE;   /* Moon Ink — warm off-white (echoes ivory day)   */
+  --f-ink-2:     #B7B9C9;   /* Moon Muted                                     */
+  --f-ink-3:     #8488A0;   /* Moon Faint                                     */
+
+  --f-navy:         #3A41A6;  /* readable indigo fill for primary buttons     */
+  --f-navy-soft:    #8E94FF;  /* bright indigo — hover / links / glow         */
+  --f-indigo-bright:#8E94FF;
+  --f-crimson:      #E07385;  /* lifted heritage crimson for dark             */
+  --f-crimson-soft: #EC95A3;
+  --f-gold:         #E3C268;  /* lifted gilt                                  */
+  --f-gold-soft:    #F0D88F;
+
+  --f-ok:   #4FB07E;
+  --f-warn: #D6A23A;
+  --f-err:  #E0686A;
+
+  /* section hues — L lifted ~0.72 for dark legibility (design.md §1.5) */
+  --f-cs: oklch(0.72 0.12 262);
+  --f-ct: oklch(0.74 0.09 70);
+  --f-cb: oklch(0.73 0.08 195);
+  --f-ca: oklch(0.72 0.10 15);
+
+  /* dark focus ring leans on the bright indigo so it reads on the dusk canvas */
+  --f-ring: 0 0 0 2px color-mix(in srgb, var(--f-indigo-bright) 50%, transparent);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   3 · TYPOGRAPHY — three families, each with an Arabic counterpart
+   (design.md §2). Arabic faces stay primary (Arabic-first product); the new
+   Latin display/body/mono faces lead the substitution chain for Latin glyphs.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --f-disp: "Clash Display", "Alexandria", "Readex Pro", "IBM Plex Sans Arabic", Georgia, serif;
+  --f-sans: "General Sans", "Readex Pro", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --f-arab: "Readex Pro", "IBM Plex Sans Arabic", "General Sans", sans-serif;
+  --f-mono: "JetBrains Mono", "Geist Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  --f-serif: "Playfair Display", "Boska", Georgia, serif;  /* serif-italic emphasis */
+}
+
+/* tabular + slashed-zero numerals for the mono "stamped" voice — IDs, money,
+   case numbers, KPIs (design.md §2: tnum + zero so 0 never reads as O).      */
+.f-mono,
+.fb-kpi__val, .fb-card__code, .fb-card__stat-n,
+.fc-row__code, .fc-row__fee, .fc-row__age, .fc-chip__n,
+.fr-row__amount, .fd-fee__amount, .ff-feerow b,
+.adm-tbl__code, .rcpt__no,
+.f-stat__val, .sp-row__code {
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   4 · SIGNATURE DEVICES  (design.md §2, §6)
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* 4.1 · Serif-italic emphasis word — one phrase per heading, never on Arabic.
+   Usage: <h1>Turn any request into a <i class="f-emph">resolution</i></h1>   */
+.f-emph,
+.f-pagehead h1 em.f-emph,
+.fb-hero__title em.f-emph {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: inherit;
+}
+/* Arabic never takes serif-italic: fall back to weight/color contrast.       */
+:root[lang="ar"] .f-emph,
+[dir="rtl"] .f-emph {
+  font-family: var(--f-disp);
+  font-style: normal;
+  font-weight: 700;
+  color: var(--f-crimson);
+}
+
+/* 4.2 · Mono eyebrow — the structural signature. Mono, uppercase, wide-tracked,
+   ink-faint. Latin gets +0.12em caps; Arabic adapts (no caps/wide tracking).  */
+.f-eyebrow {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--f-ink-3);
+}
+[dir="rtl"] .f-eyebrow:lang(ar) {
+  font-family: var(--f-arab);
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* 4.3 · Damped-spring settle — the gilt seal / KPI tick / confirm check.
+   Single tiny overshoot (≤6%), reduced-motion safe (design.md §5, §17.4).     */
+@keyframes ds-settle {
+  0%   { transform: scale(0.82); opacity: 0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.ds-seal { animation: ds-settle var(--f-dur-enter, 280ms) var(--f-ease-settle) both; }
+
+/* ───────────────────────────────────────────────────────────────────────────
+   5 · ELEVATION REFINEMENT  (design.md §4 — indigo-tinted soft shadow)
+   Retint the existing soft shadows from warm-ink toward Royal Indigo, so depth
+   reads as "lit", not as a gray box. Light only; dark keeps its glow lift.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --f-shadow:    0 1px 2px rgba(26,23,20,0.04), 0 8px 24px -12px rgba(43,49,128,0.14);
+  --f-shadow-md: 0 1px 2px rgba(26,23,20,0.05), 0 18px 44px -18px rgba(43,49,128,0.18);
+}
+.f-body.dark {
+  --f-shadow:    0 0 0 1px rgba(142,148,255,0.10), 0 12px 40px -16px rgba(0,0,0,0.6), inset 0 1px 0 rgba(234,231,222,0.06);
+  --f-shadow-md: 0 0 0 1px rgba(142,148,255,0.16), 0 18px 48px -16px rgba(0,0,0,0.66), inset 0 1px 0 rgba(234,231,222,0.08);
+}

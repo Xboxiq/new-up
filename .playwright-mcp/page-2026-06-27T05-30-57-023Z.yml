@@ -1,0 +1,205 @@
+- generic [ref=e2]:
+  - generic [ref=e41]:
+    - banner [ref=e42]:
+      - generic [ref=e43]:
+        - link "تدفّق الخير RASAFA · CS HUB" [ref=e44] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e46]:
+            - strong [ref=e47]: تدفّق الخير
+            - generic [ref=e48]: RASAFA · CS HUB
+        - generic "الفرع الحالي" [ref=e50]:
+          - generic [ref=e51]: رص
+          - generic [ref=e52]: RS-014 · النضال
+        - button "search ⌘K" [ref=e53] [cursor=pointer]:
+          - generic [ref=e54]: search
+          - generic [ref=e55]: ⌘K
+        - button "article" [ref=e56] [cursor=pointer]:
+          - generic [ref=e57]: article
+        - button "dark_mode ليلي" [ref=e58] [cursor=pointer]:
+          - generic [ref=e59]: dark_mode
+          - generic: ليلي
+        - button "ح shield_person" [ref=e61] [cursor=pointer]:
+          - generic [ref=e62]: ح
+          - generic "مسؤول النظام" [ref=e63]:
+            - generic [ref=e64]: shield_person
+      - navigation [ref=e65]:
+        - button "نظرة عامة" [ref=e66] [cursor=pointer]
+        - button "الخدمات" [ref=e67] [cursor=pointer]
+        - button "الحالات" [ref=e68] [cursor=pointer]
+        - button "الفروع" [ref=e69] [cursor=pointer]
+        - button "التقارير" [ref=e70] [cursor=pointer]
+        - button "الأجور" [ref=e71] [cursor=pointer]
+        - button "الدليل" [ref=e72] [cursor=pointer]
+        - button "الإدارة" [ref=e73] [cursor=pointer]
+    - main [ref=e74]:
+      - generic [ref=e75]:
+        - button "arrow_forward دفع قائمة أجور كهرباء" [ref=e76] [cursor=pointer]:
+          - generic [ref=e77]: arrow_forward
+          - text: دفع قائمة أجور كهرباء
+        - generic [ref=e78]:
+          - generic [ref=e79]:
+            - heading "edit_document نموذج CB0001 — دفع قائمة أجور كهرباء" [level=2] [ref=e80]:
+              - generic [ref=e82]: edit_document
+              - text: نموذج CB0001 — دفع قائمة أجور كهرباء
+            - generic [ref=e83]: النسختان متطابقتان بالمعلومات — الاحترافية للتعبئة والأصلية للطباعة الرسمية
+          - generic [ref=e84]:
+            - generic [ref=e85]: محفوظ تلقائياً
+            - generic [ref=e87]:
+              - button "auto_awesome الاحترافية" [ref=e88] [cursor=pointer]:
+                - generic [ref=e89]: auto_awesome
+                - text: الاحترافية
+              - button "description الأصلية" [ref=e90] [cursor=pointer]:
+                - generic [ref=e91]: description
+                - text: الأصلية
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - heading "person بيانات مقدم الطلب" [level=3] [ref=e96]:
+                - generic [ref=e97]: person
+                - text: بيانات مقدم الطلب
+              - generic [ref=e98]:
+                - generic [ref=e99]:
+                  - generic [ref=e100]:
+                    - generic [ref=e101]: الاسم الرباعي واللقب
+                    - 'textbox "مثال: علي عبدالله حسين الكرخي" [ref=e102]': اختبار بيانات
+                  - generic [ref=e103]:
+                    - generic [ref=e104]: رقم البطاقة الموحدة / الهوية
+                    - textbox "199801012345" [ref=e105]: اختبار بيانات
+                - generic [ref=e106]:
+                  - generic [ref=e107]:
+                    - generic [ref=e108]: رقم بطاقة السكن
+                    - textbox [ref=e109]: اختبار بيانات
+                  - generic [ref=e110]:
+                    - generic [ref=e111]: رقم هاتف / موبايل
+                    - textbox "07xxxxxxxxx" [ref=e112]: "07712345678"
+            - generic [ref=e113]:
+              - heading "tag بيانات الاشتراك" [level=3] [ref=e115]:
+                - generic [ref=e116]: tag
+                - text: بيانات الاشتراك
+              - generic [ref=e117]:
+                - generic [ref=e118]:
+                  - generic [ref=e119]:
+                    - generic [ref=e120]: رقم الحساب المخصص
+                    - 'textbox "مثال: 4081-552" [ref=e121]': اختبار بيانات
+                  - generic [ref=e122]:
+                    - generic [ref=e123]: اسم المشترك على الفاتورة
+                    - textbox [ref=e124]: اختبار بيانات
+                - generic [ref=e125]:
+                  - generic [ref=e126]:
+                    - generic [ref=e127]: رقم المقياس
+                    - textbox [ref=e128]: اختبار بيانات
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: صنف الاشتراك الحالي
+                    - combobox [ref=e131]:
+                      - option "— اختر —"
+                      - option "منزلي" [selected]
+                      - option "تجاري"
+                      - option "صناعي"
+                      - option "حكومي"
+                      - option "زراعي"
+            - generic [ref=e132]:
+              - heading "payments تفاصيل القائمة" [level=3] [ref=e134]:
+                - generic [ref=e135]: payments
+                - text: تفاصيل القائمة
+              - generic [ref=e136]:
+                - generic [ref=e137]:
+                  - generic [ref=e138]:
+                    - generic [ref=e139]: رقم القائمة
+                    - textbox [ref=e140]: اختبار بيانات
+                  - generic [ref=e141]:
+                    - generic [ref=e142]: فترة الاستهلاك
+                    - textbox [ref=e143]: اختبار بيانات
+                - generic [ref=e144]:
+                  - generic [ref=e145]:
+                    - generic [ref=e146]:
+                      - text: المبلغ المستحق
+                      - generic [ref=e147]: (د.ع)
+                    - spinbutton [ref=e148]: "12"
+                  - generic [ref=e149]:
+                    - generic [ref=e150]: طريقة الدفع
+                    - combobox [ref=e151]:
+                      - option "— اختر —"
+                      - option "نقداً في الصندوق" [selected]
+                      - option "تحويل مصرفي"
+                      - option "بطاقة ماستر"
+                      - option "محفظة إلكترونية"
+            - generic [ref=e152]:
+              - generic [ref=e153]:
+                - heading "folder_open الوثائق / المستمسكات" [level=3] [ref=e154]:
+                  - generic [ref=e155]: folder_open
+                  - text: الوثائق / المستمسكات
+                - paragraph [ref=e156]: حدّد المستندات المرفقة — تكتمل عند تسليم الملف
+              - generic [ref=e158]:
+                - generic [ref=e159]:
+                  - generic [ref=e163] [cursor=pointer]: القائمة الأصلية
+                  - button "upload_file إرفاق" [ref=e164] [cursor=pointer]:
+                    - generic [ref=e165]: upload_file
+                    - generic [ref=e166]: إرفاق
+                - generic [ref=e167]:
+                  - generic [ref=e171] [cursor=pointer]: هوية الدافع
+                  - button "upload_file إرفاق" [ref=e172] [cursor=pointer]:
+                    - generic [ref=e173]: upload_file
+                    - generic [ref=e174]: إرفاق
+                - paragraph [ref=e175]:
+                  - generic [ref=e176]: info
+                  - text: ارفع صورة أو PDF لكل مستند — يُضاف تلقائياً للـ PDF الموحّد عند التصدير.
+            - generic [ref=e177]:
+              - generic [ref=e178]:
+                - heading "gavel الإقرار والتعهد" [level=3] [ref=e179]:
+                  - generic [ref=e180]: gavel
+                  - text: الإقرار والتعهد
+                - paragraph [ref=e181]: يُطبع كاملاً مع النموذج الأصلي
+              - generic [ref=e182]:
+                - paragraph [ref=e183]: أقر بأن المبلغ المسدّد مطابق للقائمة المعروضة وأن الإيصال الصادر يعتبر إثبات دفع رسمياً.
+                - generic [ref=e184] [cursor=pointer]:
+                  - generic [ref=e186]: check
+                  - text: قرأت الإقرار وأوافق على ما ورد فيه
+            - generic [ref=e187]:
+              - generic [ref=e188]:
+                - heading "attach_file المرفقات" [level=3] [ref=e189]:
+                  - generic [ref=e190]: attach_file
+                  - text: المرفقات
+                - paragraph [ref=e191]: صور أو PDFs للمستمسكات — تُدمج في PDF موحّد عند التصدير
+              - generic [ref=e193] [cursor=pointer]:
+                - generic [ref=e194]: cloud_upload
+                - generic [ref=e195]:
+                  - strong [ref=e196]: اسحب وأفلت الملفات هنا
+                  - generic [ref=e197]: أو اضغط للاختيار — JPG · PNG · PDF (حتى 8MB لكل ملف)
+          - complementary [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e200]: request_quote
+              - text: الأجور المتوقعة
+            - generic [ref=e202]:
+              - generic [ref=e203]: هذه الخدمة بدون أجور
+              - generic [ref=e204]: —
+            - generic [ref=e205]:
+              - button "send تقديم الطلب" [ref=e206] [cursor=pointer]:
+                - generic [ref=e207]: send
+                - text: تقديم الطلب
+              - button "description النسخة الأصلية" [ref=e208] [cursor=pointer]:
+                - generic [ref=e209]: description
+                - text: النسخة الأصلية
+              - button "refresh إعادة تهيئة" [ref=e210] [cursor=pointer]:
+                - generic [ref=e211]: refresh
+                - text: إعادة تهيئة
+    - link "مقارنة التصاميم compare افتح" [ref=e212] [cursor=pointer]:
+      - /url: compare.html
+      - text: مقارنة التصاميم
+      - generic [ref=e213]:
+        - generic [ref=e214]: compare
+        - text: افتح
+    - contentinfo "Designed and developed by Hussein Ali" [ref=e215]:
+      - generic [ref=e221]:
+        - generic "جهة التشغيل" [ref=e222]:
+          - generic [ref=e223]: ©
+          - generic [ref=e224]: "2026"
+          - generic [ref=e226]: تدفّق الخير
+          - generic [ref=e227]: كهرباء الرصافة · فرع النضال
+        - generic [ref=e228]:
+          - generic [ref=e229]: Designed & Developed
+          - heading "Hussein Ali" [level=6] [ref=e230]:
+            - generic [ref=e231]: Hussein Ali
+          - generic [ref=e232]:
+            - generic [ref=e233]: Software · Design
+            - generic [ref=e235]: Baghdad — Iraq
+  - region "إشعارات"

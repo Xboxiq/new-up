@@ -1,0 +1,156 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "تدفّق الخير RASAFA · CS HUB" [ref=e6] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e8]:
+            - strong [ref=e9]: تدفّق الخير
+            - generic [ref=e10]: RASAFA · CS HUB
+        - generic "الفرع الحالي" [ref=e12]:
+          - generic [ref=e13]: رص
+          - generic [ref=e14]: RS-014 · النضال
+        - button "search ⌘K" [ref=e15] [cursor=pointer]:
+          - generic [ref=e16]: search
+          - generic [ref=e17]: ⌘K
+        - button "article" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: article
+        - button "dark_mode ليلي" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: dark_mode
+          - generic: ليلي
+        - button "ح shield_person" [ref=e23] [cursor=pointer]:
+          - generic [ref=e24]: ح
+          - generic "مسؤول النظام" [ref=e25]:
+            - generic [ref=e26]: shield_person
+      - navigation [ref=e27]:
+        - button "نظرة عامة" [ref=e28] [cursor=pointer]
+        - button "الخدمات" [ref=e29] [cursor=pointer]
+        - button "الحالات" [ref=e30] [cursor=pointer]
+        - button "الفروع" [ref=e31] [cursor=pointer]
+        - button "التقارير" [ref=e32] [cursor=pointer]
+        - button "الأجور" [ref=e33] [cursor=pointer]
+        - button "الدليل" [ref=e34] [cursor=pointer]
+        - button "الإدارة" [ref=e35] [cursor=pointer]
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - complementary [ref=e38]:
+          - generic [ref=e39]: الإدارة
+          - button "space_dashboard نظرة عامة" [ref=e40] [cursor=pointer]:
+            - generic [ref=e41]: space_dashboard
+            - text: نظرة عامة
+          - button "apps الخدمات 30" [ref=e42] [cursor=pointer]:
+            - generic [ref=e43]: apps
+            - text: الخدمات
+            - generic [ref=e44]: "30"
+          - button "tips_and_updates النصائح 5" [ref=e45] [cursor=pointer]:
+            - generic [ref=e46]: tips_and_updates
+            - text: النصائح
+            - generic [ref=e47]: "5"
+          - button "group المستخدمون 6" [ref=e48] [cursor=pointer]:
+            - generic [ref=e49]: group
+            - text: المستخدمون
+            - generic [ref=e50]: "6"
+          - button "badge الأدوار والصلاحيات 7" [ref=e51] [cursor=pointer]:
+            - generic [ref=e52]: badge
+            - text: الأدوار والصلاحيات
+            - generic [ref=e53]: "7"
+          - button "tune إعدادات المركز" [ref=e54] [cursor=pointer]:
+            - generic [ref=e55]: tune
+            - text: إعدادات المركز
+          - button "history سجل التدقيق 8" [ref=e56] [cursor=pointer]:
+            - generic [ref=e57]: history
+            - text: سجل التدقيق
+            - generic [ref=e58]: "8"
+          - generic [ref=e60]:
+            - generic [ref=e61]: ح
+            - generic [ref=e62]:
+              - generic [ref=e63]: حسين علي
+              - generic [ref=e64]: مدير النظام
+        - generic [ref=e65]:
+          - generic [ref=e67]:
+            - heading "admin_panel_settings لوحة الأدمن" [level=1] [ref=e68]:
+              - generic [ref=e69]: admin_panel_settings
+              - text: لوحة الأدمن
+            - generic [ref=e70]: نظرة عامة على إعدادات وبيانات النظام
+          - generic [ref=e71]:
+            - button "apps الخدمات 30 30 مفعّلة" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]:
+                - generic [ref=e74]: apps
+                - text: الخدمات
+              - generic [ref=e75]: "30"
+              - generic [ref=e76]: 30 مفعّلة
+            - button "tips_and_updates النصائح 5 5 نشطة" [ref=e77] [cursor=pointer]:
+              - generic [ref=e78]:
+                - generic [ref=e79]: tips_and_updates
+                - text: النصائح
+              - generic [ref=e80]: "5"
+              - generic [ref=e81]: 5 نشطة
+            - button "group المستخدمون 6 6 حساب نشط" [ref=e82] [cursor=pointer]:
+              - generic [ref=e83]:
+                - generic [ref=e84]: group
+                - text: المستخدمون
+              - generic [ref=e85]: "6"
+              - generic [ref=e86]: 6 حساب نشط
+            - 'button "history سجل التدقيق 8 آخر نشاط: ٢٤‏/٠٦‏/٢٠٢٦، ١:٢٨ م" [ref=e87] [cursor=pointer]':
+              - generic [ref=e88]:
+                - generic [ref=e89]: history
+                - text: سجل التدقيق
+              - generic [ref=e90]: "8"
+              - generic [ref=e91]: "آخر نشاط: ٢٤‏/٠٦‏/٢٠٢٦، ١:٢٨ م"
+          - generic [ref=e92]:
+            - heading "bolt أحدث النشاط" [level=3] [ref=e93]:
+              - generic [ref=e94]: bolt
+              - text: أحدث النشاط
+            - paragraph [ref=e95]: آخر ٥ إجراءات في النظام
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - generic [ref=e98]: ٢٤‏/٦‏/٢٠٢٦، ١:٢٨ م
+                - generic [ref=e99]:
+                  - generic [ref=e100]: auth.login.success
+                  - generic [ref=e101]: admin
+                - generic [ref=e102]: حسين علي
+              - generic [ref=e103]:
+                - generic [ref=e104]: ٢٤‏/٦‏/٢٠٢٦، ١٢:٠١ م
+                - generic [ref=e105]:
+                  - generic [ref=e106]: auth.login.success
+                  - generic [ref=e107]: admin
+                - generic [ref=e108]: حسين علي
+              - generic [ref=e109]:
+                - generic [ref=e110]: ٢٤‏/٦‏/٢٠٢٦، ١٢:٠١ م
+                - generic [ref=e111]:
+                  - generic [ref=e112]: auth.session.expired
+                  - generic [ref=e113]: admin
+                - generic [ref=e114]: مجهول
+              - generic [ref=e115]:
+                - generic [ref=e116]: ٢٤‏/٦‏/٢٠٢٦، ١١:١٦ ص
+                - generic [ref=e117]:
+                  - generic [ref=e118]: auth.login.success
+                  - generic [ref=e119]: admin
+                - generic [ref=e120]: حسين علي
+              - generic [ref=e121]:
+                - generic [ref=e122]: ٢٤‏/٦‏/٢٠٢٦، ١٠:٢٩ ص
+                - generic [ref=e123]:
+                  - generic [ref=e124]: auth.login.success
+                  - generic [ref=e125]: admin
+                - generic [ref=e126]: حسين علي
+    - link "مقارنة التصاميم compare افتح" [ref=e127] [cursor=pointer]:
+      - /url: compare.html
+      - text: مقارنة التصاميم
+      - generic [ref=e128]:
+        - generic [ref=e129]: compare
+        - text: افتح
+    - contentinfo "Designed and developed by Hussein Ali" [ref=e130]:
+      - generic [ref=e136]:
+        - generic "جهة التشغيل" [ref=e137]:
+          - generic [ref=e138]: ©
+          - generic [ref=e139]: "2026"
+          - generic [ref=e141]: تدفّق الخير
+          - generic [ref=e142]: كهرباء الرصافة · فرع النضال
+        - generic [ref=e143]:
+          - generic [ref=e144]: Designed & Developed
+          - heading "Hussein Ali" [level=6] [ref=e145]:
+            - generic [ref=e146]: Hussein Ali
+          - generic [ref=e147]:
+            - generic [ref=e148]: Software · Design
+            - generic [ref=e150]: Baghdad — Iraq
+  - region "إشعارات"

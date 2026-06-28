@@ -1,0 +1,136 @@
+/* ===========================================================================
+   newlevel/tokens.css — "Tayyar / التيّار" token layer
+   Namespace: --nl-*  · OKLCH throughout · dual-theme · RTL-first
+   Mirrors newlevel/DESIGN.md front matter. Never collides with --ms-* / --f-*.
+   =========================================================================== */
+
+:root {
+  /* ---- light: cool neutral ladder (NOT cream) ---- */
+  --nl-bg:         oklch(0.985 0.003 230);
+  --nl-bg-2:       oklch(0.965 0.004 230);
+  --nl-surface:    oklch(1 0 0);
+  --nl-surface-2:  oklch(0.975 0.004 230);
+  --nl-surface-3:  oklch(0.952 0.006 235);
+  --nl-border:     oklch(0.905 0.006 235);
+  --nl-border-2:   oklch(0.84 0.008 240);
+  --nl-ink:        oklch(0.24 0.014 255);
+  --nl-ink-2:      oklch(0.44 0.013 255);
+  --nl-ink-3:      oklch(0.545 0.013 255);
+
+  /* ---- accent: live copper (the one signal) ---- */
+  --nl-copper:        oklch(0.53 0.142 48);
+  --nl-copper-bright: oklch(0.62 0.15 52);
+  --nl-copper-ink:    oklch(0.47 0.13 46);   /* copper as text/link on light (AA) */
+  --nl-copper-soft:   oklch(0.93 0.04 60);   /* hover/wash fill */
+  --nl-on-accent:     oklch(0.99 0.004 60);
+  --nl-copper-grad:   linear-gradient(135deg, oklch(0.50 0.14 44) 0%, oklch(0.56 0.145 50) 55%, oklch(0.62 0.15 56) 100%);
+  /* glass chrome fill (legible in light) */
+  --nl-glass:      color-mix(in srgb, var(--nl-surface) 76%, transparent);
+  --nl-glass-edge: oklch(1 0 0 / 0.6);
+
+  /* ---- status (badges/deltas/dots only) ---- */
+  --nl-ok:   oklch(0.55 0.12 150);
+  --nl-warn: oklch(0.62 0.13 78);
+  --nl-err:  oklch(0.53 0.18 25);
+  --nl-warn-ink: oklch(0.47 0.115 70);  /* warn text on warn-tint (AA) */
+  --nl-ok-tint:   oklch(0.95 0.04 150);
+  --nl-warn-tint: oklch(0.95 0.06 85);
+  --nl-err-tint:  oklch(0.95 0.05 25);
+
+  /* ---- four domain hues (1:1, one perceived weight) ---- */
+  --nl-cs: oklch(0.55 0.13 260);   /* Subscriptions — Cobalt   */
+  --nl-ct: oklch(0.58 0.10 200);   /* Technical     — Teal      */
+  --nl-cb: oklch(0.56 0.11 150);   /* Billing       — Green     */
+  --nl-ca: oklch(0.55 0.14 18);    /* Complaints    — Rosewood   */
+  --nl-cs-tint: oklch(0.95 0.035 260);
+  --nl-ct-tint: oklch(0.95 0.03 200);
+  --nl-cb-tint: oklch(0.95 0.035 150);
+  --nl-ca-tint: oklch(0.95 0.04 18);
+
+  /* ---- elevation ---- */
+  --nl-shadow-hairline: inset 0 0 0 1px var(--nl-border);
+  --nl-shadow-lift: 0 1px 2px oklch(0.2 0.02 40 / 0.05), 0 10px 26px -16px oklch(0.55 0.12 45 / 0.20);
+  --nl-shadow-pop:  0 2px 6px oklch(0.2 0.02 40 / 0.06), 0 18px 44px -20px oklch(0.55 0.12 45 / 0.26);
+
+  /* ---- radius ---- */
+  --nl-r-rail: 2px; /* conductor rail / dots / micro chips — intentional sub-sm radius */
+  --nl-r-sm: 6px;  --nl-r-md: 10px;  --nl-r-lg: 14px;  --nl-r-xl: 20px;  --nl-r-pill: 999px;
+
+  /* ---- spacing ---- */
+  --nl-1: 4px;  --nl-2: 8px;  --nl-3: 12px;  --nl-4: 16px;  --nl-5: 20px;
+  --nl-6: 24px; --nl-8: 32px; --nl-10: 40px; --nl-12: 48px; --nl-16: 64px;
+
+  /* ---- type ---- */
+  --nl-font: "Readex Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --nl-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* ---- motion ---- */
+  --nl-ease:      cubic-bezier(0.4, 0, 0.2, 1);
+  --nl-ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --nl-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --nl-dur-micro: 160ms;
+  --nl-dur-enter: 260ms;
+  --nl-dur-exit:  180ms;
+
+  /* ---- focus ring + layout consts ---- */
+  --nl-ring: 0 0 0 2px var(--nl-bg), 0 0 0 4px var(--nl-copper-bright);
+  --nl-touch: 44px;
+  --nl-shell: 1440px;
+  --nl-topbar: 60px;
+
+  /* ---- semantic z-index scale ---- */
+  --nl-z-dropdown: 100;
+  --nl-z-sticky:   200;
+  --nl-z-backdrop: 300;
+  --nl-z-modal:    400;
+  --nl-z-toast:    500;
+  --nl-z-tooltip:  600;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --nl-bg:         oklch(0.19 0.014 255);
+  --nl-bg-2:       oklch(0.215 0.015 255);
+  --nl-surface:    oklch(0.245 0.016 255);
+  --nl-surface-2:  oklch(0.275 0.017 255);
+  --nl-surface-3:  oklch(0.31 0.018 255);
+  --nl-border:     oklch(0.34 0.018 255);
+  --nl-border-2:   oklch(0.42 0.02 255);
+  --nl-ink:        oklch(0.93 0.006 250);
+  --nl-ink-2:      oklch(0.76 0.01 250);
+  --nl-ink-3:      oklch(0.645 0.012 250);
+
+  --nl-copper:        oklch(0.70 0.14 54);
+  --nl-copper-bright: oklch(0.78 0.145 56);
+  --nl-copper-ink:    oklch(0.78 0.13 56);
+  --nl-copper-soft:   oklch(0.32 0.05 50);
+  --nl-on-accent:     oklch(0.19 0.014 255);
+  --nl-copper-grad:   linear-gradient(135deg, oklch(0.62 0.14 46) 0%, oklch(0.70 0.145 52) 55%, oklch(0.78 0.15 58) 100%);
+  --nl-glass:      color-mix(in srgb, var(--nl-surface) 70%, transparent);
+  --nl-glass-edge: oklch(1 0 0 / 0.07);
+
+  --nl-ok:   oklch(0.72 0.13 152);
+  --nl-warn: oklch(0.78 0.13 82);
+  --nl-err:  oklch(0.73 0.17 25);
+  --nl-warn-ink: oklch(0.84 0.13 84);
+  --nl-ok-tint:   oklch(0.30 0.05 152);
+  --nl-warn-tint: oklch(0.32 0.06 82);
+  --nl-err-tint:  oklch(0.30 0.07 25);
+
+  --nl-cs: oklch(0.72 0.12 260);
+  --nl-ct: oklch(0.74 0.09 200);
+  --nl-cb: oklch(0.74 0.10 150);
+  --nl-ca: oklch(0.70 0.13 18);
+  --nl-cs-tint: oklch(0.30 0.05 260);
+  --nl-ct-tint: oklch(0.30 0.045 200);
+  --nl-cb-tint: oklch(0.30 0.05 150);
+  --nl-ca-tint: oklch(0.31 0.06 18);
+
+  --nl-shadow-hairline: inset 0 0 0 1px var(--nl-border);
+  --nl-shadow-lift: 0 0 0 1px oklch(0 0 0 / 0.35), 0 14px 36px -18px oklch(0 0 0 / 0.65);
+  --nl-shadow-pop:  0 0 0 1px oklch(0 0 0 / 0.4), 0 22px 52px -22px oklch(0 0 0 / 0.7);
+
+  --nl-ring: 0 0 0 2px var(--nl-bg), 0 0 0 4px var(--nl-copper-bright);
+  color-scheme: dark;
+}
