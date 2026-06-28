@@ -31,9 +31,19 @@
         '<ellipse cx="37" cy="30" rx="21" ry="12" fill="#ffffff" opacity=".26"/>' +
         '<rect x="12" y="12" width="76" height="76" rx="26" fill="none" stroke="#ffffff" stroke-opacity=".30" stroke-width="1"/>' +
       '</svg>' +
-      '<span class="ms" style="font-size:' + Math.round(size * 0.44) + 'px">' + icon + '</span>' +
+      // glyph: a bespoke SVG element (opts.glyph) when given, else a Material symbol
+      (opts.glyph ? '' : '<span class="ms" style="font-size:' + Math.round(size * 0.44) + 'px">' + icon + '</span>') +
       '</span>'
     );
+    if (opts.glyph) {
+      var g = document.createElement("span");
+      g.className = "at-spot__glyph";
+      g.style.cssText = "position:absolute;inset:0;display:grid;place-items:center";
+      opts.glyph.setAttribute("width", Math.round(size * 0.46));
+      opts.glyph.setAttribute("height", Math.round(size * 0.46));
+      g.appendChild(opts.glyph);
+      wrap.appendChild(g);
+    }
     return wrap;
   }
 

@@ -43,6 +43,16 @@
   --at-glass-edge: rgba(255, 255, 255, 0.55);
   --at-glass-blur: blur(22px) saturate(150%);
 
+  /* ── Gradients — professional, brand-tonal only (creative-fx: never rainbow,
+        never gradient-on-text; mesh stays ≤8% as atmosphere, not decoration) ── */
+  --at-grad-primary: linear-gradient(102deg, var(--at-indigo) 0%, var(--at-indigo-soft) 55%, var(--at-indigo) 100%);
+  --at-grad-golden:  linear-gradient(104deg, color-mix(in srgb, var(--at-gold-soft) 60%, transparent), color-mix(in srgb, var(--at-gold) 80%, transparent));
+  --at-grad-seal:    radial-gradient(circle at 32% 28%, var(--at-gold-soft), var(--at-gold) 70%);
+  /* golden-hour atmosphere for the page canvas (two faint pools, ≤8%) */
+  --at-grad-dawn:
+    radial-gradient(52% 42% at 88% -8%, color-mix(in srgb, var(--at-indigo) 6%, transparent), transparent 70%),
+    radial-gradient(46% 40% at 4% 108%, color-mix(in srgb, var(--at-gold) 5%, transparent), transparent 70%);
+
   /* ── Elevation — light: hairline inset + indigo-tinted soft lift (design.md §4) ── */
   --at-hairline:   inset 0 0 0 1px var(--at-border);
   --at-lift:       0 1px 2px rgba(26,23,20,.04), 0 8px 24px -12px rgba(43,49,128,.14);

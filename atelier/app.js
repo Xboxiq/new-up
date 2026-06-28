@@ -40,6 +40,7 @@
   var fmt = window.fmt || function (n) { return String(n); };
   var secClass = function (code) { return "sec-" + String(code || "").toLowerCase(); };
   var ART = window.AtelierArt || {};
+  var ICONS = window.AtelierIcons || {};
   var BRANCH_STATS = window.BRANCH_STATS || {};
   var MAHALLA_INDEX = window.MAHALLA_INDEX || {};
   var BRANCH_MAP = window.BRANCH_MAP || {};
@@ -324,9 +325,13 @@
   }
   function featureCard(s, lg) {
     var sec = SECTION_MAP[s.section] || {};
+    var bi = ICONS.forService ? ICONS.forService(s.code) : null;
+    var spot = ART.spot3d
+      ? ART.spot3d(s.icon, { lg: lg, size: lg ? 78 : 58, glyph: bi ? ICONS.svg(bi, { glyph: true, draw: true }) : null })
+      : el("span", { class: "at-svc__ico" }, [ms(s.icon)]);
     return el("button", { class: "at-feature " + (lg ? "at-feature--lg " : "") + secClass(s.section), type: "button", on: { click: function () { openService(s.code); } } }, [
       el("div", { class: "at-feature__top" }, [
-        ART.spot3d ? ART.spot3d(s.icon, { lg: lg, size: lg ? 78 : 58 }) : el("span", { class: "at-svc__ico" }, [ms(s.icon)]),
+        spot,
         el("span", { class: "at-feature__tag", text: (sec.name_en || sec.name) + " · " + s.section }),
       ]),
       el("h3", { class: "at-feature__h", text: s.name }),
@@ -395,7 +400,7 @@
         el("span", { class: "at-acc__rail" }, [el("span", { class: "at-mono", text: "0" + (i + 1) }), s.name]),
         el("div", { class: "at-acc__body" }, [
           ART.lineMesh ? ART.lineMesh(s.icon) : null,
-          el("span", { class: "at-acc__ico" }, [ms(s.icon)]),
+          el("span", { class: "at-acc__ico" }, [ICONS.forSection && ICONS.forSection(s.code) ? ICONS.svg(ICONS.forSection(s.code), { draw: true, size: 28 }) : ms(s.icon)]),
           el("span", { class: "at-acc__num", text: "0" + (i + 1) + " / " + s.name_en.toUpperCase() }),
           el("h3", { class: "at-acc__h", text: s.name }),
           el("p", { class: "at-acc__blurb", text: s.blurb }),
@@ -713,7 +718,7 @@
 
     var dock = el("div", { class: "at-dock" }, [
       el("a", { class: "at-brand", href: "#", "aria-label": "تدفّق الخير — الرئيسية", on: { click: function (e) { e.preventDefault(); go("home"); } } }, [
-        el("span", { class: "at-brand__mark" }, [ms("bolt", "ms--fill")]),
+        el("span", { class: "at-brand__mark" }, [ICONS.svg ? ICONS.svg("bolt", { glyph: true, size: 21 }) : ms("bolt", "ms--fill")]),
         el("span", { class: "at-brand__name" }, [el("strong", { text: "تدفّق الخير" }), el("small", { text: "RASAFA · CS HUB" })]),
       ]),
       tabsWrap,

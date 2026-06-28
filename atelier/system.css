@@ -22,7 +22,7 @@ body {
   line-height: 1.6;
   color: var(--at-ink);
   background:
-    radial-gradient(130% 90% at 100% -10%, color-mix(in srgb, var(--at-indigo) 5%, transparent), transparent 55%),
+    var(--at-grad-dawn),
     var(--at-bg);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
@@ -464,7 +464,7 @@ button { font: inherit; color: inherit; }
 }
 .at-seal__badge {
   inline-size: 56px; block-size: 56px; border-radius: 50%; flex: none; display: grid; place-items: center; color: var(--at-on-indigo);
-  background: radial-gradient(circle at 32% 28%, var(--at-gold-soft), var(--at-gold) 70%);
+  background: var(--at-grad-seal);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px -6px color-mix(in srgb, var(--at-gold) 60%, transparent);
   animation: at-settle var(--at-dur-enter) var(--at-spring) both;
 }
@@ -635,6 +635,7 @@ button { font: inherit; color: inherit; }
 /* 3D spot — glossy section-hued object, white glyph on top */
 .at-spot { position: relative; flex: none; line-height: 0; filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--at-sec) 34%, transparent)); }
 .at-spot .ms { position: absolute; inset: 0; display: grid; place-items: center; color: var(--at-on-indigo); text-shadow: 0 1px 2px rgba(0,0,0,.18); }
+.at-spot__glyph { filter: drop-shadow(0 1px 2px rgba(0,0,0,.18)); }
 .at-spot--lg { filter: drop-shadow(0 16px 28px color-mix(in srgb, var(--at-sec) 38%, transparent)); }
 
 /* line + mesh — backdrop wash with a centred monoline glyph */
@@ -772,6 +773,38 @@ button { font: inherit; color: inherit; }
 @media (max-width: 600px) { .at-desk__hint { display: none; } .at-desk__input { font-size: 1.02rem; } }
 
 /* ============================================================
+   §15d · BESPOKE ICONS (draw-on) + CARD REVEAL / STAGGER
+   Custom domain icons (icons.js) animate their stroke once;
+   showcase cards rise in a gentle stagger. transform/opacity only
+   (animate skill); all disabled under reduced-motion.
+   ============================================================ */
+.at-icon { display: inline-block; vertical-align: middle; color: inherit; }
+.at-icon path, .at-icon circle, .at-icon rect, .at-icon line, .at-icon polyline {
+  fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+/* white glyph variant — bespoke icon sitting on a 3D-spot blob */
+.at-icon--glyph path, .at-icon--glyph circle, .at-icon--glyph rect, .at-icon--glyph line, .at-icon--glyph polyline { stroke: var(--at-on-indigo); stroke-width: 1.6; }
+
+/* draw-on: pathLength="1" lets one keyframe trace every stroke; small stagger */
+.at-icon--draw [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: at-draw .72s var(--at-ease-out) forwards; }
+.at-icon--draw [pathLength]:nth-child(2) { animation-delay: .10s; }
+.at-icon--draw [pathLength]:nth-child(3) { animation-delay: .20s; }
+.at-icon--draw [pathLength]:nth-child(4) { animation-delay: .30s; }
+@keyframes at-draw { to { stroke-dashoffset: 0; } }
+
+/* card reveal — showcase bento + service grid rise in sequence */
+@keyframes at-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.at-bento > *, .at-grid > * { animation: at-rise var(--at-dur-enter) var(--at-ease-out) both; }
+.at-bento > *:nth-child(2), .at-grid > *:nth-child(2) { animation-delay: 50ms; }
+.at-bento > *:nth-child(3), .at-grid > *:nth-child(3) { animation-delay: 100ms; }
+.at-bento > *:nth-child(4), .at-grid > *:nth-child(4) { animation-delay: 150ms; }
+.at-grid > *:nth-child(5) { animation-delay: 200ms; }
+.at-grid > *:nth-child(6) { animation-delay: 250ms; }
+/* the featured spot lifts + brightens on hover (subtle parallax) */
+.at-feature:hover .at-spot { transform: translateY(-3px) scale(1.03); }
+.at-spot { transition: transform var(--at-dur-enter) var(--at-spring); }
+
+/* ============================================================
    §16 · RESPONSIVE
    ============================================================ */
 @media (max-width: 980px) {
@@ -800,6 +833,8 @@ button { font: inherit; color: inherit; }
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .at-view, .at-kin, .at-acc[aria-expanded="true"] .at-acc__body, .at-seal__badge { animation: none; opacity: 1; transform: none; filter: none; }
+  .at-bento > *, .at-grid > * { animation: none; opacity: 1; transform: none; }
+  .at-icon--draw [pathLength] { animation: none; stroke-dashoffset: 0; }
   .at-mast__pulse { animation: none; }
   *, *::before, *::after { transition-duration: 1ms !important; }
 }
