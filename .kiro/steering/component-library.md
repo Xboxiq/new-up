@@ -22,11 +22,11 @@ This file is that curated, persistent base. Treat it as the catalog when buildin
 |--------|---------------|--------|-------|
 | minhxthanh/copy-code-button | `.at-copy` | **BUILT** (§15h) | Copy mono refs (TQ-…/account). Ghost until hover; OK-check confirm; a11y label swap. Wired: receipt ref + cases table IDs. |
 | haydenbleasel/announcement | `.at-announce` | **BUILT** (§15h) | design.md §6.3b scarcity band. Soft gilt wash, ink text, one inline indigo link, dismissible (localStorage `at-announce`). Home only, never stacked. |
-| easemize/material-design-3-switch | `.at-switch` | SPEC | M3 toggle: track 52×32, thumb transform-only, `role="switch"` + `aria-checked`, space/enter, focus ring, reduced-motion. Build when a preferences/settings surface exists (avoid orphan). |
-| originui/dialog | `.at-dialog` | SPEC | Glass-on-chrome modal (design.md §6.3): `surface ≥72%` scrim, focus-trap, Esc, return-focus, `inert` background. High value — currently no modal exists. |
+| easemize/material-design-3-switch | `.at-switch` | **BUILT** (§15i) | M3 toggle, indigo-when-on (the action color), transform-only thumb (RTL-aware via `[dir="rtl"]`), `role="switch"`+`aria-checked`, keyboard via button. Wired into the new preferences dialog (dark-mode toggle). |
+| originui/dialog | `.at-dialog` | **BUILT** (§15i) | Glass-on-chrome modal (design.md §6.3): focus-trap, Esc, scrim-close, return-focus, body scroll-lock, reduced-motion. Generic `openDialog({eyebrow,title,sec,body,actions})`. Homes: preferences + case detail. |
 | originui/input + use-image-upload | refine `.at-input` | SPEC | Label-above, helper below, error below (ux `form-labels`). Image-upload only if a doc-attachment step is added to the form flow. |
-| geekles007/select + multiple-select | `.at-select` | SPEC | Token-styled select/listbox for form section/type + directory filters; keyboard + `aria-activedescendant`. |
-| javierdev0/order-tracking | `.at-track` | SPEC | Map to a request-status timeline (reuses the §6.6 stepper vocabulary) on a case-detail surface. |
+| geekles007/select + multiple-select | `.at-select` | SPEC | Token-styled select/listbox; **deferred** — current needs are better served by segmented `.at-opt`/chips (no clearly-better home yet). |
+| javierdev0/order-tracking | `.at-casetrack` | **BUILT** (§15i) | Case **status timeline**, rebuilt on the §6.6 stepper (unify, not a new fragment). `caseStages(status)` is pure + self-checked. Fixes a real UX bug: clicking an existing case row (requests table + telemetry feed) now opens a **case-detail dialog** with its timeline, not a new form. |
 | ayushmxxn/theme-toggle | refine dock toggle | SPEC | Optional sun/moon morph (transform/opacity, reduced-motion) for the existing dock theme button. |
 
 ### Reject — clash with the calm civic register (`design-taste §9.A`, `design.md` "glass on chrome only / no glow")

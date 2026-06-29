@@ -215,7 +215,7 @@
     if (loc.length) d.details = loc.join(" · ");
     return d;
   }
-  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed, searchAll: searchAll, goldenProgress: goldenProgress, caTelemetry: caTelemetry, parseIntent: parseIntent, prefillFromIntent: prefillFromIntent };
+  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed, searchAll: searchAll, goldenProgress: goldenProgress, caTelemetry: caTelemetry, parseIntent: parseIntent, prefillFromIntent: prefillFromIntent, caseStages: caseStages };
 
   // ---- persisted state --------------------------------------------------
   function load(key, fallback) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : fallback; } catch (e) { return fallback; } }
@@ -243,6 +243,7 @@
   // reference number for a completed request (pure-ish; format is asserted)
   function genRef() { return "TQ-2026-08-" + (1400 + Math.floor(Math.random() * 600)); }
   function openService(code, prefill) {
+    closeDialog();
     if (!SERVICE_MAP[code]) return;
     state.recent = toggleId(state.recent.filter(function (x) { return x !== code; }), code).slice(0, 12);
     save("at-recent", state.recent);
@@ -886,7 +887,7 @@
   function feedRow(c) {
     var s = SERVICE_MAP[c.svc] || { name: c.svc, section: "CA", code: c.svc };
     var urgent = c.priority === "urgent", vip = c.priority === "vip";
-    return el("button", { class: "at-tele__row " + secClass(s.section), type: "button", on: { click: function () { openService(s.code); } } }, [
+    return el("button", { class: "at-tele__row " + secClass(s.section), type: "button", on: { click: function () { openCaseDetail(c); } } }, [
       el("span", { class: "at-tele__dot" + (urgent ? " is-urgent" : vip ? " is-vip" : "") }),
       el("span", { class: "at-tele__rmain" }, [
         el("span", { class: "at-tele__rtop" }, [el("span", { class: "at-tele__ref", text: c.id }), el("span", { class: "at-tele__state", text: "· " + c.status })]),
@@ -910,7 +911,7 @@
     var body = el("tbody", {}, rows.map(function (c) {
       var s = SERVICE_MAP[c.svc] || { name: c.svc, section: "CS", icon: "description", code: c.svc };
       var urgent = c.priority === "urgent", vip = c.priority === "vip";
-      return el("tr", { class: secClass(s.section), style: urgent ? "--at-sec:var(--at-crimson)" : null, on: { click: function () { openService(s.code); } } }, [
+      return el("tr", { class: secClass(s.section), style: urgent ? "--at-sec:var(--at-crimson)" : null, on: { click: function () { openCaseDetail(c); } } }, [
         el("td", {}, [el("span", { class: "at-mono", style: "color:var(--at-ink-2)", text: c.id }), copyBtn(c.id, "نسخ رقم الطلب")]),
         el("td", {}, [el("div", { class: "at-tname" }, [el("span", { class: "at-svc__ico" }, [ms(s.icon)]), el("span", {}, [el("b", { text: s.name }), el("small", { class: "at-tnum", text: s.code })])])]),
         el("td", { text: c.subscriber }),
@@ -946,6 +947,114 @@
   function emptyState(icon, msg) {
     var art = ART.iso ? ART.iso(icon === "search_off" ? "search" : "empty") : ms(icon);
     return el("div", { class: "at-empty sec-cs" }, [art, el("p", { text: msg })]);
+  }
+
+  // =====================================================================
+  // ADOPTED PRIMITIVES (21st.dev refs → rebuilt native, design.md §10):
+  // dialog (originui/dialog) · switch (M3) · order-tracking (case timeline).
+  // Glass-on-chrome modal, focus-trapped + Esc + scrim + return-focus.
+  // =====================================================================
+  var currentDialog = null;
+  function closeDialog() {
+    if (!currentDialog) return;
+    var d = currentDialog; currentDialog = null;
+    document.removeEventListener("keydown", d.onKey, true);
+    document.documentElement.style.overflow = d.prevOverflow || "";
+    var ov = d.overlay;
+    if (prefersReduced()) { if (ov.parentNode) ov.parentNode.removeChild(ov); }
+    else { ov.setAttribute("data-closing", "1"); setTimeout(function () { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 220); }
+    if (d.returnTo && d.returnTo.focus) { try { d.returnTo.focus(); } catch (e) {} }
+  }
+  function openDialog(opts) {
+    opts = opts || {}; closeDialog();
+    var titleId = "at-dlg-title";
+    var closeX = el("button", { class: "at-dialog__close", type: "button", "aria-label": "إغلاق", on: { click: closeDialog } }, [ms("close")]);
+    var actionNodes = (opts.actions || []).map(function (a) {
+      return el("button", { class: "at-btn " + (a.variant || "at-btn--ghost") + " at-btn--sm", type: "button",
+        on: { click: function () { if (a.onClick) a.onClick(); if (a.close !== false) closeDialog(); } } }, [a.icon ? ms(a.icon) : null, a.label]);
+    });
+    var panel = el("div", { class: "at-dialog " + (opts.sec ? secClass(opts.sec) : ""), role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, tabindex: "-1" }, [
+      el("div", { class: "at-dialog__head" }, [
+        el("div", { style: "min-inline-size:0" }, [
+          opts.eyebrow ? el("span", { class: "at-eyebrow", text: opts.eyebrow }) : null,
+          el("h2", { class: "at-dialog__title", id: titleId, text: opts.title || "" }),
+        ]),
+        closeX,
+      ]),
+      opts.body ? el("div", { class: "at-dialog__body" }, [opts.body]) : null,
+      actionNodes.length ? el("div", { class: "at-dialog__actions" }, actionNodes) : null,
+    ]);
+    var overlay = el("div", { class: "at-overlay", on: { click: function (e) { if (e.target === overlay) closeDialog(); } } }, [panel]);
+    var prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    document.body.appendChild(overlay);
+    var returnTo = document.activeElement;
+    function focusables() { return panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'); }
+    function onKey(e) {
+      if (e.key === "Escape") { e.preventDefault(); closeDialog(); return; }
+      if (e.key === "Tab") {
+        var f = focusables(); if (!f.length) { e.preventDefault(); panel.focus(); return; }
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    document.addEventListener("keydown", onKey, true);
+    currentDialog = { overlay: overlay, onKey: onKey, prevOverflow: prevOverflow, returnTo: returnTo };
+    requestAnimationFrame(function () { (actionNodes[0] || closeX).focus(); });
+    return closeDialog;
+  }
+  // Material-3 style switch (transform-only thumb, RTL-aware, keyboard via button).
+  function switchEl(opts) {
+    opts = opts || {}; var on = !!opts.checked;
+    var btn = el("button", { class: "at-switch", type: "button", role: "switch", "aria-checked": on ? "true" : "false", "aria-label": opts.label || "تبديل",
+      on: { click: function () { on = !on; btn.setAttribute("aria-checked", on ? "true" : "false"); if (opts.onChange) opts.onChange(on); } } },
+      [el("span", { class: "at-switch__track" }, [el("span", { class: "at-switch__thumb" })])]);
+    return btn;
+  }
+  function openPreferences() {
+    var row1 = el("div", { class: "at-prefrow" }, [
+      el("div", {}, [el("div", { class: "at-prefrow__t", text: "الوضع الداكن" }), el("div", { class: "at-prefrow__s", text: "غسق إنديغو — مريح للورديات الطويلة" })]),
+      switchEl({ checked: isDark(), label: "الوضع الداكن", onChange: function (v) { applyTheme(v); render(); } }),
+    ]);
+    openDialog({ eyebrow: "تفضيلات", title: "تفضيلات العرض", body: el("div", {}, [row1]), actions: [{ label: "تم", variant: "at-btn--primary", icon: "check" }] });
+  }
+  // order-tracking (javierdev0) → a case status timeline, rebuilt on the §6.6 stepper (unify).
+  var CASE_STAGES = ["مُقدَّم", "قيد المراجعة", "قيد المعالجة", "مُنجَز"];
+  var CASE_STAGE_MAP = { "فحص ميداني": 1, "تحقق قانوني": 1, "موافقة مدير": 1, "بانتظار الدفع": 2, "قيد التنفيذ": 2, "فريق طوارئ": 2, "مُنجَز": 3, "منجز": 3, "مكتمل": 3 };
+  function caseStages(status) {
+    var cur = CASE_STAGE_MAP.hasOwnProperty(String(status)) ? CASE_STAGE_MAP[String(status)] : 1;
+    return { stages: CASE_STAGES, current: cur };
+  }
+  function trackStepper(stages, current) {
+    return el("div", { class: "at-stepper at-stepper--track" }, stages.map(function (st, i) {
+      var stt = i < current ? "done" : i === current ? "active" : "upcoming";
+      return el("div", { class: "at-step", "data-state": stt }, [
+        el("span", { class: "at-step__rail" }),
+        el("span", { class: "at-step__node" }, [stt === "done" ? ms("check") : String(i + 1)]),
+        el("div", { class: "at-step__lbl" }, [el("div", { class: "at-step__title", text: st })]),
+      ]);
+    }));
+  }
+  function openCaseDetail(c) {
+    var s = SERVICE_MAP[c.svc] || { name: c.svc, section: "CS", icon: "description", code: c.svc };
+    var st = caseStages(c.status), urgent = c.priority === "urgent", vip = c.priority === "vip";
+    var header = el("div", { class: "at-casehd" }, [
+      el("span", { class: "at-svc__ico" }, [ms(s.icon)]),
+      el("div", { style: "min-inline-size:0" }, [
+        el("div", { class: "at-casehd__ref" }, [el("span", { class: "at-mono at-tnum", text: c.id }), copyBtn(c.id, "نسخ رقم الطلب")]),
+        el("span", { class: "at-badge " + (urgent ? "at-badge--urgent" : vip ? "at-badge--gold" : "") }, [urgent ? ms("priority_high") : vip ? ms("workspace_premium") : null, c.status]),
+      ]),
+    ]);
+    var track = el("div", { class: "at-casetrack" }, [el("span", { class: "at-eyebrow", text: "مسار الحالة" }), trackStepper(st.stages, st.current)]);
+    var meta = el("div", {}, [
+      row("person", "المشترك", c.subscriber),
+      row("badge", "الموظف المسؤول", c.officer),
+      row("schedule", "المدة", c.age, true),
+      row("request_quote", "الأجور", c.fee ? fmt(c.fee) + " د.ع" : "—"),
+    ]);
+    openDialog({ eyebrow: "متابعة حالة · " + s.section, title: s.name, sec: s.section, body: el("div", {}, [header, track, meta]),
+      actions: [{ label: "فتح طلب مماثل", variant: "at-btn--primary", icon: "add", onClick: function () { openService(s.code); } }, { label: "إغلاق", variant: "at-btn--ghost" }] });
   }
 
   // =====================================================================
@@ -1122,6 +1231,7 @@
       tabsWrap,
       el("div", { class: "at-dock__side" }, [
         el("label", { class: "at-docksearch" }, [ms("search"), el("input", { type: "search", placeholder: "بحث شامل", "aria-label": "بحث" }), el("kbd", { text: "⌘K" })]),
+        el("button", { class: "at-iconbtn", type: "button", "aria-label": "التفضيلات", on: { click: openPreferences } }, [ms("settings")]),
         el("button", { class: "at-iconbtn", type: "button", id: "at-theme", "aria-label": "تبديل السمة" }, [ms(isDark() ? "light_mode" : "dark_mode")]),
         el("button", { class: "at-iconbtn", type: "button", "aria-label": "التنبيهات" }, [ms("notifications"), el("span", { class: "at-iconbtn__pip" })]),
         el("button", { class: "at-monogram", type: "button", "aria-label": "الحساب", text: "ر م" }),
@@ -1143,7 +1253,7 @@
   }
 
   var VIEWS = { home: viewHome, services: viewServices, branches: viewBranches, fees: viewFees, complaints: viewComplaints, requests: viewRequests, updates: viewUpdates };
-  function go(tab) { state.form = null; state.receipt = null; state.tab = tab; render(); var m = $(".at-main"); if (m) m.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" }); }
+  function go(tab) { closeDialog(); state.form = null; state.receipt = null; state.tab = tab; render(); var m = $(".at-main"); if (m) m.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" }); }
 
   // ---- theme ------------------------------------------------------------
   function isDark() { return document.documentElement.getAttribute("data-theme") === "dark"; }
@@ -1213,5 +1323,7 @@
     console.assert(parseIntent("بلاغ خطر").action.code === "CA0002", "parseIntent: hazard report");
     console.assert(parseIntent("سلام") === null, "parseIntent: no match -> null");
     console.assert(prefillFromIntent({ type: "تجاري", mahalla: "143", branch: { id: "RS-014", name: "مركز النضال" } }).type === "تجاري", "prefillFromIntent: carries type");
+    console.assert(caseStages("فحص ميداني").current === 1 && caseStages("بانتظار الدفع").current === 2 && caseStages("مُنجَز").current === 3, "caseStages: status -> stage");
+    console.assert(caseStages("نص غير معروف").current === 1 && caseStages().stages.length === 4, "caseStages: default + 4 stages");
   })();
 })();
