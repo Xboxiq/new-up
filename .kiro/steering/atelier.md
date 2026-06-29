@@ -65,11 +65,16 @@ services/branches/mahallas/cases/fees, ⌘K) · **golden-hour sunline** (workday
 **accordion** · quick-access (fav/recent/most, localStorage) · **gilt seal** · tips + notifications ·
 extension slots (Vercel/Notion/Figma/Skills). Tabs: services directory / branches / fees /
 complaints / requests / updates. World-class button vocabulary + bespoke animated icons + gradients.
+**Core work loop done:** service **form flow** (connected vertical stepper §6.6, 3 steps:
+subscriber → details → review-with-advisories) → **gilt receipt** (§6.7: drawn gold seal settling on
+a damped spring, mono `tnum` reference, circular-check summary, ceremonial download). Wired via
+`openService(code)` → `state.form` → submit → `state.receipt`; `go(tab)` clears them; host apps can
+still override with `window.AtelierNav`. Screenshot analysis is documented in `atelier/VISUAL-FEEDBACK.md`.
 
 ## Next (small → big, per the build order)
 1. Polish the small details first: focus states, tab/keyboard order, AA contrast in dark,
    skeleton loaders, empty/error states — then larger screens.
-2. Service **form flow** (connected stepper §6.6) → **gilt receipt** (§6.7) — the core work loop.
+2. ~~Service **form flow** (connected stepper §6.6) → **gilt receipt** (§6.7)~~ — **DONE**.
 3. Branch **mahalla map**, **dark telemetry** dashboard for CA (§6.12), Cover Flow onboarding (§6.8).
 4. Intent **parsing** in the concierge (full-sentence → pre-filled service+branch).
 5. Verify each change: `impeccable detect` → `[]`; logical-props/emoji scan; 375/768/1440;

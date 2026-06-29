@@ -99,6 +99,8 @@
 
   var state = {
     tab: "home",
+    form: null,      // { code, step, data } — active service form flow
+    receipt: null,   // { code, ref, data } — completed flow (gilt moment)
     favs: load("at-favs", ["CS0001", "CB0001"]),
     recent: load("at-recent", ["CT0009", "CB0006", "CS0004"]),
     ledgerFilter: "all",
@@ -112,11 +114,16 @@
     save("at-favs", state.favs);
     render();
   }
+  // reference number for a completed request (pure-ish; format is asserted)
+  function genRef() { return "TQ-2026-08-" + (1400 + Math.floor(Math.random() * 600)); }
   function openService(code) {
+    if (!SERVICE_MAP[code]) return;
     state.recent = toggleId(state.recent.filter(function (x) { return x !== code; }), code).slice(0, 12);
     save("at-recent", state.recent);
-    if (window.AtelierNav) window.AtelierNav(code); // integration hook
+    if (window.AtelierNav) { window.AtelierNav(code); }        // host app may override routing
+    else { state.receipt = null; state.form = { code: code, step: 0, data: {} }; } // built-in flow
     render();
+    var m = $(".at-main"); if (m) m.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
   }
 
   // ---- static editorial content (structure fixed, content is data) ------
@@ -692,6 +699,147 @@
   }
 
   // =====================================================================
+  // VIEW: SERVICE FORM FLOW (connected stepper §6.6) + GILT RECEIPT (§6.7)
+  // =====================================================================
+  var TYPE_OPTS = {
+    CS: ["منزلي", "تجاري", "صناعي", "حكومي"],
+    CT: ["طور واحد", "ثلاثة أطوار"],
+    CB: ["دفع كامل", "تقسيط"],
+    CA: ["عادي", "عاجل", "خطر"],
+  };
+  function formView() {
+    var f = state.form, s = SERVICE_MAP[f.code] || {}, sec = SECTION_MAP[s.section] || {};
+    var steps = [
+      { eyebrow: "الخطوة ١ من ٣", title: "بيانات المشترك" },
+      { eyebrow: "الخطوة ٢ من ٣", title: "تفاصيل الطلب" },
+      { eyebrow: "الخطوة ٣ من ٣", title: "المراجعة والإقرار" },
+    ];
+    var inputs = {};
+    function readActive() { Object.keys(inputs).forEach(function (k) { f.data[k] = inputs[k].value; }); }
+    function field(label, key, opts) {
+      opts = opts || {};
+      var node = opts.area
+        ? el("textarea", { class: "at-input", placeholder: opts.ph || "", "aria-label": label })
+        : el("input", { class: "at-input", type: opts.type || "text", placeholder: opts.ph || "", "aria-label": label, inputmode: opts.tnum ? "numeric" : null });
+      node.value = f.data[key] || "";
+      if (opts.tnum) node.classList.add("at-tnum");
+      inputs[key] = node;
+      return el("div", { class: "at-field" }, [el("label", {}, [label, opts.req ? el("span", { class: "req", text: "*" }) : null]), node]);
+    }
+    function segmented(key, options) {
+      return el("div", { class: "at-opts" }, options.map(function (o) {
+        var on = (f.data[key] || options[0]) === o;
+        return el("button", { class: "at-opt", type: "button", "aria-pressed": on ? "true" : "false",
+          on: { click: function () { readActive(); f.data[key] = o; render(); } } },
+          [el("span", { class: "at-opt__tick" }), o]);
+      }));
+    }
+
+    // active step body
+    var body;
+    if (f.step === 0) body = el("div", {}, [
+      field("اسم المشترك", "subscriber", { req: true, ph: "الاسم الثلاثي كما في السجل" }),
+      field("رقم الحساب / المقياس", "account", { req: true, tnum: true, ph: "مثال: 100-204-1187" }),
+      field("رقم الهاتف", "phone", { tnum: true, ph: "0790…" }),
+    ]);
+    else if (f.step === 1) body = el("div", {}, [
+      el("div", { class: "at-field" }, [el("label", {}, [s.section === "CA" ? "أولوية البلاغ" : "الصنف / النوع"]), segmented("type", TYPE_OPTS[s.section] || ["عادي"])]),
+      field("تفاصيل الطلب", "details", { area: true, ph: "اكتب وصفاً موجزاً للطلب أو الموقع…" }),
+      s.fixedPrice || s.hasPrice || s.priceNote ? el("div", { class: "at-adv" }, [
+        el("span", { class: "at-adv__ico" }, [ms("request_quote")]),
+        el("div", {}, [el("span", { class: "at-adv__tag", text: "أجور" }), el("span", { class: "at-adv__t", text: s.fixedPrice ? (fmt(s.fixedPrice) + " د.ع") : (s.priceNote || "تُحدَّد بعد الكشف الموقعي") })]),
+      ]) : null,
+    ]);
+    else body = el("div", {}, [
+      el("div", {}, (window.getAdvisories ? window.getAdvisories(f.code) : []).map(function (a) {
+        var danger = a.t === "danger";
+        return el("div", { class: "at-adv" + (danger ? " at-adv--danger" : "") }, [
+          el("span", { class: "at-adv__ico" }, [ms(danger ? "warning" : a.t === "faq" ? "help" : "fact_check")]),
+          el("div", {}, [el("span", { class: "at-adv__tag", text: danger ? "تحذير" : a.t === "faq" ? "سؤال شائع" : "مراجعة" }), el("span", { class: "at-adv__t", text: a.x })]),
+        ]);
+      })),
+      el("button", { class: "at-opt", type: "button", style: "margin-top:var(--at-2)", "aria-pressed": f.data.confirm ? "true" : "false",
+        on: { click: function () { readActive(); f.data.confirm = !f.data.confirm; render(); } } },
+        [el("span", { class: "at-opt__tick" }), "أُقرّ بصحّة البيانات وأطّلعت على الملاحظات"]),
+    ]);
+
+    function next() { readActive(); if (f.step < 2) { f.step++; render(); } else { if (!f.data.confirm) { f.data.confirm = true; } state.receipt = { code: f.code, ref: genRef(), data: f.data }; state.form = null; render(); } }
+    function back() { readActive(); if (f.step > 0) { f.step--; render(); } else { state.form = null; state.tab = state.tab || "services"; render(); } }
+
+    var stepper = el("div", { class: "at-stepper" }, steps.map(function (st, i) {
+      var stt = i < f.step ? "done" : i === f.step ? "active" : "upcoming";
+      return el("div", { class: "at-step", "data-state": stt }, [
+        el("span", { class: "at-step__rail" }),
+        el("span", { class: "at-step__node" }, [stt === "done" ? ms("check") : String(i + 1)]),
+        el("div", { class: "at-step__lbl" }, [el("div", { class: "at-step__eyebrow", text: st.eyebrow }), el("div", { class: "at-step__title", text: st.title })]),
+        i === f.step ? el("div", { class: "at-step__body" }, [
+          body,
+          el("div", { class: "at-flow__actions" }, [
+            el("button", { class: "at-btn at-btn--primary", type: "button", on: { click: next } }, [ms(f.step === 2 ? "check_circle" : "arrow_back"), f.step === 2 ? "إرسال الطلب" : "التالي"]),
+            el("button", { class: "at-btn at-btn--ghost", type: "button", on: { click: back } }, [f.step === 0 ? "إلغاء" : "السابق"]),
+          ]),
+        ]) : null,
+      ]);
+    }));
+
+    var aside = el("div", { class: "at-flow__aside " + secClass(s.section) }, [
+      el("div", { class: "at-flow__art" }, [ART.spot3d ? ART.spot3d(s.icon, { lg: true, size: 92, glyph: ICONS.forService && ICONS.forService(f.code) ? ICONS.svg(ICONS.forService(f.code), { glyph: true, draw: true }) : null }) : ms(s.icon)]),
+      el("div", {}, [
+        el("span", { class: "at-eyebrow", text: (sec.name || "") + " · " + s.section }),
+        el("h2", { class: "at-head", style: "display:block;margin-top:6px;font-family:var(--at-display);font-size:1.25rem", text: s.name }),
+        el("div", { class: "at-svc__stat at-tnum", style: "margin-top:var(--at-3)" }, [el("span", {}, [ms("schedule"), " مدة الإنجاز ~" + s.sla + " يوم"])]),
+      ]),
+    ]);
+
+    return el("div", { class: "at-view" }, [
+      el("button", { class: "at-link", type: "button", style: "margin-block-end:var(--at-3)", on: { click: function () { go(state.tab); } } }, [ms("arrow_forward"), "رجوع"]),
+      headBlock("طلب خدمة", s.name, "أكمل الخطوات الثلاث — تُحفظ بياناتك تلقائياً بين الخطوات"),
+      el("div", { class: "at-flow" }, [aside, el("section", { class: "at-card " + secClass(s.section) }, [stepper])]),
+    ]);
+  }
+
+  function receiptView() {
+    var r = state.receipt, s = SERVICE_MAP[r.code] || {}, sec = SECTION_MAP[s.section] || {};
+    var fee = s.fixedPrice ? (fmt(s.fixedPrice) + " د.ع") : (s.priceNote || "تُحدَّد بعد الكشف");
+    var rows = [
+      ["badge", "الخدمة", s.name],
+      ["badge", "القسم", (sec.name || "") + " · " + r.code],
+      ["badge", "المشترك", r.data.subscriber || "—"],
+      ["badge", "رقم الحساب", r.data.account || "—"],
+      ["badge", "النوع", r.data.type || "—"],
+      ["badge", "الأجور", fee],
+    ];
+    return el("div", { class: "at-view" }, [
+      el("div", { class: "at-receipt " + secClass(s.section) }, [
+        el("div", { class: "at-receipt__card" }, [
+          el("div", { class: "at-receipt__seal" }, [
+            (function () {
+              // drawn gilt seal: a gold spot blob (currentColor=gold) + check glyph
+              var w = el("span", { style: "color:var(--at-gold);display:block;inline-size:96px;block-size:96px;position:relative" });
+              if (ART.spot3d) { var sp = ART.spot3d("verified", { size: 96 }); w.appendChild(sp.querySelector("svg")); }
+              w.appendChild(el("span", { class: "ms ms--fill", style: "position:absolute;inset:0;display:grid;place-items:center;color:var(--at-on-indigo);font-size:40px", text: "workspace_premium" }));
+              return w;
+            })(),
+          ]),
+          el("div", { class: "at-receipt__eyebrow", text: "تمّ الإنجاز · ختم رسمي" }),
+          el("h2", { class: "at-receipt__h", text: "تم استلام طلبك" }),
+          el("div", { class: "at-receipt__ref" }, [ms("tag"), el("span", { class: "at-tnum", text: r.ref })]),
+          el("dl", { class: "at-receipt__rows" }, rows.map(function (row) {
+            return el("div", { class: "at-receipt__row" }, [
+              el("dt", {}, [el("span", { class: "at-check" }, [ms("check")]), row[1]]),
+              el("dd", { class: "at-tnum", text: row[2] }),
+            ]);
+          })),
+          el("div", { class: "at-receipt__actions" }, [
+            el("button", { class: "at-btn at-btn--ceremonial", type: "button" }, [ms("download"), "تنزيل الإيصال"]),
+            el("button", { class: "at-btn at-btn--ghost", type: "button", on: { click: function () { go("requests"); } } }, [ms("inbox"), "متابعة الطلبات"]),
+          ]),
+        ]),
+      ]),
+    ]);
+  }
+
+  // =====================================================================
   // DOCK + ROUTER
   // =====================================================================
   var TABS = [
@@ -745,7 +893,7 @@
   }
 
   var VIEWS = { home: viewHome, services: viewServices, branches: viewBranches, fees: viewFees, complaints: viewComplaints, requests: viewRequests, updates: viewUpdates };
-  function go(tab) { state.tab = tab; render(); var m = $(".at-main"); if (m) m.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" }); }
+  function go(tab) { state.form = null; state.receipt = null; state.tab = tab; render(); var m = $(".at-main"); if (m) m.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" }); }
 
   // ---- theme ------------------------------------------------------------
   function isDark() { return document.documentElement.getAttribute("data-theme") === "dark"; }
@@ -759,7 +907,8 @@
     if (!root) return;
     clear(root);
     var dock = buildDock();
-    var main = el("main", { class: "at-main" }, [el("div", { class: "at-shell" }, [(VIEWS[state.tab] || viewHome)()])]);
+    var view = state.receipt ? receiptView() : state.form ? formView() : (VIEWS[state.tab] || viewHome)();
+    var main = el("main", { class: "at-main" }, [el("div", { class: "at-shell" }, [view])]);
     root.appendChild(dock);
     root.appendChild(main);
     requestAnimationFrame(placeIndicator);
@@ -794,5 +943,6 @@
     console.assert(mostUsed(sample, 1)[0].code === "CB0001", "mostUsed: by popularity");
     console.assert(goldenProgress({ getHours: function () { return 12; }, getMinutes: function () { return 0; } }, 8, 16).pct === 0.5, "goldenProgress: noon = 0.5");
     console.assert(searchAll("").services.length === 0 && searchAll("cb0001").services.length === 1, "searchAll: empty vs code match");
+    console.assert(/^TQ-2026-08-\d{4}$/.test(genRef()), "genRef: reference format");
   })();
 })();

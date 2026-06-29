@@ -805,6 +805,105 @@ button { font: inherit; color: inherit; }
 .at-spot { transition: transform var(--at-dur-enter) var(--at-spring); }
 
 /* ============================================================
+   §15e · FORM FLOW (connected stepper §6.6) + GILT RECEIPT (§6.7)
+   Stepper modelled on screenshots/20260625_234741 (active node
+   filled --at-sec · rail · pale upcoming · bold/muted labels).
+   ============================================================ */
+.at-flow { display: grid; grid-template-columns: 300px 1fr; gap: var(--at-8); align-items: start; }
+.at-flow__aside { position: sticky; inset-block-start: 84px; display: flex; flex-direction: column; gap: var(--at-5); }
+.at-flow__art { display: grid; place-items: center; padding: var(--at-6); border-radius: var(--at-r-2xl); background: color-mix(in srgb, var(--at-sec) 7%, var(--at-surface)); box-shadow: var(--at-hairline); }
+
+/* the connected vertical stepper */
+.at-stepper { display: flex; flex-direction: column; }
+.at-step { position: relative; display: grid; grid-template-columns: auto 1fr; gap: var(--at-4); padding-block-end: var(--at-5); }
+.at-step:last-child { padding-block-end: 0; }
+.at-step__node {
+  inline-size: 38px; block-size: 38px; flex: none; z-index: 1;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--at-surface); color: var(--at-ink-3);
+  box-shadow: var(--at-hairline);
+  font-family: var(--at-mono); font-weight: 600; font-size: .9rem;
+  transition: background var(--at-dur-enter) var(--at-spring), color var(--at-dur-micro) var(--at-ease), box-shadow var(--at-dur-enter) var(--at-ease);
+}
+.at-step__rail { position: absolute; inset-inline-start: 18px; inset-block-start: 38px; inline-size: 2px; block-size: calc(100% - 38px); background: var(--at-border); z-index: 0; }
+.at-step:last-child .at-step__rail { display: none; }
+.at-step__lbl { padding-block-start: 7px; }
+.at-step__eyebrow { font-family: var(--at-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; color: var(--at-ink-3); }
+.at-step__title { font-family: var(--at-display); font-weight: 600; font-size: 1.02rem; color: var(--at-ink-3); margin-block-start: 2px; }
+/* states */
+.at-step[data-state="active"] .at-step__node { background: var(--at-sec); color: var(--at-on-indigo); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 4px 12px -3px color-mix(in srgb, var(--at-sec) 55%, transparent); }
+.at-step[data-state="active"] .at-step__title { color: var(--at-ink); }
+.at-step[data-state="done"] .at-step__node { background: color-mix(in srgb, var(--at-sec) 16%, transparent); color: var(--at-sec); }
+.at-step[data-state="done"] .at-step__rail { background: color-mix(in srgb, var(--at-sec) 45%, var(--at-border)); }
+.at-step[data-state="done"] .at-step__title { color: var(--at-ink-2); }
+
+/* active step body (only the active step expands a form) */
+.at-step__body { grid-column: 2; margin-block-start: var(--at-4); display: none; }
+.at-step[data-state="active"] .at-step__body { display: block; animation: at-glass-in var(--at-dur-enter) var(--at-ease-out) both; }
+
+/* fields */
+.at-field { display: flex; flex-direction: column; gap: 7px; margin-block-end: var(--at-4); }
+.at-field > label { font-weight: 600; font-size: .88rem; color: var(--at-ink-2); }
+.at-field > label .req { color: var(--at-crimson); margin-inline-start: 3px; }
+.at-input {
+  inline-size: 100%; padding: 11px 14px; border-radius: var(--at-r-md);
+  background: var(--at-surface-2); color: var(--at-ink); font: inherit; font-size: .95rem;
+  border: 1px solid var(--at-border); outline: none;
+  transition: box-shadow var(--at-dur-micro) var(--at-ease), border-color var(--at-dur-micro) var(--at-ease);
+}
+.at-input::placeholder { color: var(--at-ink-3); }
+.at-input:focus { border-color: var(--at-sec); box-shadow: 0 0 0 3px color-mix(in srgb, var(--at-sec) 22%, transparent); }
+textarea.at-input { resize: vertical; min-block-size: 76px; }
+
+/* boxed segmented options (img 204904) */
+.at-opts { display: grid; gap: 8px; }
+.at-opt { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: var(--at-r-md); border: 1px solid var(--at-border); background: var(--at-surface); cursor: pointer; font: inherit; text-align: start; color: var(--at-ink-2); transition: border-color var(--at-dur-micro) var(--at-ease), background var(--at-dur-micro) var(--at-ease); }
+.at-opt:hover { border-color: var(--at-border-2); }
+.at-opt__tick { inline-size: 18px; block-size: 18px; flex: none; border-radius: 50%; border: 1.5px solid var(--at-border-2); display: grid; place-items: center; }
+.at-opt[aria-pressed="true"] { border-color: var(--at-sec); background: color-mix(in srgb, var(--at-sec) 8%, transparent); color: var(--at-ink); }
+.at-opt[aria-pressed="true"] .at-opt__tick { border-color: var(--at-sec); background: var(--at-sec); }
+.at-opt[aria-pressed="true"] .at-opt__tick::after { content: ""; inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--at-on-indigo); }
+
+/* review advisories (reuse getAdvisories) */
+.at-adv { display: flex; gap: 11px; padding: 12px 14px; border-radius: var(--at-r-md); background: var(--at-surface-2); box-shadow: var(--at-hairline); margin-block-end: 8px; }
+.at-adv__ico { inline-size: 30px; block-size: 30px; flex: none; display: grid; place-items: center; border-radius: 9px; background: color-mix(in srgb, var(--at-sec) 13%, transparent); color: var(--at-sec); }
+.at-adv__ico .ms { font-size: 18px; }
+.at-adv--danger .at-adv__ico { background: color-mix(in srgb, var(--at-crimson) 14%, transparent); color: var(--at-crimson); }
+.at-adv__t { font-size: .88rem; color: var(--at-ink-2); line-height: 1.5; }
+.at-adv__tag { font-family: var(--at-mono); font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: var(--at-ink-3); display: block; margin-block-end: 2px; }
+
+.at-flow__actions { display: flex; gap: var(--at-3); margin-block-start: var(--at-6); }
+
+/* ── GILT RECEIPT (§6.7) — the one ceremonial moment ── */
+.at-receipt { max-inline-size: 560px; margin-inline: auto; }
+.at-receipt__card {
+  position: relative; overflow: hidden; text-align: center;
+  padding: var(--at-10) var(--at-8) var(--at-8);
+  border-radius: var(--at-r-2xl);
+  background: var(--at-glass); -webkit-backdrop-filter: var(--at-glass-blur); backdrop-filter: var(--at-glass-blur);
+  box-shadow: var(--at-hairline), inset 0 1px 0 var(--at-glass-edge), 0 26px 64px -24px rgba(43,49,128,.34);
+}
+.at-receipt__card::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: var(--at-grad-golden); opacity: .5; }
+.at-receipt__seal { position: relative; inline-size: 96px; block-size: 96px; margin-inline: auto; }
+.at-receipt__seal svg { display: block; filter: drop-shadow(0 10px 20px color-mix(in srgb, var(--at-gold) 45%, transparent)); animation: at-settle 520ms var(--at-spring) both; }
+.at-receipt__seal .ms { position: absolute; inset: 0; display: grid; place-items: center; color: var(--at-on-indigo); font-size: 38px; }
+.at-receipt__eyebrow { position: relative; margin-block-start: var(--at-5); font-family: var(--at-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--at-gold); }
+.at-receipt__h { position: relative; font-family: var(--at-display); font-weight: 700; font-size: 1.6rem; margin: var(--at-2) 0 0; }
+.at-receipt__ref { position: relative; display: inline-flex; align-items: center; gap: 8px; margin-block-start: var(--at-3); padding: 8px 14px; border-radius: var(--at-r-pill); background: color-mix(in srgb, var(--at-ink) 5%, transparent); font-family: var(--at-mono); font-size: .9rem; color: var(--at-ink); }
+.at-receipt__rows { position: relative; text-align: start; margin-block-start: var(--at-6); border-radius: var(--at-r-lg); background: color-mix(in srgb, var(--at-surface) 70%, transparent); box-shadow: var(--at-hairline); padding: var(--at-2) var(--at-5); }
+.at-receipt__row { display: flex; align-items: center; justify-content: space-between; gap: var(--at-3); padding-block: 11px; border-block-end: 1px solid var(--at-border); }
+.at-receipt__row:last-child { border-block-end: 0; }
+.at-receipt__row dt { display: inline-flex; align-items: center; gap: 8px; color: var(--at-ink-2); font-size: .88rem; }
+.at-receipt__row dt .at-check { inline-size: 18px; block-size: 18px; border-radius: 50%; background: color-mix(in srgb, var(--at-ok) 16%, transparent); color: var(--at-ok); display: grid; place-items: center; }
+.at-receipt__row dt .at-check .ms { font-size: 13px; }
+.at-receipt__row dd { margin: 0; font-family: var(--at-mono); font-weight: 600; color: var(--at-ink); }
+.at-receipt__actions { position: relative; display: flex; gap: var(--at-3); justify-content: center; margin-block-start: var(--at-6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .at-step[data-state="active"] .at-step__body, .at-receipt__seal svg { animation: none; }
+}
+
+/* ============================================================
    §16 · RESPONSIVE
    ============================================================ */
 @media (max-width: 980px) {
@@ -814,6 +913,8 @@ button { font: inherit; color: inherit; }
   .at-docksearch { display: none; }
   .at-bento { grid-template-columns: repeat(2, 1fr); }
   .at-feature, .at-feature--lg { grid-column: span 1; grid-row: auto; min-block-size: 180px; }
+  .at-flow { grid-template-columns: 1fr; }
+  .at-flow__aside { position: static; order: -1; }
 }
 @media (max-width: 760px) {
   .at-accord { flex-direction: column; min-block-size: 0; }
