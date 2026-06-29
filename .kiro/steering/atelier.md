@@ -78,13 +78,20 @@ rainbow), a scrollable **live feed** of real cases (status dot · mono ref · st
 **priority** (الكل/عاجل/قيادة/اعتيادي), and **one** crimson draughtsman connector on the URGENT metric.
 Derived purely from `RECENT_CASES` + `KPIS` via `AtelierHelpers.caTelemetry` (self-checked); the old
 standalone CA cases-table is folded into the feed. Quiet CA service cards sit beneath ("monitor, then file").
+**Concierge intent compiler done:** «المنضدة» now compiles a full Arabic operator sentence into a
+structured, pre-fillable request. `AtelierHelpers.parseIntent` (pure, self-checked vs real data) scores
+an action from a verb-lexicon mapped to real service codes + name-token overlap, resolves a mahalla number
+to its branch via `MAHALLA_INDEX` (32→4), and matches a type within the service's `TYPE_OPTS`. The desk
+renders an "understood" read-back card (section-hued identity + mono chips: domain · branch · mahalla ·
+type) with an indigo "ابدأ الطلب" that opens the stepper pre-filled via `openService(code, prefill)`. It
+is the first keyboard option. Full skill-driven write-up + decision ledger in `atelier/VISUAL-FEEDBACK.md` §10.
 
 ## Next (small → big, per the build order)
 1. Polish the small details first: focus states, tab/keyboard order, AA contrast in dark,
    skeleton loaders, empty/error states — then larger screens.
 2. ~~Service **form flow** (connected stepper §6.6) → **gilt receipt** (§6.7)~~ — **DONE**.
 3. Branch **mahalla map**, ~~**dark telemetry** dashboard for CA (§6.12)~~ **DONE**, Cover Flow onboarding (§6.8).
-4. Intent **parsing** in the concierge (full-sentence → pre-filled service+branch).
+4. ~~Intent **parsing** in the concierge (full-sentence → pre-filled service+branch)~~ **DONE** (intent _compiler_).
 5. Verify each change: `impeccable detect` → `[]`; logical-props/emoji scan; 375/768/1440;
    toggle dark; reduced-motion. Run JS via `env -u NODE_OPTIONS node --check`.
 

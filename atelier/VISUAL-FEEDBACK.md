@@ -172,3 +172,66 @@ Tokens only · logical properties only · `tnum`+`zero` · mono eyebrows/labels 
 its mandated baseline of 9, with **zero new findings**) · one accent discipline kept (crimson = urgent
 only; section hues 1:1; the feed's "leadership/VIP" dot is the rationed gold) · AA contrast on Indigo
 Dusk (Moon-Ink text on Slate, lifted section hues) · reduced-motion disables draw + pulse.
+
+
+
+---
+
+## 10 · «المنضدة» Intent Compiler (home signature, matured) — skill-driven pass
+
+> Built after explicit user feedback: "the development ideas are not mature yet; use the
+> mandated skills precisely and distinctively." This pass re-activated every mandated skill in
+> full (frontend-design, refero-design, design-taste-frontend, animate, design-motion-principles,
+> creative-fx, ui-ux-pro-max) and ran the `ui-ux-pro-max` search engine before designing.
+
+### Research (refero-design + ui-ux-pro-max, not vibe-memory)
+- `ui-ux-pro-max --design-system "...operations console arabic RTL data-dense"` → **Data-Dense
+  Dashboard** confirmed for the ops surface; its generic blue/amber palette **overridden** by the
+  brief-pinned indigo + section-hue system (frontend-design: "the brief wins").
+- `--domain chart` → for distribution use bars/box with **a number + label so meaning never relies
+  on color alone**; live indicators must respect reduced-motion and avoid flashing.
+- `--domain ux` → reduced-motion (High), "animate 1-2 elements max" (High), visible focus rings (High).
+
+### Self-critique that reshaped the roadmap (frontend-design pass 2)
+Running "would I produce this for any similar prompt?" against the prior roadmap bullets:
+- **Branch "map"** — rejected: no real GPS beyond 4 strings; a faked map violates refero's
+  "don't fake complex imagery." An honest version is a coverage *matrix*, not a map (deferred).
+- **"Intent parsing" as fuzzy search** — rejected as generic command-palette slop. **Matured into
+  an intent _compiler_**: it reads a full operator sentence in the desk's own Arabic vernacular and
+  emits a structured, pre-fillable civic request.
+
+### What shipped
+`AtelierHelpers.parseIntent(query, …)` (pure, with runnable `console.assert` checks, verified against
+the **real** `data.js` + `final_branches_data.js`):
+- **Action** — scored from a lexicon of real verb-phrases mapped to existing service codes, plus
+  service-name token overlap (needs ≥2 tokens, kills noise). "تقسيط" correctly beats generic "دفع".
+- **Locality** — a mahalla number resolves to its branch via the real `MAHALLA_INDEX` (32→4); e.g.
+  143→مركز النضال (RS-014), 129→مركز الفضل (RS-024). No invented geography.
+- **Type** — matched within the service's own section `TYPE_OPTS` (منزلي/تجاري/… or عادي/عاجل/خطر).
+Then the concierge renders an **"understood" read-back card** at the top of its results: section-hued
+identity (icon tile + mono chips: domain · branch · mahalla · type) with an **indigo** "ابدأ الطلب"
+action that opens the stepper **pre-filled** (`openService(code, prefill)` seeds `state.form.data`).
+It is the first keyboard option (Arrow/Enter), so one sentence + Enter lands in a pre-filled request.
+
+### Decision ledger (refero) — every choice has a source
+| Decision | Source | Role preserved |
+|----------|--------|----------------|
+| Compile sentence → pre-filled stepper (not a link) | frontend-design "structure encodes meaning"; subject = service-desk clerk | distinctive to this civic desk |
+| Lexicon mapped to **real** service codes + name-token overlap | refero "trace every decision"; `data.js` | no invented services |
+| Mahalla→branch via real `MAHALLA_INDEX` | `final_branches_data.js` | honest locality, no fake map |
+| Mono read-back chips, section-hued identity | design.md §2 mono; §1.5 hue 1:1 | clerk repeats request back |
+| "ابدأ الطلب" = indigo **gradient** (`--at-grad-primary`), AA in both themes | design.md §1.3 / §6.1 | indigo = the only action color |
+| Pure helper + self-checks; no new impeccable findings | refero verification loop; creative-fx restraint | quality floor |
+
+### Three axes (the standing rule)
+- **UX** — collapses navigate → pick service → fill → choose branch into one sentence; the desk
+  shows it understood before acting (clerk behaviour), reducing mis-routes.
+- **Aesthetic** — deepens the *existing* home signature (the concierge) with **no new chrome** — only
+  a mono read-back; spends boldness in one place (frontend-design).
+- **Arrangement** — leads the results panel, above the grouped matches, as keyboard option 0.
+
+### Verification
+`node --check` OK · `parseIntent` self-checks ALL PASS against real data · impeccable unchanged at
+its mandated baseline (zero new findings) · no physical left/right, no UI emoji, no em-dash in
+visible strings · braces balanced · AA: read-back text on section-tinted surface, action button on
+the AA-safe indigo gradient · reduced-motion: the card uses transitions only (collapsed by §17).
