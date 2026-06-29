@@ -87,8 +87,12 @@
   color-scheme: light;
 }
 
-/* ── Dark · Indigo Dusk (design.md §1.2 / §17.1) — lifted navy, never OLED black ── */
-:root[data-theme="dark"] {
+/* ── Dark · Indigo Dusk (design.md §1.2 / §17.1) — lifted navy, never OLED black ──
+   `.at-darkzone` shares this exact token set so a panel can render Indigo Dusk in
+   BOTH themes — used for the CA telemetry dashboard (design.md §6.12: "the one place
+   dense data + dark + mono converge"). A deliberate dark island, not a theme switch;
+   single source of truth, never aliased to --f-*/--nl-*. ── */
+:root[data-theme="dark"], .at-darkzone {
   --at-bg:        #161B36;
   --at-bg-2:      #1B2142;
   --at-surface:   #222A4F;

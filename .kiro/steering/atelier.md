@@ -70,12 +70,20 @@ subscriber → details → review-with-advisories) → **gilt receipt** (§6.7: 
 a damped spring, mono `tnum` reference, circular-check summary, ceremonial download). Wired via
 `openService(code)` → `state.form` → submit → `state.receipt`; `go(tab)` clears them; host apps can
 still override with `window.AtelierNav`. Screenshot analysis is documented in `atelier/VISUAL-FEEDBACK.md`.
+**CA reports signature done:** the complaints/reports (CA) view now opens with the **dark telemetry
+dashboard** (design.md §6.12) as its one signature — a deliberate **Indigo-Dusk island** (`.at-darkzone`
+supplies the dark tokens in both themes), flat (no glass behind data), with a mono `tnum` **KPI strip**
+(today / open / urgent / collected), a **four-domain distribution chart** in the section hues (never
+rainbow), a scrollable **live feed** of real cases (status dot · mono ref · state · time) filterable by
+**priority** (الكل/عاجل/قيادة/اعتيادي), and **one** crimson draughtsman connector on the URGENT metric.
+Derived purely from `RECENT_CASES` + `KPIS` via `AtelierHelpers.caTelemetry` (self-checked); the old
+standalone CA cases-table is folded into the feed. Quiet CA service cards sit beneath ("monitor, then file").
 
 ## Next (small → big, per the build order)
 1. Polish the small details first: focus states, tab/keyboard order, AA contrast in dark,
    skeleton loaders, empty/error states — then larger screens.
 2. ~~Service **form flow** (connected stepper §6.6) → **gilt receipt** (§6.7)~~ — **DONE**.
-3. Branch **mahalla map**, **dark telemetry** dashboard for CA (§6.12), Cover Flow onboarding (§6.8).
+3. Branch **mahalla map**, ~~**dark telemetry** dashboard for CA (§6.12)~~ **DONE**, Cover Flow onboarding (§6.8).
 4. Intent **parsing** in the concierge (full-sentence → pre-filled service+branch).
 5. Verify each change: `impeccable detect` → `[]`; logical-props/emoji scan; 375/768/1440;
    toggle dark; reduced-motion. Run JS via `env -u NODE_OPTIONS node --check`.
