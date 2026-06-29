@@ -66,6 +66,15 @@
       .replace(/[\u0660-\u0669]/g, function (d) { return d.charCodeAt(0) - 0x0660; })
       .replace(/[\u06f0-\u06f9]/g, function (d) { return d.charCodeAt(0) - 0x06f0; });
   }
+  // normalise Arabic for matching: Latin digits · strip tashkeel · unify alef/ya/ta-marbuta.
+  function normalizeAr(s) {
+    return toLatinDigits(s)
+      .replace(/[\u064B-\u0652\u0670]/g, "")
+      .replace(/[\u0623\u0625\u0622]/g, "\u0627")  // أإآ → ا
+      .replace(/\u0649/g, "\u064A")                // ى → ي
+      .replace(/\u0629/g, "\u0647")                // ة → ه
+      .replace(/\s+/g, " ").trim().toLowerCase();
+  }
   // «المنضدة» — one query, routed across every domain. Pure: returns plain data.
   function searchAll(q) {
     var raw = (q || "").trim();
@@ -112,7 +121,77 @@
       open: kpis.pending || 0, collected: kpis.collected || 0, satisfaction: kpis.satisfaction || 0,
     };
   }
-  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed, searchAll: searchAll, goldenProgress: goldenProgress, caTelemetry: caTelemetry };
+  // «المنضدة» intent compiler (design.md home signature). Grounded in the REAL
+  // service catalog + mahalla→branch index — turns an operator sentence into a
+  // structured, pre-fillable request. Pure + testable. Lexicon keys map verb
+  // phrases to services that actually exist in window.SERVICES.
+  var INTENT_LEXICON = [
+    { code: "CS0001", w: 4, kw: ["اشتراك جديد", "عمل اشتراك", "ربط جديد", "عداد جديد", "نصب عداد"] },
+    { code: "CS0011", w: 4, kw: ["نقل ملكية", "بيع اشتراك", "شراء اشتراك", "ورثة", "تحويل ملكية"] },
+    { code: "CS0003", w: 3, kw: ["تغيير صنف", "تغيير الصنف", "تحويل تجاري", "تحويل صناعي"] },
+    { code: "CS0004", w: 3, kw: ["ايقاف خدمة", "قطع مؤقت", "ايقاف اشتراك", "قطع تيار مؤقت"] },
+    { code: "CS0005", w: 3, kw: ["تفعيل اشتراك", "اعادة تفعيل", "فتح حساب", "اشتراك موقوف"] },
+    { code: "CS0006", w: 3, kw: ["الغاء اشتراك", "غلق حساب"] },
+    { code: "CS0007", w: 3, kw: ["اعتراض", "الاعتراض على القوائم"] },
+    { code: "CS0009", w: 3, kw: ["قراءة مقياس"] },
+    { code: "CS0010", w: 3, kw: ["اشتراك مؤقت", "موقع بناء"] },
+    { code: "CT0009", w: 4, kw: ["فحص مقياس", "كشف مقياس", "صيانة مقياس", "تبديل مقياس", "عطل مقياس"] },
+    { code: "CT0008", w: 3, kw: ["نقل مقياس", "تغيير موقع المقياس", "نقل موقع المقياس"] },
+    { code: "CT0003", w: 3, kw: ["تغيير كابل", "كابل مشترك"] },
+    { code: "CT0007", w: 3, kw: ["زيادة قوة", "تغيير نوع المقياس", "ثلاثي اطوار"] },
+    { code: "CT0001", w: 3, kw: ["تغيير موقع عامود", "ضرر عامود"] },
+    { code: "CT0002", w: 3, kw: ["ركيزة محولة", "تغيير موقع المحولة"] },
+    { code: "CB0001", w: 3, kw: ["دفع قائمة", "تسديد قائمة", "دفع اجور", "اجور كهرباء", "تسديد فاتورة"] },
+    { code: "CB0006", w: 4, kw: ["تقسيط", "تسوية مالية", "ترتيب دفع", "اقساط"] },
+    { code: "CB0004", w: 3, kw: ["نسخة قائمة", "بدل مفقود"] },
+    { code: "CB0002", w: 3, kw: ["تقرير استهلاك"] },
+    { code: "CA0001", w: 4, kw: ["تلاعب", "عبث بالمقياس", "سرقة تيار"] },
+    { code: "CA0002", w: 5, kw: ["حالة خطر", "بلاغ خطر", "خطر", "حريق", "شرارة"] },
+    { code: "CA0003", w: 3, kw: ["ضرر شبكة", "اضرار الشبكة", "فقد مكونات"] },
+    { code: "CA0004", w: 3, kw: ["شكوى ادارية", "نوعية الخدمة", "شكوى"] },
+  ];
+  function parseIntent(query, opts) {
+    opts = opts || {};
+    var services = opts.services || SERVICES, serviceMap = opts.serviceMap || SERVICE_MAP,
+      mahallaIndex = opts.mahallaIndex || MAHALLA_INDEX, branchMap = opts.branchMap || BRANCH_MAP,
+      typeOpts = opts.typeOpts || TYPE_OPTS, lexicon = opts.lexicon || INTENT_LEXICON;
+    var nq = normalizeAr(query);
+    if (nq.length < 2) return null;
+    // (1) action: lexicon score + service-name token overlap (>=2 tokens to avoid noise)
+    var score = {};
+    lexicon.forEach(function (e) { e.kw.forEach(function (k) { if (nq.indexOf(normalizeAr(k)) !== -1) score[e.code] = (score[e.code] || 0) + e.w; }); });
+    services.forEach(function (s) {
+      var hit = 0;
+      normalizeAr(s.name).split(/[ \/()\u060c,]+/).forEach(function (t) { if (t.length >= 3 && nq.indexOf(t) !== -1) hit++; });
+      if (hit >= 2) score[s.code] = (score[s.code] || 0) + hit;
+    });
+    var bestCode = null, best = 0;
+    Object.keys(score).forEach(function (c) { if (score[c] > best) { best = score[c]; bestCode = c; } });
+    if (!bestCode || !serviceMap[bestCode]) return null;
+    var svc = serviceMap[bestCode];
+    // (2) locality: mahalla number → its branch (honest, from the real index)
+    var mahalla = null, branch = null;
+    var m = nq.match(/(?:محله\s*)?\b(\d{2,3})\b/);
+    if (m && mahallaIndex[m[1]]) { mahalla = m[1]; branch = branchMap[mahallaIndex[m[1]]] || null; }
+    // (3) type/category within the service's own section
+    var type = null, ts = typeOpts[svc.section] || [];
+    for (var i = 0; i < ts.length; i++) { if (nq.indexOf(normalizeAr(ts[i])) !== -1) { type = ts[i]; break; } }
+    return {
+      action: { code: svc.code, name: svc.name, section: svc.section },
+      mahalla: mahalla, branch: branch ? { id: branch.id, name: branch.name } : null,
+      type: type, confidence: 0.5 + (branch ? 0.25 : 0) + (type ? 0.25 : 0), raw: query,
+    };
+  }
+  function prefillFromIntent(intent) {
+    var d = {};
+    if (intent.type) d.type = intent.type;
+    var loc = [];
+    if (intent.mahalla) loc.push("محلة " + intent.mahalla);
+    if (intent.branch) loc.push(intent.branch.name + " (" + intent.branch.id + ")");
+    if (loc.length) d.details = loc.join(" · ");
+    return d;
+  }
+  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed, searchAll: searchAll, goldenProgress: goldenProgress, caTelemetry: caTelemetry, parseIntent: parseIntent, prefillFromIntent: prefillFromIntent };
 
   // ---- persisted state --------------------------------------------------
   function load(key, fallback) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : fallback; } catch (e) { return fallback; } }
@@ -138,12 +217,12 @@
   }
   // reference number for a completed request (pure-ish; format is asserted)
   function genRef() { return "TQ-2026-08-" + (1400 + Math.floor(Math.random() * 600)); }
-  function openService(code) {
+  function openService(code, prefill) {
     if (!SERVICE_MAP[code]) return;
     state.recent = toggleId(state.recent.filter(function (x) { return x !== code; }), code).slice(0, 12);
     save("at-recent", state.recent);
-    if (window.AtelierNav) { window.AtelierNav(code); }        // host app may override routing
-    else { state.receipt = null; state.form = { code: code, step: 0, data: {} }; } // built-in flow
+    if (window.AtelierNav) { window.AtelierNav(code, prefill); }   // host app may override routing
+    else { state.receipt = null; state.form = { code: code, step: 0, data: prefill || {} }; } // built-in flow
     render();
     var m = $(".at-main"); if (m) m.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
   }
@@ -303,15 +382,41 @@
       tryRow, results,
     ]);
 
-    function act(it) { if (!it) return; if (it.type === "service") openService(it.id); else if (it.type === "branch") go("branches"); else if (it.type === "case") go("requests"); else if (it.type === "fee") go("fees"); }
-    function setActive(i) { active = i; var n = results.querySelectorAll(".at-result"); for (var k = 0; k < n.length; k++) { var on = k === i; n[k].classList.toggle("is-active", on); if (on) n[k].scrollIntoView({ block: "nearest" }); } }
+    function act(it) {
+      if (!it) return;
+      if (it.type === "intent") openService(it.intent.action.code, prefillFromIntent(it.intent));
+      else if (it.type === "service") openService(it.id);
+      else if (it.type === "branch") go("branches");
+      else if (it.type === "case") go("requests");
+      else if (it.type === "fee") go("fees");
+    }
+    function setActive(i) { active = i; var n = results.querySelectorAll(".at-desk__intent, .at-result"); for (var k = 0; k < n.length; k++) { var on = k === i; n[k].classList.toggle("is-active", on); if (on) n[k].scrollIntoView({ block: "nearest" }); } }
+    // the "understood" read-back card — the desk repeats your request back, then offers to start it
+    function intentCard(intent, idx) {
+      var a = intent.action, sec = SECTION_MAP[a.section] || {}, svc = SERVICE_MAP[a.code] || {};
+      var chips = [el("span", { class: "at-intentchip" }, [ms("category"), (sec.name || "") + " · " + a.section])];
+      if (intent.branch) chips.push(el("span", { class: "at-intentchip" }, [ms("apartment"), intent.branch.name]));
+      if (intent.mahalla) chips.push(el("span", { class: "at-intentchip" }, [ms("pin_drop"), "محلة " + intent.mahalla]));
+      if (intent.type) chips.push(el("span", { class: "at-intentchip" }, [ms("sell"), intent.type]));
+      return el("button", { class: "at-desk__intent " + secClass(a.section), type: "button", role: "option",
+        on: { click: function () { act({ type: "intent", intent: intent }); }, mouseenter: function () { setActive(idx); } } }, [
+        el("span", { class: "at-desk__intentico" }, [ms(svc.icon || "bolt")]),
+        el("span", { class: "at-desk__intentmain" }, [
+          el("span", { class: "at-desk__intenteyebrow" }, [ms("task_alt"), "فهمتُ طلبك · INTENT"]),
+          el("span", { class: "at-desk__intentname", text: a.name }),
+          el("span", { class: "at-desk__chips" }, chips),
+        ]),
+        el("span", { class: "at-desk__intentgo" }, [ms("arrow_back"), "ابدأ الطلب"]),
+      ]);
+    }
     function recompute() {
-      var g = searchAll(q); flat = []; clear(results);
+      var g = searchAll(q); var intent = parseIntent(q, {}); flat = []; clear(results);
       if (!q) { wrap.setAttribute("data-open", "0"); results.hidden = true; tryRow.hidden = false; return; }
       tryRow.hidden = true; wrap.setAttribute("data-open", "1"); results.hidden = false;
+      if (intent) { var iIdx = flat.length; flat.push({ type: "intent", intent: intent }); results.appendChild(intentCard(intent, iIdx)); }
       var groups = [["services", "الخدمات", "apps"], ["branches", "الفروع والمحلات", "hub"], ["cases", "الطلبات", "inbox"], ["fees", "الأجور", "payments"]];
       var total = g.services.length + g.branches.length + g.cases.length + g.fees.length;
-      if (!total) { results.appendChild(el("div", { class: "at-desk__none", text: "لا نتائج لـ «" + q + "». جرّب رقم محلة، أو رقم طلب، أو اسم خدمة." })); return; }
+      if (!total && !intent) { results.appendChild(el("div", { class: "at-desk__none", text: "لا نتائج لـ «" + q + "». جرّب رقم محلة، أو رقم طلب، أو اسم خدمة." })); return; }
       groups.forEach(function (gr) {
         var items = g[gr[0]]; if (!items.length) return;
         var rows = [el("div", { class: "at-desk__grouphd" }, [ms(gr[2]), gr[1], el("span", { class: "at-tnum", text: String(items.length) })])];
@@ -1058,5 +1163,15 @@
     console.assert(tel.total === 4 && tel.max === 2, "caTelemetry: total + max");
     console.assert(tel.today === 84 && tel.open === 213 && tel.delta === 12, "caTelemetry: kpi passthrough");
     console.assert(caTelemetry([], {}, [], {}).max === 1, "caTelemetry: empty guards max>=1");
+    // intent compiler — grounded in the real catalog + mahalla index
+    var pi = parseIntent("عمل اشتراك جديد في محلة ١٤٣ تجاري");
+    console.assert(pi && pi.action.code === "CS0001", "parseIntent: action = new connection");
+    console.assert(pi && pi.mahalla === "143" && pi.branch && pi.branch.id === "RS-014", "parseIntent: mahalla 143 -> branch RS-014");
+    console.assert(pi && pi.type === "تجاري", "parseIntent: type تجاري");
+    console.assert(parseIntent("فحص مقياس").action.code === "CT0009", "parseIntent: meter inspection");
+    console.assert(parseIntent("تقسيط قائمة").action.code === "CB0006", "parseIntent: installment beats generic bill");
+    console.assert(parseIntent("بلاغ خطر").action.code === "CA0002", "parseIntent: hazard report");
+    console.assert(parseIntent("سلام") === null, "parseIntent: no match -> null");
+    console.assert(prefillFromIntent({ type: "تجاري", mahalla: "143", branch: { id: "RS-014", name: "مركز النضال" } }).type === "تجاري", "prefillFromIntent: carries type");
   })();
 })();

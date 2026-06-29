@@ -1034,3 +1034,39 @@ textarea.at-input { resize: vertical; min-block-size: 76px; }
   .at-tele__bar { animation: none; opacity: 1; transform: none; }
   .at-tele__livedot { animation: none; }
 }
+
+
+/* ============================================================
+   §15g · «المنضدة» INTENT CARD — the compiled-request read-back
+   The concierge repeats the understood request (service · branch ·
+   mahalla · type) and offers to start it pre-filled. Domain identity
+   = section hue (tint + icon tile + chips); the ACTION button stays
+   Royal Indigo (design.md §1.3: the only first-class action color).
+   No 3px edge, no spring (stays off the impeccable baseline).
+   ============================================================ */
+.at-desk__intent {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--at-3);
+  inline-size: 100%; text-align: start; cursor: pointer; border: 0;
+  padding: 12px 14px; margin-block-end: var(--at-2); border-radius: var(--at-r-lg);
+  background: color-mix(in srgb, var(--at-sec) 10%, var(--at-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 30%, transparent);
+  color: var(--at-ink);
+  transition: background var(--at-dur-micro) var(--at-ease), box-shadow var(--at-dur-enter) var(--at-ease);
+}
+.at-desk__intent:hover, .at-desk__intent.is-active { background: color-mix(in srgb, var(--at-sec) 15%, var(--at-surface)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--at-sec) 46%, transparent); }
+.at-desk__intent:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-desk__intentico { inline-size: 40px; block-size: 40px; flex: none; display: grid; place-items: center; border-radius: 12px; background: color-mix(in srgb, var(--at-sec) 16%, transparent); color: var(--at-sec); }
+.at-desk__intentico .ms { font-size: 22px; }
+.at-desk__intentmain { min-inline-size: 0; }
+.at-desk__intenteyebrow { display: inline-flex; align-items: center; gap: 6px; font-family: var(--at-mono); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--at-sec); }
+.at-desk__intenteyebrow .ms { font-size: 14px; }
+.at-desk__intentname { display: block; font-family: var(--at-display); font-weight: 600; font-size: .98rem; color: var(--at-ink); margin-block-start: 3px; line-height: 1.3; }
+.at-desk__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-block-start: 8px; }
+.at-intentchip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--at-mono); font-size: .66rem; padding: 3px 9px; border-radius: var(--at-r-pill); background: color-mix(in srgb, var(--at-sec) 13%, transparent); color: var(--at-sec); }
+.at-intentchip .ms { font-size: 13px; }
+.at-desk__intentgo { flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: .82rem; font-weight: 600; white-space: nowrap; padding: 9px 15px; border-radius: var(--at-r-pill); background: var(--at-grad-primary); color: var(--at-on-indigo); box-shadow: inset 0 1px 0 rgba(255,255,255,.22); }
+.at-desk__intentgo .ms { font-size: 17px; }
+@media (max-width: 600px) {
+  .at-desk__intent { grid-template-columns: auto 1fr; }
+  .at-desk__intentgo { grid-column: 1 / -1; justify-content: center; margin-block-start: var(--at-1); }
+}
