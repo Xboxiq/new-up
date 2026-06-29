@@ -1117,3 +1117,70 @@ textarea.at-input { resize: vertical; min-block-size: 76px; }
 .at-announce__x:focus-visible { outline: none; box-shadow: var(--at-ring); }
 .at-announce__x .ms { font-size: 18px; }
 @media (max-width: 600px) { .at-announce__msg { font-size: .84rem; } }
+
+
+/* ============================================================
+   §15i · DIALOG + SWITCH + CASE TIMELINE (21st.dev refs → native)
+   · .at-dialog  — originui/dialog → glass-on-chrome modal (design.md §6.3),
+     focus-trapped, Esc/scrim close, return-focus. Glass allowed (chrome).
+   · .at-switch  — Material-3 switch → indigo when on (the action color),
+     transform-only thumb (RTL-aware), role=switch.
+   · .at-casetrack — order-tracking → reuses the §6.6 stepper (unify).
+   No spring-animation (ease-out/exit only), no glow, no 3px edge.
+   ============================================================ */
+.at-overlay {
+  position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: var(--at-5);
+  background: color-mix(in srgb, var(--at-ink) 46%, transparent);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: at-overlay-in var(--at-dur-enter) var(--at-ease-out) both;
+}
+@keyframes at-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+.at-overlay[data-closing="1"] { animation: at-overlay-out var(--at-dur-exit) var(--at-ease-exit) both; }
+@keyframes at-overlay-out { from { opacity: 1; } to { opacity: 0; } }
+.at-dialog {
+  inline-size: min(100%, 468px); max-block-size: 88dvh; overflow-y: auto;
+  border-radius: var(--at-r-2xl); padding: var(--at-6);
+  background: var(--at-glass); -webkit-backdrop-filter: var(--at-glass-blur); backdrop-filter: var(--at-glass-blur);
+  box-shadow: var(--at-hairline), inset 0 1px 0 var(--at-glass-edge), 0 30px 70px -28px rgba(43,49,128,.40);
+  animation: at-dialog-in var(--at-dur-enter) var(--at-ease-out) both;
+}
+@keyframes at-dialog-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+.at-overlay[data-closing="1"] .at-dialog { animation: at-dialog-out var(--at-dur-exit) var(--at-ease-exit) both; }
+@keyframes at-dialog-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(6px) scale(.985); } }
+.at-dialog:focus { outline: none; }
+.at-dialog__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--at-4); margin-block-end: var(--at-5); }
+.at-dialog__title { font-family: var(--at-display); font-weight: 600; font-size: 1.2rem; color: var(--at-ink); margin: 6px 0 0; }
+.at-dialog__close { inline-size: 34px; block-size: 34px; flex: none; display: grid; place-items: center; border: 0; border-radius: 50%; cursor: pointer; background: color-mix(in srgb, var(--at-ink) 5%, transparent); color: var(--at-ink-2); transition: background var(--at-dur-micro) var(--at-ease), color var(--at-dur-micro) var(--at-ease); }
+.at-dialog__close:hover { background: color-mix(in srgb, var(--at-ink) 10%, transparent); color: var(--at-ink); }
+.at-dialog__close:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-dialog__close .ms { font-size: 19px; }
+.at-dialog__body { color: var(--at-ink-2); }
+.at-dialog__actions { display: flex; gap: var(--at-3); justify-content: flex-end; flex-wrap: wrap; margin-block-start: var(--at-6); }
+
+/* SWITCH — Material-3; indigo = the action color when on. */
+.at-switch { inline-size: 48px; block-size: 28px; flex: none; border: 0; padding: 0; background: none; cursor: pointer; border-radius: var(--at-r-pill); }
+.at-switch:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-switch__track { display: block; inline-size: 100%; block-size: 100%; border-radius: var(--at-r-pill); position: relative; background: var(--at-surface-3); box-shadow: inset 0 0 0 1px var(--at-border-2); transition: background var(--at-dur-enter) var(--at-ease); }
+.at-switch__thumb { position: absolute; inset-block-start: 4px; inset-inline-start: 4px; inline-size: 20px; block-size: 20px; border-radius: 50%; background: var(--at-surface); box-shadow: 0 1px 3px rgba(26,23,20,.28); transition: transform var(--at-dur-enter) var(--at-spring); }
+.at-switch[aria-checked="true"] .at-switch__track { background: var(--at-indigo); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--at-indigo) 60%, #000 10%); }
+.at-switch[aria-checked="true"] .at-switch__thumb { transform: translateX(20px); }
+[dir="rtl"] .at-switch[aria-checked="true"] .at-switch__thumb { transform: translateX(-20px); }
+
+/* PREFERENCES row */
+.at-prefrow { display: flex; align-items: center; justify-content: space-between; gap: var(--at-4); padding-block: var(--at-2); }
+.at-prefrow__t { font-weight: 600; color: var(--at-ink); font-size: .95rem; }
+.at-prefrow__s { color: var(--at-ink-3); font-size: .82rem; margin-block-start: 2px; }
+
+/* CASE DETAIL — header + the order-tracking timeline (stepper reuse) */
+.at-casehd { display: flex; align-items: flex-start; gap: var(--at-4); margin-block-end: var(--at-5); }
+.at-casehd .at-svc__ico { inline-size: 44px; block-size: 44px; }
+.at-casehd__ref { display: flex; align-items: center; gap: 6px; color: var(--at-ink-2); margin-block-end: 8px; }
+.at-casetrack { padding: var(--at-5); border-radius: var(--at-r-lg); background: color-mix(in srgb, var(--at-surface-2) 70%, transparent); box-shadow: var(--at-hairline); margin-block-end: var(--at-5); }
+.at-casetrack .at-eyebrow { margin-block-end: var(--at-4); }
+.at-stepper--track .at-step { padding-block-end: var(--at-4); }
+.at-stepper--track .at-step:last-child { padding-block-end: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .at-overlay, .at-overlay[data-closing="1"], .at-dialog, .at-overlay[data-closing="1"] .at-dialog { animation: none; }
+  .at-switch__thumb { transition: none; }
+}

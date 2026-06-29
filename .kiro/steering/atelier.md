@@ -53,8 +53,9 @@ External UI sources (21st.dev/shadcn) are **never installed** (no-build vanilla 
 curated and rebuilt on `--at-*` per `design.md §10`. **The binding how-to-work charter is
 `.kiro/steering/design-system-method.md` (always) — analyze→extract→rebuild→unify→evolve, think like a
 Principal Design Systems Architect.** The adopted base + per-source verdicts + rebuild specs live in
-`.kiro/steering/component-library.md` (manual). Built so far from that base: `.at-copy` (copy mono refs)
-and `.at-announce` (announcement bar §6.3b).
+`.kiro/steering/component-library.md` (manual). Built so far from that base: `.at-copy` (copy mono refs),
+`.at-announce` (announcement §6.3b), `.at-dialog` (glass modal §6.3), `.at-switch` (M3 toggle), and
+`.at-casetrack` (case-status timeline — clicking a case row now opens a detail dialog, not a new form).
 
 ## Inspiration sources (extract the *principle*, rebuild on tokens — never copy)
 Apple Liquid Glass · Vercel (crisp mono) · Origin (lit-window cards) · Seed (lift-by-colour) ·
