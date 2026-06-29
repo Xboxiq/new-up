@@ -1,0 +1,81 @@
+name: Deploy atelier to GitHub Pages
+
+# Publishes the no-build "تدفّق الخير / atelier" static app to GitHub Pages.
+# A clean publish folder is assembled (only the app + the reused data layer +
+# a root redirect) so skills/screenshots/docs are NOT published.
+#
+# One-time setup: Repo → Settings → Pages → Build and deployment →
+#   Source = "GitHub Actions". (configure-pages tries to enable it automatically;
+#   if the first run fails on enablement, set the source once and re-run.)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Least-privilege permissions required by the Pages deploy actions.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; newer pushes supersede in-flight ones.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble publish folder (_site)
+        run: |
+          set -euo pipefail
+          mkdir -p _site/atelier
+          # the app shell + styles + scripts (no .md docs)
+          cp atelier/index.html atelier/tokens.css atelier/system.css \
+             atelier/icons.js atelier/art.js atelier/app.js _site/atelier/
+          # the reused data layer — index.html loads these via ../ (repo root)
+          cp data.js final_branches_data.js _site/
+          # skip Jekyll processing for a plain static site
+          touch _site/.nojekyll
+          # clean root URL → redirect to the app
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="ar" dir="rtl">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>تدفّق الخير</title>
+            <meta http-equiv="refresh" content="0; url=./atelier/" />
+            <link rel="canonical" href="./atelier/" />
+          </head>
+          <body style="font-family:system-ui;margin:64px auto;max-width:40rem;padding-inline:24px">
+            <a href="./atelier/">تدفّق الخير — افتح المنصة</a>
+          </body>
+          </html>
+          HTML
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
