@@ -114,3 +114,61 @@ glow** + gradient "Get started" button + a gradient "Best value" pill; the right
 - **Gilt receipt (§6.7):** frosted card (img 4) + a **drawn gilt seal** that settles on a damped
   spring + mono `tnum` reference + a **circular-check summary list** + one **ceremonial** gold CTA.
   One gold moment per flow.
+
+
+---
+
+## 9 · CA dark telemetry / reports dashboard (design.md §6.12) — design + critique
+
+> Increment added this session. The CA domain is "Complaints **& Reports**." The complaints
+> view previously showed CA service cards + a generic open-cases table — competent but with **no
+> single signature**. design.md §6.12 explicitly reserves one component for exactly this domain:
+> a **dark operational dashboard** ("the one place dense data + dark + mono converge"). Building it
+> gives the CA screen its missing point of view and closes a real design.md gap. Reference image:
+> `screenshots/20260625_204128` (EigenExplorer), analyzed in §3 above — mono `tnum` mega-numbers,
+> a segmented pill, a vertical rail, connector "spec" lines, one rationed accent, flat (no glass).
+
+### Self-critique first (the brief's gate: "would I produce this for any similar request?")
+A "dark dashboard with KPI strip + chart + live feed" is, generically, a templated answer. To make
+it specific to *this* civic-electricity world and not interchangeable SaaS, four decisions:
+1. **A deliberate dark island, not a dark app.** The panel renders Indigo Dusk *inside* the warm
+   Walnut-Ivory broadsheet — the sanctioned "one place dark converges," contained like a lit
+   control-room window. (In dark mode it sits as a raised slate panel, still distinct.)
+2. **The chart is the four civic domains, never a rainbow.** Bars use the 1:1 section hues
+   (CS Cobalt · CT Bronze · CB Teal · CA Rosewood) and nothing else — the chart literally *is* the
+   platform's structure (design.md §1.5, §6.12 "series use the section hues"). Not arbitrary series.
+3. **Honest data only.** KPI values come from `KPIS` (today / open / collected / satisfaction); the
+   distribution counts active `RECENT_CASES` per domain; the live feed is the real cases with their
+   Arabic civic states (فريق الطوارئ، موافقة مدير، فحص ميداني) and `TQ-…` refs. **No invented series,
+   no fake time-range toggle** (rejected: a اليوم/الأسبوع period switch would imply time-series data
+   we don't have). The one segmented control filters the feed by a field that *exists* — **priority**
+   (الكل · عاجل · قيادة · اعتيادي) — real triage, not decoration.
+4. **One draughtsman connector, tied to content.** A single thin connector line annotates the
+   **URGENT** KPI with the real CA0002 rule ("بلاغ خطر = أولوية قصوى · إشعار فوري") — used exactly
+   once (img-3's "spec line"), as meaning, not ornament.
+
+This passes: it is grounded in the subject's world and the token system, not a generic template.
+
+### The three axes (justification before building)
+- **UX value.** Gives CA staff a single monitoring surface *before* they act: today's intake, open
+  backlog, urgent count, and a scannable live case feed with priority-coded dots. Triage is faster —
+  the crimson urgent items and the urgent KPI are immediately legible, and the priority filter narrows
+  the feed to what needs attention now. "Monitor, then file" in one screen.
+- **Aesthetic.** Realizes §6.12 literally — Indigo Dusk surface, **mono labels throughout**, a top
+  **KPI strip**, a **live-feed row list** (status dot · mono ref · state · timestamp), **one chart in
+  section hues**, kept **flat (no glass behind data)**, `tnum`+slashed-zero numerals. Depth is by
+  **surface step** (panel `surface` → recessed `bg` wells) + hairlines, never a gray box-shadow.
+  Motion is one orchestrated moment: bars draw in (transform `scaleX`, ease-out, no spring) and a
+  single "LIVE" dot pulses (opacity) — both off under reduced-motion.
+- **Arrangement.** The dark panel is the **one signature** of the CA view and sits at the top:
+  headBlock → **telemetry panel (signature)** → quiet CA service cards (the "file a report" zone).
+  Inside the panel, top-to-bottom by decreasing aggregation: KPI strip (totals) → domain chart
+  (distribution) → live feed (individual cases). The previous standalone CA cases-table is folded
+  into the richer live feed, so the screen keeps exactly one focal object.
+
+### Anti-slop guardrails applied
+Tokens only · logical properties only · `tnum`+`zero` · mono eyebrows/labels · **no** 3px
+`border-inline-start` and **no** `var(--at-spring)` animation inside the panel (so impeccable stays at
+its mandated baseline of 9, with **zero new findings**) · one accent discipline kept (crimson = urgent
+only; section hues 1:1; the feed's "leadership/VIP" dot is the rationed gold) · AA contrast on Indigo
+Dusk (Moon-Ink text on Slate, lifted section hues) · reduced-motion disables draw + pulse.

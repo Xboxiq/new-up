@@ -91,7 +91,28 @@
     var pct = Math.max(0, Math.min(1, (mins - s) / (e - s)));
     return { pct: pct, remainMin: Math.max(0, e - mins) };
   }
-  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed, searchAll: searchAll, goldenProgress: goldenProgress };
+  // CA telemetry aggregation (design.md §6.12). Pure: derives from the live data
+  // (RECENT_CASES + KPIS + SECTIONS) — never invents series. serviceMap maps a
+  // case's svc code → its section, so cases distribute across the four domains.
+  function caTelemetry(cases, kpis, sections, serviceMap) {
+    cases = cases || []; kpis = kpis || {}; sections = sections || []; serviceMap = serviceMap || {};
+    var byDomain = {};
+    sections.forEach(function (s) { byDomain[s.code] = 0; });
+    cases.forEach(function (c) {
+      var sec = (serviceMap[c.svc] || {}).section;
+      if (sec != null) { byDomain[sec] = (byDomain[sec] || 0) + 1; }
+    });
+    var max = 1;
+    Object.keys(byDomain).forEach(function (k) { if (byDomain[k] > max) max = byDomain[k]; });
+    var count = function (p) { return cases.filter(function (c) { return c.priority === p; }).length; };
+    return {
+      byDomain: byDomain, max: max, total: cases.length,
+      urgent: count("urgent"), vip: count("vip"),
+      today: kpis.todayCases || 0, delta: kpis.todayDelta || 0,
+      open: kpis.pending || 0, collected: kpis.collected || 0, satisfaction: kpis.satisfaction || 0,
+    };
+  }
+  window.AtelierHelpers = { filterServices: filterServices, toggleId: toggleId, mostUsed: mostUsed, searchAll: searchAll, goldenProgress: goldenProgress, caTelemetry: caTelemetry };
 
   // ---- persisted state --------------------------------------------------
   function load(key, fallback) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : fallback; } catch (e) { return fallback; } }
@@ -108,6 +129,7 @@
     accord: "CS",
     dir: { q: "", sec: "ALL" },
     tipIndex: 0,
+    telemetry: "all",   // CA reports live-feed priority filter (§6.12)
   };
   function setFav(code) {
     state.favs = toggleId(state.favs, code);
@@ -631,18 +653,101 @@
   }
 
   // =====================================================================
-  // VIEW: COMPLAINTS
+  // VIEW: COMPLAINTS & REPORTS (CA) — telemetry dashboard is the signature
   // =====================================================================
   function viewComplaints() {
     var svc = SERVICES.filter(function (s) { return s.section === "CA"; });
-    var caCases = CASES.filter(function (c) { return (SERVICE_MAP[c.svc] || {}).section === "CA"; });
     return el("div", { class: "at-view" }, [
-      headBlock("الشكاوى والتقارير · CA", "الشكاوى والبلاغات", "بلاغات التلاعب والأخطار والشكاوى الإدارية"),
-      el("div", { class: "at-grid" }, svc.map(svcCard)),
-      el("section", { class: "at-card sec-ca" }, [
-        el("div", { class: "at-card__head" }, [el("h3", { class: "at-card__title", html: '<span class="ms">gpp_maybe</span> بلاغات مفتوحة' })]),
-        casesTable(caCases.length ? caCases : CASES.slice(0, 3)),
+      headBlock("الشكاوى والتقارير · CA", "غرفة التقارير", "مراقبة حيّة للبلاغات والحالات — ثم افتح بلاغاً جديداً"),
+      telemetryPanel(),                              // the one signature: dark Indigo-Dusk island
+      el("section", {}, [
+        el("div", { class: "at-head" }, [el("div", { class: "at-head__main" }, [
+          el("span", { class: "at-eyebrow", text: "تقديم بلاغ" }), el("h2", { text: "بلاغات القسم وخدماته" }),
+        ])]),
+        el("div", { class: "at-grid" }, svc.map(svcCard)),
       ]),
+    ]);
+  }
+
+  // CA telemetry / reports dashboard (design.md §6.12) — flat dark surface,
+  // mono tnum mega-numbers, four-domain chart in section hues, live feed.
+  var PRIO_FILTERS = [["all", "الكل", "list"], ["urgent", "عاجل", "priority_high"], ["vip", "قيادة", "workspace_premium"], ["standard", "اعتيادي", "task_alt"]];
+  function telemetryPanel() {
+    var t = caTelemetry(CASES, KPIS, SECTIONS, SERVICE_MAP);
+
+    // KPI strip — honest values from KPIS + the real urgent count
+    var kpis = el("div", { class: "at-tele__kpis" }, [
+      kpiCell("bolt", "بلاغات اليوم · TODAY", fmt(t.today), "+" + t.delta + "٪"),
+      kpiCell("pending_actions", "قيد المعالجة · OPEN", fmt(t.open), null),
+      kpiCell("priority_high", "حالات عاجلة · URGENT", fmt(t.urgent), null, true),
+      kpiCell("payments", "محصّل اليوم · COLLECTED", fmt(t.collected), null, false, "د.ع"),
+    ]);
+
+    // four-domain distribution — section hues 1:1, never rainbow
+    var chart = el("div", { class: "at-tele__chart" }, SECTIONS.map(function (s) {
+      var n = t.byDomain[s.code] || 0, pct = Math.round((n / t.max) * 100);
+      return el("div", { class: "at-tele__bar " + secClass(s.code) }, [
+        el("span", { class: "at-tele__barlbl", text: s.name }),
+        el("span", { class: "at-tele__bartrack" }, [el("span", { class: "at-tele__barfill", style: "inline-size:" + pct + "%" })]),
+        el("span", { class: "at-tele__barval at-tnum", text: String(n) }),
+      ]);
+    }));
+
+    // live feed — filtered by priority; status dot · mono ref · state · time
+    var rows = CASES.filter(function (c) { return state.telemetry === "all" || c.priority === state.telemetry; });
+    var feed = rows.length ? el("div", { class: "at-tele__feed" }, rows.map(feedRow))
+      : el("div", { class: "at-tele__feed" }, [el("div", { class: "at-empty", style: "padding:var(--at-10) var(--at-4)" }, [el("p", { text: "لا حالات بهذا التصنيف." })])]);
+
+    var seg = el("div", { class: "at-seg", role: "tablist", "aria-label": "تصفية حسب الأولوية" }, PRIO_FILTERS.map(function (p) {
+      return el("button", { class: "at-seg__opt", role: "tab", "aria-selected": state.telemetry === p[0] ? "true" : "false", type: "button",
+        on: { click: function () { state.telemetry = p[0]; render(); } } }, [ms(p[2]), p[1]]);
+    }));
+
+    return el("section", { class: "at-tele at-darkzone sec-ca" }, [
+      el("div", { class: "at-tele__head" }, [
+        el("div", {}, [
+          el("span", { class: "at-eyebrow at-eyebrow--mono", text: "المراقبة · CA REPORTS" }),
+          el("h2", { class: "at-tele__title", html: '<span class="ms">monitoring</span> غرفة العمليات' }),
+        ]),
+        el("div", { class: "at-tele__tools" }, [
+          el("span", { class: "at-tele__live" }, [el("span", { class: "at-tele__livedot" }), "تيّار حيّ · LIVE"]),
+          seg,
+        ]),
+      ]),
+      kpis,
+      el("div", { class: "at-tele__body" }, [
+        el("div", { class: "at-tele__panel" }, [
+          el("div", { class: "at-tele__panelhd" }, [ms("bar_chart"), "الحالات النشطة حسب القسم", el("span", { class: "at-tnum", text: t.total + " حالة" })]),
+          chart,
+        ]),
+        el("div", { class: "at-tele__panel", style: "padding:0;background:none;box-shadow:none" }, [
+          el("div", { class: "at-tele__panelhd", style: "padding-inline:var(--at-1)" }, [ms("forum"), "التيّار الحيّ", el("span", { class: "at-tnum", text: rows.length + " / " + CASES.length })]),
+          feed,
+        ]),
+      ]),
+    ]);
+  }
+  function kpiCell(icon, label, val, delta, urgent, unit) {
+    return el("div", { class: "at-tele__kpi" + (urgent ? " at-tele__kpi--urgent" : "") }, [
+      el("span", { class: "at-tele__kpilbl" }, [ms(icon), label]),
+      el("div", { class: "at-tele__kpival at-tnum", html: val + (unit ? ' <small>' + unit + "</small>" : "") }),
+      delta ? el("span", { class: "at-tele__delta at-tnum" }, [ms("trending_up"), delta]) : null,
+      urgent ? el("div", { class: "at-tele__annot" }, [
+        el("span", { class: "at-tele__annotdot" }), el("span", { class: "at-tele__annotline" }),
+        el("span", { class: "at-tele__annottxt", text: "أولوية قصوى · إشعار فوري لفرق الطوارئ" }),
+      ]) : null,
+    ]);
+  }
+  function feedRow(c) {
+    var s = SERVICE_MAP[c.svc] || { name: c.svc, section: "CA", code: c.svc };
+    var urgent = c.priority === "urgent", vip = c.priority === "vip";
+    return el("button", { class: "at-tele__row " + secClass(s.section), type: "button", on: { click: function () { openService(s.code); } } }, [
+      el("span", { class: "at-tele__dot" + (urgent ? " is-urgent" : vip ? " is-vip" : "") }),
+      el("span", { class: "at-tele__rmain" }, [
+        el("span", { class: "at-tele__rtop" }, [el("span", { class: "at-tele__ref", text: c.id }), el("span", { class: "at-tele__state", text: "· " + c.status })]),
+        el("span", { class: "at-tele__sub", text: c.subscriber }),
+      ]),
+      el("span", { class: "at-tele__time", text: c.age }),
     ]);
   }
 
@@ -944,5 +1049,14 @@
     console.assert(goldenProgress({ getHours: function () { return 12; }, getMinutes: function () { return 0; } }, 8, 16).pct === 0.5, "goldenProgress: noon = 0.5");
     console.assert(searchAll("").services.length === 0 && searchAll("cb0001").services.length === 1, "searchAll: empty vs code match");
     console.assert(/^TQ-2026-08-\d{4}$/.test(genRef()), "genRef: reference format");
+    var tSec = [{ code: "CS" }, { code: "CB" }, { code: "CA" }];
+    var tMap = { X1: { section: "CS" }, X2: { section: "CS" }, X3: { section: "CB" }, X4: { section: "CA" } };
+    var tCases = [{ svc: "X1", priority: "standard" }, { svc: "X2", priority: "urgent" }, { svc: "X3", priority: "vip" }, { svc: "X4", priority: "standard" }];
+    var tel = caTelemetry(tCases, { todayCases: 84, todayDelta: 12, pending: 213 }, tSec, tMap);
+    console.assert(tel.byDomain.CS === 2 && tel.byDomain.CB === 1 && tel.byDomain.CA === 1, "caTelemetry: per-domain counts");
+    console.assert(tel.urgent === 1 && tel.vip === 1, "caTelemetry: priority counts");
+    console.assert(tel.total === 4 && tel.max === 2, "caTelemetry: total + max");
+    console.assert(tel.today === 84 && tel.open === 213 && tel.delta === 12, "caTelemetry: kpi passthrough");
+    console.assert(caTelemetry([], {}, [], {}).max === 1, "caTelemetry: empty guards max>=1");
   })();
 })();
