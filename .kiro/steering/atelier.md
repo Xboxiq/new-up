@@ -48,6 +48,12 @@ atelier at golden hour." One signature per screen.
 `design-motion-principles` (motion) · `creative-fx` (gradient/glass/grain/kinetic refs) ·
 `ui-ux-pro-max` (styles/palettes search) · `handoff` (this brief follows it).
 
+## Component base (external sources → native rebuilds)
+External UI sources (21st.dev/shadcn) are **never installed** (no-build vanilla project). They are
+curated and rebuilt on `--at-*` per `design.md §10`. The adopted base + verdicts + rebuild specs live in
+`.kiro/steering/component-library.md` (manual) — **read it before building any new primitive**. Built so
+far from that base: `.at-copy` (copy mono refs) and `.at-announce` (announcement bar §6.3b).
+
 ## Inspiration sources (extract the *principle*, rebuild on tokens — never copy)
 Apple Liquid Glass · Vercel (crisp mono) · Origin (lit-window cards) · Seed (lift-by-colour) ·
 Notion (calm density) · gradientbuttons.colorion (tonal CTA) · backgrounds.supply (grain/mesh) ·

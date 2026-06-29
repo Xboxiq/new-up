@@ -1070,3 +1070,50 @@ textarea.at-input { resize: vertical; min-block-size: 76px; }
   .at-desk__intent { grid-template-columns: auto 1fr; }
   .at-desk__intentgo { grid-column: 1 / -1; justify-content: center; margin-block-start: var(--at-1); }
 }
+
+
+/* ============================================================
+   §15h · ADOPTED PRIMITIVES (21st.dev sources → rebuilt native)
+   Studied for principle, rebuilt on --at-* (design.md §10 method).
+   · .at-copy     — copy-code-button → copy a mono reference (TQ-…/account)
+   · .at-announce — announcement bar (design.md §6.3b scarcity band)
+   No glow, no 3px edge, no spring-animation; logical props; tnum-friendly.
+   ============================================================ */
+
+/* COPY — low-emphasis until hovered/focused; confirms with an OK check. */
+.at-copy {
+  inline-size: 26px; block-size: 26px; flex: none; vertical-align: middle; margin-inline-start: 6px;
+  display: inline-grid; place-items: center; border: 0; border-radius: 7px; cursor: pointer;
+  background: transparent; color: var(--at-ink-3);
+  transition: background var(--at-dur-micro) var(--at-ease), color var(--at-dur-micro) var(--at-ease), transform var(--at-dur-enter) var(--at-spring);
+}
+.at-copy:hover { background: color-mix(in srgb, var(--at-indigo) 12%, transparent); color: var(--at-indigo); }
+.at-copy:active { transform: scale(.9); }
+.at-copy:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-copy.is-copied { background: color-mix(in srgb, var(--at-ok) 16%, transparent); color: var(--at-ok); }
+.at-copy .ms { font-size: 16px; }
+/* inside data tables the copy stays out of the way until the row is engaged */
+.at-table .at-copy { opacity: 0; }
+.at-table tr:hover .at-copy, .at-table .at-copy:focus-visible, .at-table .at-copy.is-copied { opacity: 1; }
+
+/* ANNOUNCEMENT BAR — the one color-rich band; soft gilt wash, ink text. */
+.at-announce {
+  display: flex; align-items: center; gap: var(--at-3);
+  margin-block-end: var(--at-6); padding: 11px 16px; border-radius: var(--at-r-lg);
+  background: color-mix(in srgb, var(--at-gold) 12%, var(--at-surface));
+  box-shadow: var(--at-hairline), inset 0 1px 0 color-mix(in srgb, #fff 30%, transparent);
+  color: var(--at-ink);
+}
+:root[data-theme="dark"] .at-announce { box-shadow: var(--at-hairline), inset 0 1px 0 rgba(234,231,222,.06); }
+.at-announce__ico { inline-size: 30px; block-size: 30px; flex: none; display: grid; place-items: center; border-radius: 9px; background: color-mix(in srgb, var(--at-gold) 22%, transparent); color: var(--at-gold); }
+.at-announce__ico .ms { font-size: 18px; }
+.at-announce__msg { margin: 0; flex: 1; min-inline-size: 0; font-size: .9rem; line-height: 1.5; color: var(--at-ink-2); }
+.at-announce__msg b { color: var(--at-ink); font-weight: 600; }
+.at-announce__link { border: 0; background: none; cursor: pointer; color: var(--at-indigo); font-weight: 600; font-size: .9rem; padding: 0; margin-inline-start: 6px; display: inline-flex; align-items: center; gap: 4px; }
+.at-announce__link .ms { font-size: 15px; }
+.at-announce__link:focus-visible { outline: none; box-shadow: var(--at-ring); border-radius: 5px; }
+.at-announce__x { inline-size: 30px; block-size: 30px; flex: none; display: grid; place-items: center; border: 0; background: none; cursor: pointer; border-radius: 8px; color: var(--at-ink-3); transition: background var(--at-dur-micro) var(--at-ease), color var(--at-dur-micro) var(--at-ease); }
+.at-announce__x:hover { background: color-mix(in srgb, var(--at-ink) 8%, transparent); color: var(--at-ink); }
+.at-announce__x:focus-visible { outline: none; box-shadow: var(--at-ring); }
+.at-announce__x .ms { font-size: 18px; }
+@media (max-width: 600px) { .at-announce__msg { font-size: .84rem; } }

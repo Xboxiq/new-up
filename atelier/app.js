@@ -28,6 +28,30 @@
   function ms(name, cls) { return el("span", { class: "ms" + (cls ? " " + cls : ""), text: name, "aria-hidden": "true" }); }
   function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
 
+  // copy-to-clipboard affordance (21st.dev copy-code-button → rebuilt native).
+  // For the mono reference numbers (TQ-… / account #) operators copy constantly.
+  // design.md adopted device: "mono reference bar with copy" (Cover Flow §A3).
+  function copyText(text) {
+    try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(String(text)); } catch (e) {}
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = String(text); ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+    } catch (e) {}
+    return null;
+  }
+  function copyBtn(text, label) {
+    var b = el("button", {
+      class: "at-copy", type: "button", "aria-label": label || ("نسخ " + text),
+      on: { click: function (e) {
+        e.stopPropagation(); copyText(text);
+        b.classList.add("is-copied"); b.setAttribute("aria-label", "تم النسخ"); clear(b); b.appendChild(ms("check"));
+        setTimeout(function () { b.classList.remove("is-copied"); b.setAttribute("aria-label", label || ("نسخ " + text)); clear(b); b.appendChild(ms("content_copy")); }, 1400);
+      } },
+    }, [ms("content_copy")]);
+    return b;
+  }
+
   // ---- data (reused) ----------------------------------------------------
   var SERVICES = window.SERVICES || [];
   var SECTIONS = window.SECTIONS || [];
@@ -209,6 +233,7 @@
     dir: { q: "", sec: "ALL" },
     tipIndex: 0,
     telemetry: "all",   // CA reports live-feed priority filter (§6.12)
+    announce: load("at-announce", true),  // dismissible announcement bar (design.md §6.3b)
   };
   function setFav(code) {
     state.favs = toggleId(state.favs, code);
@@ -342,7 +367,22 @@
     // ---- aside: gilt seal + quick access + tip + notifs
     var aside = el("aside", { class: "at-aside" }, [sealCard(done), quickCard(), tipCard(), notifCard()]);
 
-    return el("div", { class: "at-view" }, [mast, deskHero(), el("div", { class: "at-broadsheet" }, [main, aside])]);
+    return el("div", { class: "at-view" }, [state.announce ? announceBar() : null, mast, deskHero(), el("div", { class: "at-broadsheet" }, [main, aside])]);
+  }
+
+  // announcement bar (design.md §6.3b) — one timely message, the only color-rich
+  // band, earns attention through scarcity. Soft gilt wash, ink text, one inline
+  // link, dismissible (persisted). Never stacked, never permanent chrome.
+  function announceBar() {
+    return el("div", { class: "at-announce", role: "region", "aria-label": "إعلان" }, [
+      el("span", { class: "at-announce__ico" }, [ms("campaign")]),
+      el("p", { class: "at-announce__msg" }, [
+        el("b", { text: "الدفع الإلكتروني للقوائم مُفعّل الآن" }),
+        " — سدِّد قائمة الأجور من شاشة الحالة مع إيصال فوري.",
+        el("button", { class: "at-announce__link", type: "button", on: { click: function () { go("updates"); } } }, ["اعرف المزيد", ms("arrow_back")]),
+      ]),
+      el("button", { class: "at-announce__x", type: "button", "aria-label": "إغلاق الإعلان", on: { click: function () { state.announce = false; save("at-announce", false); render(); } } }, [ms("close")]),
+    ]);
   }
 
   function stripItem(num, label) {
@@ -871,7 +911,7 @@
       var s = SERVICE_MAP[c.svc] || { name: c.svc, section: "CS", icon: "description", code: c.svc };
       var urgent = c.priority === "urgent", vip = c.priority === "vip";
       return el("tr", { class: secClass(s.section), style: urgent ? "--at-sec:var(--at-crimson)" : null, on: { click: function () { openService(s.code); } } }, [
-        el("td", {}, [el("span", { class: "at-mono", style: "color:var(--at-ink-2)", text: c.id })]),
+        el("td", {}, [el("span", { class: "at-mono", style: "color:var(--at-ink-2)", text: c.id }), copyBtn(c.id, "نسخ رقم الطلب")]),
         el("td", {}, [el("div", { class: "at-tname" }, [el("span", { class: "at-svc__ico" }, [ms(s.icon)]), el("span", {}, [el("b", { text: s.name }), el("small", { class: "at-tnum", text: s.code })])])]),
         el("td", { text: c.subscriber }),
         el("td", {}, [el("span", { class: "at-badge " + (urgent ? "at-badge--urgent" : vip ? "at-badge--gold" : "") }, [urgent ? ms("priority_high") : (vip ? ms("workspace_premium") : null), c.status])]),
@@ -1033,7 +1073,7 @@
           ]),
           el("div", { class: "at-receipt__eyebrow", text: "تمّ الإنجاز · ختم رسمي" }),
           el("h2", { class: "at-receipt__h", text: "تم استلام طلبك" }),
-          el("div", { class: "at-receipt__ref" }, [ms("tag"), el("span", { class: "at-tnum", text: r.ref })]),
+          el("div", { class: "at-receipt__ref" }, [ms("tag"), el("span", { class: "at-tnum", text: r.ref }), copyBtn(r.ref, "نسخ الرقم المرجعي")]),
           el("dl", { class: "at-receipt__rows" }, rows.map(function (row) {
             return el("div", { class: "at-receipt__row" }, [
               el("dt", {}, [el("span", { class: "at-check" }, [ms("check")]), row[1]]),
